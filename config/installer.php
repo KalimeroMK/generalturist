@@ -125,7 +125,7 @@ return [
     |--------------------------------------------------------------------------
     | Selected Installed Middlware Option
     |--------------------------------------------------------------------------
-    | The selected option fo what happens when an installer intance has been
+    | The selected option fo what happens when an installed intance has been
     | Default output is to `/resources/views/error/404.blade.php` if none.
     | The available middleware options include:
     | route, abort, dump, 404, default, ''
