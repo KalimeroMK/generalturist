@@ -1,7 +1,8 @@
-<script src="https://js.pusher.com/5.0/pusher.min.js"></script>
-<script>
+<script src="https://js.pusher.com/7.0.3/pusher.min.js"></script>
+<script >
   // Enable pusher logging - don't include this in production
   Pusher.logToConsole = true;
+
   var pusher = new Pusher("{{ config('chatify.pusher.key') }}", {
     encrypted: true,
     cluster: "{{ config('chatify.pusher.options.cluster') }}",
@@ -12,7 +13,6 @@
         }
     }
   });
-  window.tmp_user_id = '{{request('user_id')}}'
 </script>
 <script src="{{ asset('js/chatify/code.js') }}"></script>
 <script>

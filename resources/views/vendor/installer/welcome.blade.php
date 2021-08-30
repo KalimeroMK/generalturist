@@ -5,7 +5,7 @@
 @endsection
 
 @section('title')
-    {{ __('Booking Core :version Installer',['version'=>config('app.version')]) }}
+    {{ trans('installer_messages.welcome.title') }}
 @endsection
 
 @section('container')

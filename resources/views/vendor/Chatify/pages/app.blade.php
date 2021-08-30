@@ -5,21 +5,21 @@
         {{-- Header and search bar --}}
         <div class="m-header">
             <nav>
-                <a href="#"><i class="fas fa-inbox"></i> <span class="messenger-headTitle">{{__('MESSAGES')}}</span> </a>
+                <a href="#"><i class="fas fa-inbox"></i> <span class="messenger-headTitle">MESSAGES</span> </a>
                 {{-- header buttons --}}
                 <nav class="m-header-right">
-                    <a href="#" onclick="return false;" ><i class="fas fa-cog settings-btn"></i></a>
-                    <a href="#" onclick="return false;" class="listView-x"><i class="fas fa-times"></i></a>
+                    <a href="#"><i class="fas fa-cog settings-btn"></i></a>
+                    <a href="#" class="listView-x"><i class="fas fa-times"></i></a>
                 </nav>
             </nav>
             {{-- Search input --}}
             <input type="text" class="messenger-search" placeholder="Search" />
             {{-- Tabs --}}
             <div class="messenger-listView-tabs">
-                <a onclick="return false;" href="#" @if($route == 'user') class="active-tab" @endif data-view="users">
-                    <span class="far fa-user"></span> {{__('People')}}</a>
-                <a onclick="return false;" href="#" @if($route == 'group') class="active-tab" @endif data-view="groups">
-                    <span class="fas fa-users"></span> {{__('Groups')}}</a>
+                <a href="#" @if($route == 'user') class="active-tab" @endif data-view="users">
+                    <span class="far fa-user"></span> People</a>
+                <a href="#" @if($route == 'group') class="active-tab" @endif data-view="groups">
+                    <span class="fas fa-users"></span> Groups</a>
             </div>
         </div>
         {{-- tabs and lists --}}
@@ -29,29 +29,31 @@
            <div class="@if($route == 'user') show @endif messenger-tab app-scroll" data-view="users">
 
                {{-- Favorites --}}
-               <p class="messenger-title">{{__('Favorites')}}</p>
+               <div class="favorites-section">
+                <p class="messenger-title">Favorites</p>
                 <div class="messenger-favorites app-scroll-thin"></div>
+               </div>
 
                {{-- Saved Messages --}}
                {!! view('Chatify::layouts.listItem', ['get' => 'saved','id' => $id])->render() !!}
 
                {{-- Contact --}}
-               <div class="listOfContacts" style="width: 100%;height: calc(100% - 200px);"></div>
+               <div class="listOfContacts" style="width: 100%;height: calc(100% - 200px);position: relative;"></div>
 
            </div>
 
            {{-- ---------------- [ Group Tab ] ---------------- --}}
            <div class="@if($route == 'group') show @endif messenger-tab app-scroll" data-view="groups">
                 {{-- items --}}
-                <p style="text-align: center;color:grey;">{{__('Soon will be available')}}</p>
+                <p style="text-align: center;color:grey;">Soon will be available</p>
              </div>
 
              {{-- ---------------- [ Search Tab ] ---------------- --}}
            <div class="messenger-tab app-scroll" data-view="search">
                 {{-- items --}}
-                <p class="messenger-title">{{__('Search')}}</p>
+                <p class="messenger-title">Search</p>
                 <div class="search-records">
-                    <p class="message-hint"><span>{{__('Type to search..')}}</span></p>
+                    <p class="message-hint center-el"><span>Type to search..</span></p>
                 </div>
              </div>
         </div>
@@ -64,29 +66,29 @@
             <nav>
                 {{-- header back button, avatar and user name --}}
                 <div style="display: inline-flex;">
-                    <a onclick="return false;" href="#" class="show-listView"><i class="fas fa-arrow-left"></i></a>
+                    <a href="#" class="show-listView"><i class="fas fa-arrow-left"></i></a>
                     <div class="avatar av-s header-avatar" style="margin: 0px 10px; margin-top: -5px; margin-bottom: -5px;">
                     </div>
-                    <a onclick="return false;" href="#" class="user-name">{{ config('chatify.name') }}</a>
+                    <a href="#" class="user-name">{{ config('chatify.name') }}</a>
                 </div>
                 {{-- header buttons --}}
                 <nav class="m-header-right">
-                    <a onclick="return false;" href="#" class="add-to-favorite"><i class="fas fa-star"></i></a>
-{{--                    <a href="{{ route('home') }}"><i class="fas fa-home"></i></a>--}}
-                    <a onclick="return false;" href="#" class="show-infoSide"><i class="fas fa-info-circle"></i></a>
+                    <a href="#" class="add-to-favorite"><i class="fas fa-star"></i></a>
+                    <a href="/"><i class="fas fa-home"></i></a>
+                    <a href="#" class="show-infoSide"><i class="fas fa-info-circle"></i></a>
                 </nav>
             </nav>
         </div>
         {{-- Internet connection --}}
         <div class="internet-connection">
-            <span class="ic-connected">{{__('Connected')}}</span>
-            <span class="ic-connecting">{{__('Connecting...')}}</span>
-            <span class="ic-noInternet">{{__('No internet access')}}</span>
+            <span class="ic-connected">Connected</span>
+            <span class="ic-connecting">Connecting...</span>
+            <span class="ic-noInternet">No internet access</span>
         </div>
         {{-- Messaging area --}}
         <div class="m-body app-scroll">
             <div class="messages">
-                <p class="message-hint" style="margin-top: calc(30% - 126.2px);"><span>{{__('Please select a chat to start messaging')}}</span></p>
+                <p class="message-hint center-el"><span>Please select a chat to start messaging</span></p>
             </div>
             {{-- Typing indicator --}}
             <div class="typing-indicator">
@@ -108,7 +110,7 @@
     <div class="messenger-infoView app-scroll">
         {{-- nav actions --}}
         <nav>
-            <a onclick="return false;" href="#"><i class="fas fa-times"></i></a>
+            <a href="#"><i class="fas fa-times"></i></a>
         </nav>
         {!! view('Chatify::layouts.info')->render() !!}
     </div>

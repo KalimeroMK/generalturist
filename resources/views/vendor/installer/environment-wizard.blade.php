@@ -7,8 +7,6 @@
 @section('title')
     <i class="fa fa-magic fa-fw" aria-hidden="true"></i>
     {!! trans('installer_messages.environment.wizard.title') !!}
-
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
 @endsection
 
 @section('container')
@@ -34,15 +32,6 @@
             <br />
             {{ trans('installer_messages.environment.wizard.tabs.application') }}
         </label>
-        @if ($errors->any())
-            <div class="alert" style="color: #721c24;background-color: #f8d7da; border-color: #f5c6cb;">
-                <div>
-                    @foreach ($errors->all() as $error)
-                        <div>{{ $error }}</div>
-                    @endforeach
-                </div>
-            </div>
-        @endif
 
         <form method="post" action="{{ route('LaravelInstaller::environmentSaveWizard') }}" class="tabs-wrap">
             <div class="tab" id="tab1content">
@@ -52,7 +41,7 @@
                     <label for="app_name">
                         {{ trans('installer_messages.environment.wizard.form.app_name_label') }}
                     </label>
-                    <input type="text" name="app_name" id="app_name" value="Booking Core" placeholder="{{ trans('installer_messages.environment.wizard.form.app_name_placeholder') }}" />
+                    <input type="text" name="app_name" id="app_name" value="" placeholder="{{ trans('installer_messages.environment.wizard.form.app_name_placeholder') }}" />
                     @if ($errors->has('app_name'))
                         <span class="error-block">
                             <i class="fa fa-fw fa-exclamation-triangle" aria-hidden="true"></i>
@@ -61,7 +50,7 @@
                     @endif
                 </div>
 
-                <div class="form-group {{ $errors->has('environment') ? ' has-error ' : '' }}" style="display: none">
+                <div class="form-group {{ $errors->has('environment') ? ' has-error ' : '' }}">
                     <label for="environment">
                         {{ trans('installer_messages.environment.wizard.form.app_environment_label') }}
                     </label>
@@ -69,7 +58,7 @@
                         <option value="local" selected>{{ trans('installer_messages.environment.wizard.form.app_environment_label_local') }}</option>
                         <option value="development">{{ trans('installer_messages.environment.wizard.form.app_environment_label_developement') }}</option>
                         <option value="qa">{{ trans('installer_messages.environment.wizard.form.app_environment_label_qa') }}</option>
-                        <option selected value="production">{{ trans('installer_messages.environment.wizard.form.app_environment_label_production') }}</option>
+                        <option value="production">{{ trans('installer_messages.environment.wizard.form.app_environment_label_production') }}</option>
                         <option value="other">{{ trans('installer_messages.environment.wizard.form.app_environment_label_other') }}</option>
                     </select>
                     <div id="environment_text_input" style="display: none;">
@@ -83,7 +72,7 @@
                     @endif
                 </div>
 
-                <div class="form-group {{ $errors->has('app_debug') ? ' has-error ' : '' }}" style="display: none">
+                <div class="form-group {{ $errors->has('app_debug') ? ' has-error ' : '' }}">
                     <label for="app_debug">
                         {{ trans('installer_messages.environment.wizard.form.app_debug_label') }}
                     </label>
@@ -92,7 +81,7 @@
                         {{ trans('installer_messages.environment.wizard.form.app_debug_label_true') }}
                     </label>
                     <label for="app_debug_false">
-                        <input type="radio" name="app_debug" checked id="app_debug_false" value=false />
+                        <input type="radio" name="app_debug" id="app_debug_false" value=false />
                         {{ trans('installer_messages.environment.wizard.form.app_debug_label_false') }}
                     </label>
                     @if ($errors->has('app_debug'))
@@ -103,7 +92,7 @@
                     @endif
                 </div>
 
-                <div class="form-group {{ $errors->has('app_log_level') ? ' has-error ' : '' }}" style="display: none">
+                <div class="form-group {{ $errors->has('app_log_level') ? ' has-error ' : '' }}">
                     <label for="app_log_level">
                         {{ trans('installer_messages.environment.wizard.form.app_log_level_label') }}
                     </label>
@@ -221,7 +210,7 @@
                     <label for="database_password">
                         {{ trans('installer_messages.environment.wizard.form.db_password_label') }}
                     </label>
-                    <input type="text" name="database_password" id="database_password" value="" placeholder="{{ trans('installer_messages.environment.wizard.form.db_password_placeholder') }}" />
+                    <input type="password" name="database_password" id="database_password" value="" placeholder="{{ trans('installer_messages.environment.wizard.form.db_password_placeholder') }}" />
                     @if ($errors->has('database_password'))
                         <span class="error-block">
                             <i class="fa fa-fw fa-exclamation-triangle" aria-hidden="true"></i>
@@ -231,7 +220,6 @@
                 </div>
 
                 <div class="buttons">
-                    <span class="button bravo_test_db" style="font-size: 17px;">{{__("Test DB")}}</span>
                     <button class="button" onclick="showApplicationSettings();return false">
                         {{ trans('installer_messages.environment.wizard.form.buttons.setup_application') }}
                         <i class="fa fa-angle-right fa-fw" aria-hidden="true"></i>
@@ -395,7 +383,7 @@
                                     </a>
                                 </sup>
                             </label>
-                            <input type="text" name="mail_driver" id="mail_driver" value="sendmail" placeholder="{{ trans('installer_messages.environment.wizard.form.app_tabs.mail_driver_placeholder') }}" />
+                            <input type="text" name="mail_driver" id="mail_driver" value="smtp" placeholder="{{ trans('installer_messages.environment.wizard.form.app_tabs.mail_driver_placeholder') }}" />
                             @if ($errors->has('mail_driver'))
                                 <span class="error-block">
                                     <i class="fa fa-fw fa-exclamation-triangle" aria-hidden="true"></i>
@@ -516,8 +504,6 @@
 @endsection
 
 @section('scripts')
-
-    <script src="{{asset('libs/jquery-3.3.1.min.js')}}"></script>
     <script type="text/javascript">
         function checkEnvironment(val) {
             var element=document.getElementById('environment_text_input');
@@ -533,43 +519,5 @@
         function showApplicationSettings() {
             document.getElementById('tab3').checked = true;
         }
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        jQuery(function ($) {
-            $('.bravo_test_db').click(function () {
-                var database_connection = $('select[name=database_connection]').val();
-                var database_hostname = $('input[name=database_hostname]').val();
-                var database_port = $('input[name=database_port]').val();
-                var database_name = $('input[name=database_name]').val();
-                var database_username = $('input[name=database_username]').val();
-                var database_password = $('input[name=database_password]').val();
-                console.log(database_connection);
-                $.ajax({
-                    url: '/install/check-db',
-                    type: 'POST',
-                    data: {
-                        "database_connection" : database_connection,
-                        "database_hostname" : database_hostname,
-                        "database_port" : database_port,
-                        "database_name" : database_name,
-                        "database_username" : database_username,
-                        "database_password" : database_password,
-                    },
-                    dataType: 'json',
-                    type: 'post',
-                    success: function (data) {
-                        alert(data.message);
-                    },
-                    cache:false
-                });
-
-            });
-        })
-
     </script>
 @endsection
