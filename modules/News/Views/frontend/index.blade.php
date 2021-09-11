@@ -33,7 +33,7 @@
                                 @include('News::frontend.layouts.details.news-loop')
                                 <hr>
                                 <div class="bravo-pagination">
-                                    {{$rows->appends(request()->query())->links()}}
+                                    {{$rows->appends(request()->query())->links('vendor.pagination.bootstrap-4')}}
                                     <span class="count-string">{{ __("Showing :from - :to of :total posts",["from"=>$rows->firstItem(),"to"=>$rows->lastItem(),"total"=>$rows->total()]) }}</span>
                                 </div>
                             </div>

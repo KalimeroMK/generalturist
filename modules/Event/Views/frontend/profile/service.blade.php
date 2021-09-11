@@ -9,7 +9,7 @@ if(!$user->hasPermissionTo('event_create')) return;
             @if(!empty($view_all))
                 <div class="review-pag-wrapper">
                     <div class="bravo-pagination">
-                        {{$services->appends(request()->query())->links()}}
+                        {{$services->appends(request()->query())->links('vendor.pagination.bootstrap-4')}}
                     </div>
                     <div class="review-pag-text text-center">
                         {{ __("Showing :from - :to of :total total",["from"=>$services->firstItem(),"to"=>$services->lastItem(),"total"=>$services->total()]) }}

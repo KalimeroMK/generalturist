@@ -48,7 +48,7 @@
                         </table>
                     </div>
                     <div class="bravo-pagination">
-                        {{$bookings->appends(request()->query())->links()}}
+                        {{$bookings->appends(request()->query())->links('vendor.pagination.bootstrap-4')}}
                     </div>
                 </div>
             @else

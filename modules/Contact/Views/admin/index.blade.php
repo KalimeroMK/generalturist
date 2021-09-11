@@ -60,7 +60,7 @@
                         </tbody>
                     </table>
                 </form>
-                {{$rows->appends(request()->query())->links()}}
+                {{$rows->appends(request()->query())->links('vendor.pagination.bootstrap-4')}}
             </div>
         </div>
     </div>

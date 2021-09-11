@@ -48,7 +48,7 @@
             <div class="alert alert-warning">{{__("No events found")}}</div>
         @endif
         <div class="d-flex justify-content-center">
-            {{$rows->appends($request->query())->links()}}
+            {{$rows->appends($request->query())->links('vendor.pagination.bootstrap-4')}}
         </div>
     </div>
     <div id="bravo_modal_calendar" class="modal fade">

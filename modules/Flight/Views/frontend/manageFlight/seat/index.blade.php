@@ -80,7 +80,7 @@
                                 </tr>
                             @endif
                             </tbody>
-                            {{$rows->appends(request()->query())->links()}}
+                            {{$rows->appends(request()->query())->links('vendor.pagination.bootstrap-4')}}
                         </table>
                     </form>
                 </div>

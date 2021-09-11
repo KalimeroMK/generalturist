@@ -71,7 +71,7 @@
             </table>
         </div>
         <div class="bravo-pagination">
-            {{$payouts->appends(request()->query())->links()}}
+            {{$payouts->appends(request()->query())->links('vendor.pagination.bootstrap-4')}}
         </div>
         @endif
     </div>

@@ -72,7 +72,7 @@
                                 </div>
                                 <div class="review-pag-wrapper">
                                     <div class="bravo-pagination">
-                                        {{$reviews->appends(request()->query())->links()}}
+                                        {{$reviews->appends(request()->query())->links('vendor.pagination.bootstrap-4')}}
                                     </div>
                                     <div class="review-pag-text">
                                         {{ __("Showing :from - :to of :total total",["from"=>$reviews->firstItem(),"to"=>$reviews->lastItem(),"total"=>$reviews->total()]) }}

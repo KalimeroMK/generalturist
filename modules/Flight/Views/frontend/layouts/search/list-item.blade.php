@@ -34,7 +34,7 @@
             @include('Flight::frontend.layouts.search.modal-form-book')
 
             <div class="bravo-pagination">
-                {{$rows->appends(request()->query())->links()}}
+                {{$rows->appends(request()->query())->links('vendor.pagination.bootstrap-4')}}
                 @if($rows->total() > 0)
                     <span class="count-string">{{ __("Showing :from - :to of :total Flights",["from"=>$rows->firstItem(),"to"=>$rows->lastItem(),"total"=>$rows->total()]) }}</span>
                 @endif
