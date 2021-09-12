@@ -6,7 +6,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @php($favicon = setting_item('site_favicon'))
-    <link rel="icon" type="image/png" href="{{!empty($favicon)?get_file_url($favicon,'full'):url('images/favicon.png')}}" />
+    <link rel="icon" type="image/png"
+          href="{{!empty($favicon)?get_file_url($favicon,'full'):url('images/favicon.png')}}"/>
     @include('Layout::parts.seo-meta')
     <link href="{{ asset('libs/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ asset('libs/font-awesome/css/font-awesome.css') }}" rel="stylesheet">
@@ -14,43 +15,44 @@
     <link href="{{ asset('libs/icofont/icofont.min.css') }}" rel="stylesheet">
     <link href="{{ asset('dist/frontend/css/notification.css') }}" rel="newest stylesheet">
     <link href="{{ asset('dist/frontend/css/app.css?_ver='.config('app.version')) }}" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{ asset("libs/daterange/daterangepicker.css") }}" >
-    <link rel="stylesheet" type="text/css" href="{{ asset("libs/select2/css/select2.min.css") }}" >
+    <link rel="stylesheet" type="text/css" href="{{ asset("libs/daterange/daterangepicker.css") }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset("libs/select2/css/select2.min.css") }}">
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link rel='stylesheet' id='google-font-css-css'  href='https://fonts.googleapis.com/css?family=Poppins%3A400%2C500%2C600' type='text/css' media='all' />
+    <link rel='stylesheet' id='google-font-css-css'
+          href='https://fonts.googleapis.com/css?family=Poppins%3A400%2C500%2C600' type='text/css' media='all'/>
     <script>
         var bookingCore = {
-            url:'{{url( app_get_locale() )}}',
-            url_root:'{{ url('') }}',
-			booking_decimals:{{(int)get_current_currency('currency_no_decimal',2)}},
-			thousand_separator:'{{get_current_currency('currency_thousand')}}',
-			decimal_separator:'{{get_current_currency('currency_decimal')}}',
-			currency_position:'{{get_current_currency('currency_format')}}',
-			currency_symbol:'{{currency_symbol()}}',
-			currency_rate:'{{get_current_currency('rate',1)}}',
-            date_format:'{{get_moment_date_format()}}',
-            map_provider:'{{setting_item('map_provider')}}',
-            map_gmap_key:'{{setting_item('map_gmap_key')}}',
-            routes:{
-                login:'{{route('auth.login')}}',
-                register:'{{route('auth.register')}}',
+            url: '{{url( app_get_locale() )}}',
+            url_root: '{{ url('') }}',
+            booking_decimals: {{(int)get_current_currency('currency_no_decimal',2)}},
+            thousand_separator: '{{get_current_currency('currency_thousand')}}',
+            decimal_separator: '{{get_current_currency('currency_decimal')}}',
+            currency_position: '{{get_current_currency('currency_format')}}',
+            currency_symbol: '{{currency_symbol()}}',
+            currency_rate: '{{get_current_currency('rate',1)}}',
+            date_format: '{{get_moment_date_format()}}',
+            map_provider: '{{setting_item('map_provider')}}',
+            map_gmap_key: '{{setting_item('map_gmap_key')}}',
+            routes: {
+                login: '{{route('auth.login')}}',
+                register: '{{route('auth.register')}}',
             },
             currentUser: {{(int)Auth::id()}},
-            isAdmin : {{is_admin() ? 1 : 0}},
+            isAdmin: {{is_admin() ? 1 : 0}},
             rtl: {{ setting_item_with_lang('enable_rtl') ? "1" : "0" }},
-            markAsRead:'{{route('core.notification.markAsRead')}}',
-            markAllAsRead:'{{route('core.notification.markAllAsRead')}}',
-            loadNotify : '{{route('core.notification.loadNotify')}}',
-            pusher_api_key : '{{setting_item("pusher_api_key")}}',
-            pusher_cluster : '{{setting_item("pusher_cluster")}}',
+            markAsRead: '{{route('core.notification.markAsRead')}}',
+            markAllAsRead: '{{route('core.notification.markAllAsRead')}}',
+            loadNotify: '{{route('core.notification.loadNotify')}}',
+            pusher_api_key: '{{setting_item("pusher_api_key")}}',
+            pusher_cluster: '{{setting_item("pusher_cluster")}}',
         };
         var i18n = {
-            warning:"{{__("Warning")}}",
-            success:"{{__("Success")}}",
-            confirm_delete:"{{__("Do you want to delete?")}}",
-            confirm:"{{__("Confirm")}}",
-            cancel:"{{__("Cancel")}}",
+            warning: "{{__("Warning")}}",
+            success: "{{__("Success")}}",
+            confirm_delete: "{{__("Do you want to delete?")}}",
+            confirm: "{{__("Confirm")}}",
+            cancel: "{{__("Cancel")}}",
         };
         var daterangepickerLocale = {
             "applyLabel": "{{__('Apply')}}",
@@ -92,6 +94,7 @@
         .bravo_topbar, .bravo_header, .bravo_footer {
             display: none;
         }
+
         html, body, .bravo_wrap, .bravo_user_profile,
         .bravo_user_profile > .container-fluid > .row-eq-height > .col-md-3 {
             min-height: 100vh !important;
@@ -105,32 +108,32 @@
     @endif
 </head>
 <body class="user-page {{$body_class ?? ''}} @if(setting_item_with_lang('enable_rtl')) is-rtl @endif">
-    @if(!is_demo_mode())
-        {!! setting_item('body_scripts') !!}
-    @endif
-    <div class="bravo_wrap">
-        @include('Layout::parts.topbar')
-        @include('Layout::parts.header')
+@if(!is_demo_mode())
+    {!! setting_item('body_scripts') !!}
+@endif
+<div class="bravo_wrap">
+    @include('Layout::parts.topbar')
+    @include('Layout::parts.header')
 
-        <div class="bravo_user_profile">
-            <div class="container-fluid">
-                <div class="row row-eq-height">
-                    <div class="col-md-3">
-                        @include('User::frontend.layouts.sidebar')
-                    </div>
-                    <div class="col-md-9">
-                        <div class="user-form-settings">
-                            @include('Layout::parts.user-bc')
-                            @yield('content')
-                        </div>
+    <div class="bravo_user_profile">
+        <div class="container-fluid">
+            <div class="row row-eq-height">
+                <div class="col-md-3">
+                    @include('User::frontend.layouts.sidebar')
+                </div>
+                <div class="col-md-9">
+                    <div class="user-form-settings">
+                        @include('Layout::parts.user-bc')
+                        @yield('content')
                     </div>
                 </div>
             </div>
         </div>
-        @include('Layout::parts.footer',['is_user_page'=>1])
     </div>
-    @if(!is_demo_mode())
+    @include('Layout::parts.footer',['is_user_page'=>1])
+</div>
+@if(!is_demo_mode())
     {!! setting_item('footer_scripts') !!}
-    @endif
+@endif
 </body>
 </html>

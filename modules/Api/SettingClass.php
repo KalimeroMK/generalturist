@@ -1,24 +1,23 @@
 <?php
 
-namespace  Modules\Api;
+    namespace Modules\Api;
 
-use Modules\Core\Abstracts\BaseSettingsClass;
-use Modules\Core\Models\Settings;
+    use Modules\Core\Abstracts\BaseSettingsClass;
 
-class SettingClass extends BaseSettingsClass
-{
-    public static function getSettingPages()
+    class SettingClass extends BaseSettingsClass
     {
-        return [
-            [
-                'id'   => 'api',
-                'title' => __("Mobile App Settings"),
-                'position'=>130,
-                'view'=>"Api::admin.settings.api",
-                "keys"=>[
-                    'api_app_layout',
+        public static function getSettingPages(): array
+        {
+            return [
+                [
+                    'id'       => 'api',
+                    'title'    => __("Mobile App Settings"),
+                    'position' => 130,
+                    'view'     => "Api::admin.settings.api",
+                    "keys"     => [
+                        'api_app_layout',
+                    ],
                 ],
-            ]
-        ];
+            ];
+        }
     }
-}

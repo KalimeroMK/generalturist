@@ -20,7 +20,7 @@
                             <div class="number">{{__(':amount',['amount'=>$row->balance])}}</div>
                         </div>
                         @if($row->balance)
-                        <div class="desc">~ {{format_money(credit_to_money($row->balance))}} </div>
+                            <div class="desc">~ {{format_money(credit_to_money($row->balance))}} </div>
                         @endif
                     </div>
                 </div>
@@ -28,7 +28,7 @@
         </div>
 
         <div class="panel">
-            <div class="panel-title"><strong >{{__("Latest Transactions")}}</strong></div>
+            <div class="panel-title"><strong>{{__("Latest Transactions")}}</strong></div>
             <div class="panel-body">
                 <div class="table-responsive">
                     <table class="table table-bordered">
@@ -44,29 +44,33 @@
                         </tr>
                         </thead>
                         <tbody>
-                            @if(count($transactions))
-                                @foreach($transactions as $transaction)
-                                    <tr>
-                                        <td>{{$transaction->id}}</td>
-                                        <td>{{ucfirst($transaction->type)}}</td>
-                                        <td>{{$transaction->amount}}</td>
-                                        <td>
-                                            @if($transaction->payment->gateway_obj)
-                                                {{$transaction->payment->gateway_obj->getDisplayName() ?? ''}}
-                                            @endif
-                                        </td>
-                                        <td><span class="badge badge-{{$transaction->status_class}}">{{$transaction->status_name ?? ''}}</span></td>
-                                        <td>
-                                            @if(!empty($transaction->meta['admin_deposit']))
-                                                {{__("Deposit by :name",['name'=>$transaction->author->display_name ?? ''])}}
-                                            @endif
-                                        </td>
-                                        <td>{{display_datetime($transaction->created_at)}}</td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr><td colspan="5">{{__("No data found")}}</td></tr>
-                            @endif
+                        @if(count($transactions))
+                            @foreach($transactions as $transaction)
+                                <tr>
+                                    <td>{{$transaction->id}}</td>
+                                    <td>{{ucfirst($transaction->type)}}</td>
+                                    <td>{{$transaction->amount}}</td>
+                                    <td>
+                                        @if($transaction->payment->gateway_obj)
+                                            {{$transaction->payment->gateway_obj->getDisplayName() ?? ''}}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-{{$transaction->status_class}}">{{$transaction->status_name ?? ''}}</span>
+                                    </td>
+                                    <td>
+                                        @if(!empty($transaction->meta['admin_deposit']))
+                                            {{__("Deposit by :name",['name'=>$transaction->author->display_name ?? ''])}}
+                                        @endif
+                                    </td>
+                                    <td>{{display_datetime($transaction->created_at)}}</td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="5">{{__("No data found")}}</td>
+                            </tr>
+                        @endif
                         </tbody>
                         {{$transactions->links()}}
                     </table>

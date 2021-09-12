@@ -1,16 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Admin
- * Date: 7/16/2019
- * Time: 2:05 PM
- */
-namespace Modules\Core\Models;
+    /**
+     * Created by PhpStorm.
+     * User: Admin
+     * Date: 7/16/2019
+     * Time: 2:05 PM
+     */
 
-use App\BaseModel;
+    namespace Modules\Core\Models;
 
-class MenuTranslation extends Menu
-{
-    protected $table = 'core_menu_translations';
-    protected $fillable = ['items'];
-}
+    class MenuTranslation extends Menu
+    {
+        protected $table = 'core_menu_translations';
+        protected $fillable = ['items'];
+    }

@@ -1,6 +1,6 @@
 @php
     $languages = \Modules\Language\Models\Language::getActive();
-    $locale = session('website_locale',app()->getLocale());
+    $locale = session('website_locale',app()->getLocale())
 @endphp
 {{--Multi Language--}}
 @if(!empty($languages) && setting_item('site_enable_multi_lang'))

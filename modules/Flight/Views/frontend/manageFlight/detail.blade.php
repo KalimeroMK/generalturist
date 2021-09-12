@@ -14,13 +14,15 @@
         @endif
     </h2>
     @include('admin.message')
-    
+
     <div class="lang-content-box">
-        <form action="{{route('flight.vendor.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}" method="post">
+        <form action="{{route('flight.vendor.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}"
+              method="post">
             @csrf
             <div class="form-add-service">
                 <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                    <a data-toggle="tab" href="#nav-tour-content" aria-selected="true" class="active">{{__("1. Content")}}</a>
+                    <a data-toggle="tab" href="#nav-tour-content" aria-selected="true"
+                       class="active">{{__("1. Content")}}</a>
                     @if(is_default_lang())
                         <a data-toggle="tab" href="#nav-attribute" aria-selected="false">{{__("4. Attributes")}}</a>
                     @endif
@@ -43,7 +45,7 @@
     </div>
 @endsection
 @section('footer')
-    <script type="text/javascript" src="{{ asset('libs/tinymce/js/tinymce/tinymce.min.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('libs/tinymce/js/tinymce/tinymce.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/condition.js?_ver='.config('app.version')) }}"></script>
     <script type="text/javascript" src="{{url('module/core/js/map-engine.js?_ver='.config('app.version'))}}"></script>
     {!! App\Helpers\MapEngine::scripts() !!}
@@ -62,8 +64,8 @@
                 classNotAvailable: ['disabled', 'off'],
                 disableHightLight: true,
                 timePicker24Hour: true,
-                locale:{
-                    format:'YYYY/MM/DD HH:mm:ss'
+                locale: {
+                    format: 'YYYY/MM/DD HH:mm:ss'
                 }
             }).on('apply.daterangepicker', function (ev, picker) {
                 $(this).val(picker.startDate.format('YYYY/MM/DD hh:mm:ss'));
@@ -74,7 +76,7 @@
             new BravoMapEngine('map_content', {
                 fitBounds: true,
                 center: [{{$row->map_lat ?? "51.505"}}, {{$row->map_lng ?? "-0.09"}}],
-                zoom:{{$row->map_zoom ?? "8"}},
+                zoom: {{$row->map_zoom ?? "8"}},
                 ready: function (engineMap) {
                     @if($row->map_lat && $row->map_lng)
                     engineMap.addMarker([{{$row->map_lat}}, {{$row->map_lng}}], {
@@ -92,8 +94,8 @@
                     engineMap.on('zoom_changed', function (zoom) {
                         $("input[name=map_zoom]").attr("value", zoom);
                     });
-                    if(myTravel.map_provider === "gmap"){
-                        engineMap.searchBox($('#customPlaceAddress'),function (dataLatLng) {
+                    if (myTravel.map_provider === "gmap") {
+                        engineMap.searchBox($('#customPlaceAddress'), function (dataLatLng) {
                             engineMap.clearMarkers();
                             engineMap.addMarker(dataLatLng, {
                                 icon_options: {}
@@ -102,7 +104,7 @@
                             $("input[name=map_lng]").attr("value", dataLatLng[1]);
                         });
                     }
-                    engineMap.searchBox($('.bravo_searchbox'),function (dataLatLng) {
+                    engineMap.searchBox($('.bravo_searchbox'), function (dataLatLng) {
                         engineMap.clearMarkers();
                         engineMap.addMarker(dataLatLng, {
                             icon_options: {}

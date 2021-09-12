@@ -1,22 +1,23 @@
 <?php
-namespace Modules\Media\Models;
 
-use App\BaseModel;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Database\Eloquent\SoftDeletes;
+    namespace Modules\Media\Models;
 
-class MediaFile extends BaseModel
-{
-    use SoftDeletes;
-    protected $table = 'media_files';
+    use App\BaseModel;
+    use Illuminate\Database\Eloquent\SoftDeletes;
 
-    public static function findMediaByName($name)
+    class MediaFile extends BaseModel
     {
-        return MediaFile::where("file_name", $name)->firstOrFail();
-    }
+        use SoftDeletes;
 
-    public function cacheKey()
-    {
-        return sprintf("%s/%s", $this->getTable(), $this->getKey());
+        protected $table = 'media_files';
+
+        public static function findMediaByName($name)
+        {
+            return MediaFile::where("file_name", $name)->firstOrFail();
+        }
+
+        public function cacheKey()
+        {
+            return sprintf("%s/%s", $this->getTable(), $this->getKey());
+        }
     }
-}

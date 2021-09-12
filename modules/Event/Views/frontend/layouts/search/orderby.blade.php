@@ -1,17 +1,16 @@
-
 <div class="item">
     <a href="{{ route("event.search",['_layout'=>'map']) }}">{{__("Show on the map")}}</a>
 </div>
 <div class="item">
     @php
         $param = request()->input();
-        $orderby =  request()->input("orderby");
+        $orderby =  request()->input("orderby")
     @endphp
     <div class="item-title">
         {{ __("Sort by:") }}
     </div>
     <div class="dropdown">
-        <span class=" dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class=" dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             @switch($orderby)
                 @case("price_low_high")
                 {{ __("Price (Low to high)") }}

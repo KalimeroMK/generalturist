@@ -1,10 +1,10 @@
 <?php
 
 
-	namespace Modules\User\Controllers\Auth;
+    namespace Modules\User\Controllers\Auth;
 
 
-	class LoginController extends \App\Http\Controllers\Auth\LoginController
-	{
+    class LoginController extends \App\Http\Controllers\Auth\LoginController
+    {
 
-	}
+    }

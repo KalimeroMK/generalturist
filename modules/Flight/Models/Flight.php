@@ -4,26 +4,24 @@
 
     use App\Currency;
     use Illuminate\Database\Eloquent\Builder;
+    use Illuminate\Database\Eloquent\Collection;
     use Illuminate\Database\Eloquent\Factories\HasFactory;
-    use Illuminate\Http\Response;
+    use Illuminate\Database\Eloquent\SoftDeletes;
+    use Illuminate\Http\Request;
     use Illuminate\Notifications\Notifiable;
     use Illuminate\Support\Arr;
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Support\Facades\Cache;
     use Illuminate\Support\Facades\Validator;
-    use Illuminate\Http\Request;
     use Modules\Booking\Models\Bookable;
     use Modules\Booking\Models\Booking;
     use Modules\Booking\Traits\CapturesService;
     use Modules\Core\Models\Attributes;
-    use Modules\Core\Models\SEO;
     use Modules\Core\Models\Terms;
     use Modules\Flight\Factories\FlightFactory;
+    use Modules\Location\Models\Location;
     use Modules\Media\Helpers\FileHelper;
     use Modules\Review\Models\Review;
-    use Illuminate\Database\Eloquent\SoftDeletes;
-    use Modules\User\Models\UserWishList;
-    use Modules\Location\Models\Location;
 
     class Flight extends Bookable
     {
@@ -32,14 +30,13 @@
         use CapturesService;
         use HasFactory;
 
-        protected $table                              = 'bravo_flight';
-        public    $type                               = 'flight';
-        public    $checkout_booking_detail_file       = 'Flight::frontend.booking.detail';
-        public    $checkout_booking_detail_modal_file = 'Flight::frontend.booking.detail-modal';
-        public    $set_paid_modal_file                = 'Flight::frontend.booking.set-paid-modal';
-        public    $email_new_booking_file             = 'Flight::emails.new_booking_detail';
-        public    $review_scope                       = false;
-
+        public $type = 'flight';
+        public $checkout_booking_detail_file = 'Flight::frontend.booking.detail';
+        public $checkout_booking_detail_modal_file = 'Flight::frontend.booking.detail-modal';
+        public $set_paid_modal_file = 'Flight::frontend.booking.set-paid-modal';
+        public $email_new_booking_file = 'Flight::emails.new_booking_detail';
+        public $review_scope = false;
+        protected $table = 'bravo_flight';
         protected $fillable = [
             'title',
             'code',
@@ -54,7 +51,7 @@
         ];
         protected $seo_type = 'flight';
 
-        protected $casts   = [
+        protected $casts = [
             'departure_time' => 'datetime',
             'arrival_time'   => 'datetime',
         ];
@@ -131,6 +128,241 @@
             return $meta;
         }
 
+        public static function getLinkForPageSearch($locale = false, $param = [])
+        {
+            return url(app_get_locale(false, false, '/').config('flight.flight_route_prefix')."?".http_build_query($param));
+        }
+
+        public static function searchForMenu($q = false)
+        {
+            $query = static::select('id', 'title as name');
+            if (strlen($q)) {
+                $query->where('title', 'like', "%".$q."%");
+            }
+            $a = $query->limit(10)->get();
+            return $a;
+        }
+
+        public static function getServiceIconFeatured()
+        {
+            return "icofont-ui-flight";
+        }
+
+        public static function isEnable()
+        {
+            return setting_item('flight_disable') == false;
+        }
+
+        public static function isEnableEnquiry()
+        {
+            if (!empty(setting_item('booking_enquiry_for_Flight'))) {
+                return true;
+            }
+            return false;
+        }
+
+        public static function search(Request $request)
+        {
+            $orderBy = $request->input("orderby");
+            $model_flight = self::query()->where('status', 'publish');
+
+            if (!empty($request->start) and !empty($request->end)) {
+                $start = strtotime($request->start) < time() ? time() : strtotime($request->start);
+                $end = strtotime($request->end) < time() ? time() : strtotime($request->end);
+                $model_flight->where('departure_time', '>=', date('Y-m-d H:i:s ', $start));
+                $model_flight->Where('departure_time', '<=', date('Y-m-d H:i:s ', $end));
+            }
+
+            if (!empty($price_range = $request->query('price_range'))) {
+                $pri_from = explode(";", $price_range)[0];
+                $pri_to = explode(";", $price_range)[1];
+                $model_flight->where('min_price', '<=', $pri_to)->where('min_price', '>=', $pri_from);
+            } else {
+                $model_flight->whereHas('flightSeat');
+            }
+            if (!empty($request->from_where)) {
+                $model_flight->whereHas('airportFrom', function (Builder $builder) use ($request) {
+                    $builder->where('location_id', $request->from_where);
+                });
+            }
+            if (!empty($request->to_where)) {
+                $model_flight->whereHas('airportTo', function (Builder $builder) use ($request) {
+                    $builder->where('location_id', $request->to_where);
+                });
+            }
+            if (!empty($request->seat_type)) {
+                $argv = array_filter($request->seat_type, function ($v) {
+                    return $v != 0;
+                });
+                if (!empty($argv)) {
+                    $model_flight->whereHas('flightSeat', function (Builder $builder) use ($argv) {
+                        foreach ($argv as $item => $value) {
+                            $builder->orWhere(function (Builder $query) use ($value, $item) {
+                                $query->where('seat_type', $item)->where('max_passengers', '>=', $value);
+                            });
+                        }
+                    });
+                }
+            }
+
+            $terms = $request->query('terms');
+            if (is_array($terms) && !empty($terms)) {
+                $model_flight->join('bc_flight_term as tt', 'tt.target_id', "bc_flight.id")->whereIn('tt.term_id', $terms);
+            }
+
+
+            if (!empty($request->query('limit'))) {
+                $limit = $request->query('limit');
+            } else {
+                $limit = !empty(setting_item("flight_page_limit_item")) ? setting_item("flight_page_limit_item") : 9;
+            }
+
+            switch ($orderBy) {
+                case "price_low_high":
+                    $model_flight->orderBy(self::getTableName().".min_price", "asc");
+                    break;
+                case "price_high_low":
+                    $model_flight->orderBy(self::getTableName().".min_price", "desc");
+                    break;
+                default:
+                    $model_flight->orderBy(self::getTableName().".id", "desc");
+            }
+
+            $model_flight->with(['flightSeat', 'airportFrom', 'airportTo', 'airline']);
+            return $model_flight->paginate($limit);
+        }
+
+        public static function searchCustom(Request $request)
+        {
+            $model_Flight = parent::query()->select("bc_flight.*");
+            $model_Flight->where("bc_flight.status", "publish");
+            if (!empty($location_id = $request->query('location_id'))) {
+                $location = Location::query()->where('id', $location_id)->where("status", "publish")->first();
+                if (!empty($location)) {
+                    $model_Flight->join('bc_locations', function ($join) use ($location) {
+                        $join->on('bc_locations.id', '=', 'bc_flight.location_id')
+                            ->where('bc_locations._lft', '>=', $location->_lft)
+                            ->where('bc_locations._rgt', '<=', $location->_rgt);
+                    });
+                }
+            }
+            if (!empty($price_range = $request->query('price_range'))) {
+                $pri_from = explode(";", $price_range)[0];
+                $pri_to = explode(";", $price_range)[1];
+                $raw_sql_min_max = "( (IFNULL(bc_flight.sale_price,0) > 0 and bc_flight.sale_price >= ? ) OR (IFNULL(bc_flight.sale_price,0) <= 0 and bc_flight.price >= ? ) )
+                            AND ( (IFNULL(bc_flight.sale_price,0) > 0 and bc_flight.sale_price <= ? ) OR (IFNULL(bc_flight.sale_price,0) <= 0 and bc_flight.price <= ? ) )";
+                $model_Flight->WhereRaw($raw_sql_min_max, [$pri_from, $pri_from, $pri_to, $pri_to]);
+            }
+
+            $terms = $request->query('terms', []);
+            if ($term_id = $request->query('term_id')) {
+                $terms[] = $term_id;
+            }
+
+            if (is_array($terms) && !empty($terms)) {
+                $terms = Arr::where($terms, function ($value, $key) {
+                    return !is_null($value);
+                });
+                if (!empty($terms)) {
+                    $model_Flight->join('bc_flight_term as tt', 'tt.target_id', "bc_flight.id")->whereIn('tt.term_id', $terms);
+                }
+            }
+
+            $review_scores = $request->query('review_score');
+            if (is_array($review_scores) && !empty($review_scores)) {
+                $where_review_score = [];
+                $params = [];
+                foreach ($review_scores as $number) {
+                    $where_review_score[] = " ( bc_flight.review_score >= ? AND bc_flight.review_score <= ? ) ";
+                    $params[] = $number;
+                    $params[] = $number.'.9';
+                }
+                $sql_where_review_score = " ( ".implode("OR", $where_review_score)." )  ";
+                $model_Flight->WhereRaw($sql_where_review_score, $params);
+            }
+            if (!empty($lat = $request->query('map_lat')) and !empty($lgn = $request->query('map_lgn'))) {
+                $model_Flight->orderByRaw("POW((bc_flight.map_lng-?),2) + POW((bc_flight.map_lat-?),2)", [$lgn, $lat]);
+            }
+            $orderby = $request->input("orderby");
+            switch ($orderby) {
+                case "price_low_high":
+                    $raw_sql = "CASE WHEN IFNULL( bc_flight.sale_price, 0 ) > 0 THEN bc_flight.sale_price ELSE bc_flight.price END AS tmp_min_price";
+                    $model_Flight->selectRaw($raw_sql);
+                    $model_Flight->orderBy("tmp_min_price", "asc");
+                    break;
+                case "price_high_low":
+                    $raw_sql = "CASE WHEN IFNULL( bc_flight.sale_price, 0 ) > 0 THEN bc_flight.sale_price ELSE bc_flight.price END AS tmp_min_price";
+                    $model_Flight->selectRaw($raw_sql);
+                    $model_Flight->orderBy("tmp_min_price", "desc");
+                    break;
+                case "rate_high_low":
+                    $model_Flight->orderBy("review_score", "desc");
+                    break;
+                default:
+                    $model_Flight->orderBy("id", "desc");
+            }
+
+            $model_Flight->groupBy("bc_flight.id");
+
+            $max_guests = (int)($request->query('adults') + $request->query('children'));
+            if ($max_guests) {
+                $model_Flight->where('max_guests', '>=', $max_guests);
+            }
+
+            if (!empty($request->query('limit'))) {
+                $limit = $request->query('limit');
+            } else {
+                $limit = !empty(setting_item("flight_page_limit_item")) ? setting_item("flight_page_limit_item") : 9;
+            }
+            return $model_Flight->with('flightSeat', 'airportFrom', 'airportTo', 'airline')->paginate($limit);
+        }
+
+        static public function getClassAvailability()
+        {
+            return "";
+        }
+
+        static public function getFiltersSearch()
+        {
+            $min_max_price = self::getMinMaxPrice();
+            return [
+                [
+                    "title"     => __("Filter Price"),
+                    "field"     => "price_range",
+                    "position"  => "1",
+                    "min_price" => floor(Currency::convertPrice($min_max_price[0])),
+                    "max_price" => ceil(Currency::convertPrice($min_max_price[1])),
+                ],
+                [
+                    "title"    => __("Review Score"),
+                    "field"    => "review_score",
+                    "position" => "2",
+                    "min"      => "1",
+                    "max"      => "5",
+                ],
+                [
+                    "title"    => __("Attributes"),
+                    "field"    => "terms",
+                    "position" => "3",
+                    "data"     => Attributes::getAllAttributesForApi("flight"),
+                ],
+            ];
+        }
+
+        public static function getMinMaxPrice()
+        {
+            $min = FlightSeat::select(['price', 'flight_id'])->whereHas('flight', function (Builder $query) {
+                $query->where('status', 'publish');
+            })->min('price');
+            $max = FlightSeat::select(['price', 'flight_id'])->whereHas('flight', function (Builder $query) {
+                $query->where('status', 'publish');
+            })->max('price');
+            return [
+                $min ?? 0,
+                $max ?? 0,
+            ];
+        }
+
         protected static function newFactory()
         {
             return FlightFactory::new();
@@ -152,12 +384,6 @@
             return url($urlDetail);
         }
 
-        public static function getLinkForPageSearch($locale = false, $param = [])
-        {
-
-            return url(app_get_locale(false, false, '/').config('flight.flight_route_prefix')."?".http_build_query($param));
-        }
-
         public function getGallery($featuredIncluded = false)
         {
             if (empty($this->gallery)) {
@@ -167,7 +393,7 @@
             if ($featuredIncluded and $this->image_id) {
                 $list_item[] = [
                     'large' => FileHelper::url($this->image_id, 'full'),
-                    'thumb' => FileHelper::url($this->image_id, 'thumb')
+                    'thumb' => FileHelper::url($this->image_id, 'thumb'),
                 ];
             }
             $items = explode(",", $this->gallery);
@@ -176,7 +402,7 @@
                 $thumb = FileHelper::url($item, 'thumb');
                 $list_item[] = [
                     'large' => $large,
-                    'thumb' => $thumb
+                    'thumb' => $thumb,
                 ];
             }
             return $list_item;
@@ -218,7 +444,6 @@
 
         public function addToCart(Request $request)
         {
-
             $res = $this->addToCartValidate($request);
             if ($res !== true) {
                 return $res;
@@ -317,7 +542,6 @@
 
             $check = $booking->save();
             if ($check) {
-
                 $this->bookingClass::clearDraftBookings();
 
                 $booking->addMeta('duration', $this->duration);
@@ -349,7 +573,7 @@
                                 'phone',
                                 'dob',
                                 'price',
-                                'id_card'
+                                'id_card',
                             ], [
                                 'flight_id'      => $this->id,
                                 'flight_seat_id' => $flight_seat['id'],
@@ -361,11 +585,10 @@
                                 'phone'          => $booking->phone,
                                 'dob'            => '',
                                 'price'          => $flight_seat['price'] ?? 0,
-                                'id_card'        => ''
+                                'id_card'        => '',
                             ]);
                             $bookingPassengers->save();
                         }
-
                     }
                 }
 
@@ -375,6 +598,49 @@
                 ]);
             }
             return $this->sendError(__("Can not check availability"));
+        }
+
+        public function addToCartValidate(Request $request)
+        {
+            $rules = [
+                'flight_seat.*.number' => 'required',
+            ];
+            $messages = [
+                'flight_seat.*.number.required' => "Seat type number must be required",
+            ];
+            // Validation
+            if (!empty($rules)) {
+                $validator = Validator::make($request->all(), $rules, $messages);
+                if ($validator->fails()) {
+                    return $this->sendError('', ['errors' => $validator->errors()]);
+                }
+            }
+            return true;
+        }
+
+        public function isDepositEnable()
+        {
+            return (setting_item('flight_deposit_enable') and setting_item('flight_deposit_amount'));
+        }
+
+        public function getDepositFomular()
+        {
+            return setting_item('flight_deposit_fomular', 'default');
+        }
+
+        public function getDepositType()
+        {
+            return setting_item('flight_deposit_type');
+        }
+
+        public function getDepositAmount()
+        {
+            return setting_item('flight_deposit_amount');
+        }
+
+        public function flightSeat()
+        {
+            return $this->hasMany(FlightSeat::class, 'flight_id')->orderBy('price');
         }
 
         public function getPriceInRanges($start_date, $end_date)
@@ -416,24 +682,10 @@
             return $totalPrice;
         }
 
-        public function addToCartValidate(Request $request)
+        public static function getBookingType()
         {
-            $rules = [
-                'flight_seat.*.number' => 'required',
-            ];
-            $messages = [
-                'flight_seat.*.number.required' => "Seat type number must be required"
-            ];
-            // Validation
-            if (!empty($rules)) {
-                $validator = Validator::make($request->all(), $rules, $messages);
-                if ($validator->fails()) {
-                    return $this->sendError('', ['errors' => $validator->errors()]);
-                }
-            }
-            return true;
+            return setting_item('flight_booking_type', 'by_day');
         }
-
 
         public function getBookingData()
         {
@@ -494,7 +746,7 @@
                     }
                 }
 
-                $booking_data['extra_price'] = array_values((array) $booking_data['extra_price']);
+                $booking_data['extra_price'] = array_values((array)$booking_data['extra_price']);
             }
 
             $list_fees = setting_item_array('flight_booking_buyer_fees');
@@ -523,29 +775,24 @@
             return $booking_data;
         }
 
-        public static function searchForMenu($q = false)
+        public static function isFormEnquiryAndBook()
         {
-            $query = static::select('id', 'title as name');
-            if (strlen($q)) {
-
-                $query->where('title', 'like', "%".$q."%");
+            $check = setting_item('booking_enquiry_for_Flight');
+            if (!empty($check) and setting_item('booking_enquiry_type') == "booking_and_enquiry") {
+                return true;
             }
-            $a = $query->limit(10)->get();
-            return $a;
+            return false;
         }
 
-        public static function getMinMaxPrice()
+        public static function getBookingEnquiryType()
         {
-            $min = FlightSeat::select(['price', 'flight_id'])->whereHas('flight', function (Builder $query) {
-                $query->where('status', 'publish');
-            })->min('price');
-            $max = FlightSeat::select(['price', 'flight_id'])->whereHas('flight', function (Builder $query) {
-                $query->where('status', 'publish');
-            })->max('price');
-            return [
-                $min ?? 0,
-                $max ?? 0
-            ];
+            $check = setting_item('booking_enquiry_for_Flight');
+            if (!empty($check)) {
+                if (setting_item('booking_enquiry_type') == "only_enquiry") {
+                    return "enquiry";
+                }
+            }
+            return "book";
         }
 
         public function getReviewEnable()
@@ -590,82 +837,9 @@
             return true;
         }
 
-        public static function getReviewStats()
-        {
-            $reviewStats = [];
-            if (!empty($list = setting_item("flight_review_stats", []))) {
-                $list = json_decode($list, true);
-                foreach ($list as $item) {
-                    $reviewStats[] = $item['title'];
-                }
-            }
-            return $reviewStats;
-        }
-
-        public function getReviewDataAttribute()
-        {
-            $list_score = [
-                'score_total'  => 0,
-                'score_text'   => __("Not rated"),
-                'total_review' => 0,
-                'rate_score'   => [],
-            ];
-            $dataTotalReview = $this->reviewClass::selectRaw(" AVG(rate_number) as score_total , COUNT(id) as total_review ")->where('object_id', $this->id)->where('object_model', $this->type)->where("status", "approved")->first();
-            if (!empty($dataTotalReview->score_total)) {
-                $list_score['score_total'] = number_format($dataTotalReview->score_total, 1);
-                $list_score['score_text'] = Review::getDisplayTextScoreByLever(round($list_score['score_total']));
-            }
-            if (!empty($dataTotalReview->total_review)) {
-                $list_score['total_review'] = $dataTotalReview->total_review;
-            }
-            $list_data_rate = $this->reviewClass::selectRaw('COUNT( CASE WHEN rate_number = 5 THEN rate_number ELSE NULL END ) AS rate_5,
-                                                            COUNT( CASE WHEN rate_number = 4 THEN rate_number ELSE NULL END ) AS rate_4,
-                                                            COUNT( CASE WHEN rate_number = 3 THEN rate_number ELSE NULL END ) AS rate_3,
-                                                            COUNT( CASE WHEN rate_number = 2 THEN rate_number ELSE NULL END ) AS rate_2,
-                                                            COUNT( CASE WHEN rate_number = 1 THEN rate_number ELSE NULL END ) AS rate_1 ')->where('object_id', $this->id)->where('object_model', $this->type)->where("status", "approved")->first()->toArray();
-            for ($rate = 5; $rate >= 1; $rate--) {
-                if (!empty($number = $list_data_rate['rate_'.$rate])) {
-                    $percent = ($number / $list_score['total_review']) * 100;
-                } else {
-                    $percent = 0;
-                }
-                $list_score['rate_score'][$rate] = [
-                    'title'   => $this->reviewClass::getDisplayTextScoreByLever($rate),
-                    'total'   => $number,
-                    'percent' => round($percent),
-                ];
-            }
-            return $list_score;
-        }
-
-        /**
-         * Get Score Review
-         *
-         * Using for loop Flight
-         */
-        public function getScoreReview()
-        {
-            $flight_id = $this->id;
-            $list_score = Cache::rememberForever('review_'.$this->type.'_'.$flight_id, function () use ($flight_id) {
-                $dataReview = $this->reviewClass::selectRaw(" AVG(rate_number) as score_total , COUNT(id) as total_review ")->where('object_id', $flight_id)->where('object_model', "Flight")->where("status", "approved")->first();
-                $score_total = !empty($dataReview->score_total) ? number_format($dataReview->score_total, 1) : 0;
-                return [
-                    'score_total'  => $score_total,
-                    'total_review' => !empty($dataReview->total_review) ? $dataReview->total_review : 0,
-                ];
-            });
-            $list_score['review_text'] = $list_score['score_total'] ? Review::getDisplayTextScoreByLever(round($list_score['score_total'])) : __("Not rated");
-            return $list_score;
-        }
-
         public function getNumberReviewsInService($status = false)
         {
             return $this->reviewClass::countReviewByServiceID($this->id, false, $status, $this->type) ?? 0;
-        }
-
-        public function getReviewList()
-        {
-            return $this->reviewClass::select(['id', 'title', 'content', 'rate_number', 'author_ip', 'status', 'created_at', 'vendor_id', 'create_user'])->where('object_id', $this->id)->where('object_model', 'Flight')->where("status", "approved")->orderBy("id", "desc")->with('author')->paginate(setting_item('flight_review_number_per_page', 5));
         }
 
         public function getNumberServiceInLocation($location)
@@ -673,7 +847,8 @@
             $number = 0;
             if (!empty($location)) {
                 $number = parent::join('bc_locations', function ($join) use ($location) {
-                    $join->on('bc_locations.id', '=', $this->table.'.location_id')->where('bc_locations._lft', '>=', $location->_lft)->where('bc_locations._rgt', '<=', $location->_rgt);
+                    $join->on('bc_locations.id', '=', $this->table.'.location_id')->where('bc_locations._lft', '>=',
+                        $location->_lft)->where('bc_locations._rgt', '<=', $location->_rgt);
                 })->where($this->table.".status", "publish")->with(['translations'])->count($this->table.".id");
             }
             if (empty($number)) {
@@ -688,11 +863,10 @@
         /**
          * @param $from
          * @param $to
-         * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+         * @return Builder[]|Collection
          */
         public function getBookingsInRange($from, $to)
         {
-
             $query = $this->bookingClass::query();
             $query->whereNotIn('status', ['draft']);
             $query->where('start_date', '<=', $to)->where('end_date', '>=', $from)->take(50);
@@ -701,13 +875,12 @@
             $query->where('object_model', $this->type);
 
             return $query->orderBy('id', 'asc')->get();
-
         }
-
 
         public function hasWishList()
         {
-            return $this->hasOne($this->userWishListClass, 'object_id', 'id')->where('object_model', $this->type)->where('user_id', Auth::id() ?? 0);
+            return $this->hasOne($this->userWishListClass, 'object_id', 'id')->where('object_model', $this->type)->where('user_id',
+                Auth::id() ?? 0);
         }
 
         public function isWishList()
@@ -718,37 +891,6 @@
                 }
             }
             return '';
-        }
-
-        public static function getServiceIconFeatured()
-        {
-            return "icofont-ui-flight";
-        }
-
-
-        public static function isEnable()
-        {
-            return setting_item('flight_disable') == false;
-        }
-
-        public function isDepositEnable()
-        {
-            return (setting_item('flight_deposit_enable') and setting_item('flight_deposit_amount'));
-        }
-
-        public function getDepositAmount()
-        {
-            return setting_item('flight_deposit_amount');
-        }
-
-        public function getDepositType()
-        {
-            return setting_item('flight_deposit_type');
-        }
-
-        public function getDepositFomular()
-        {
-            return setting_item('flight_deposit_fomular', 'default');
         }
 
         public function detailBookingEachDate($booking)
@@ -802,193 +944,6 @@
             return $allDates;
         }
 
-        public static function isEnableEnquiry()
-        {
-            if (!empty(setting_item('booking_enquiry_for_Flight'))) {
-                return true;
-            }
-            return false;
-        }
-
-        public static function isFormEnquiryAndBook()
-        {
-            $check = setting_item('booking_enquiry_for_Flight');
-            if (!empty($check) and setting_item('booking_enquiry_type') == "booking_and_enquiry") {
-                return true;
-            }
-            return false;
-        }
-
-        public static function getBookingEnquiryType()
-        {
-            $check = setting_item('booking_enquiry_for_Flight');
-            if (!empty($check)) {
-                if (setting_item('booking_enquiry_type') == "only_enquiry") {
-                    return "enquiry";
-                }
-            }
-            return "book";
-        }
-
-        public static function search(Request $request)
-        {
-            $orderBy = $request->input("orderby");
-            $model_flight = self::query()->where('status','publish');
-
-            if (!empty($request->start) and !empty($request->end)) {
-                $start = strtotime($request->start) < time() ? time() : strtotime($request->start);
-                $end = strtotime($request->end) < time() ? time() : strtotime($request->end);
-                $model_flight->where('departure_time', '>=', date('Y-m-d H:i:s ', $start));
-                $model_flight->Where('departure_time', '<=', date('Y-m-d H:i:s ', $end));
-            }
-
-            if (!empty($price_range = $request->query('price_range'))) {
-                $pri_from = explode(";", $price_range)[0];
-                $pri_to = explode(";", $price_range)[1];
-                $model_flight->where('min_price','<=',$pri_to)->where('min_price','>=',$pri_from);
-
-            }else{
-                $model_flight->whereHas('flightSeat');
-            }
-            if (!empty($request->from_where)) {
-                $model_flight->whereHas('airportFrom', function (Builder $builder) use ($request) {
-                    $builder->where('location_id', $request->from_where);
-                });
-            }
-            if (!empty($request->to_where)) {
-                $model_flight->whereHas('airportTo', function (Builder $builder) use ($request) {
-                    $builder->where('location_id', $request->to_where);
-                });
-            }
-            if (!empty($request->seat_type)) {
-                $argv = array_filter($request->seat_type, function ($v) {
-                    return $v != 0;
-                });
-                if (!empty($argv)) {
-                    $model_flight->whereHas('flightSeat', function (Builder $builder) use ($argv) {
-                        foreach ($argv as $item => $value) {
-                            $builder->orWhere(function (Builder $query) use ($value, $item) {
-                                $query->where('seat_type', $item)->where('max_passengers', '>=', $value);
-                            });
-                        }
-                    });
-                }
-            }
-
-            $terms = $request->query('terms');
-            if (is_array($terms) && !empty($terms)) {
-                $model_flight->join('bc_flight_term as tt', 'tt.target_id', "bc_flight.id")->whereIn('tt.term_id', $terms);
-            }
-
-
-            if (!empty($request->query('limit'))) {
-                $limit = $request->query('limit');
-            } else {
-                $limit = !empty(setting_item("flight_page_limit_item")) ? setting_item("flight_page_limit_item") : 9;
-            }
-
-            switch ($orderBy) {
-                case "price_low_high":
-                    $model_flight->orderBy(self::getTableName().".min_price", "asc");
-                    break;
-                case "price_high_low":
-                    $model_flight->orderBy(self::getTableName().".min_price", "desc");
-                    break;
-                default:
-                    $model_flight->orderBy(self::getTableName().".id", "desc");
-            }
-
-            $model_flight->with(['flightSeat', 'airportFrom', 'airportTo', 'airline']);
-            return $model_flight->paginate($limit);
-        }
-
-
-        public static function searchCustom(Request $request)
-        {
-            $model_Flight = parent::query()->select("bc_flight.*");
-            $model_Flight->where("bc_flight.status", "publish");
-            if (!empty($location_id = $request->query('location_id'))) {
-                $location = Location::query()->where('id', $location_id)->where("status", "publish")->first();
-                if (!empty($location)) {
-                    $model_Flight->join('bc_locations', function ($join) use ($location) {
-                        $join->on('bc_locations.id', '=', 'bc_flight.location_id')
-                            ->where('bc_locations._lft', '>=', $location->_lft)
-                            ->where('bc_locations._rgt', '<=', $location->_rgt);
-                    });
-                }
-            }
-            if (!empty($price_range = $request->query('price_range'))) {
-                $pri_from = explode(";", $price_range)[0];
-                $pri_to = explode(";", $price_range)[1];
-                $raw_sql_min_max = "( (IFNULL(bc_flight.sale_price,0) > 0 and bc_flight.sale_price >= ? ) OR (IFNULL(bc_flight.sale_price,0) <= 0 and bc_flight.price >= ? ) )
-                            AND ( (IFNULL(bc_flight.sale_price,0) > 0 and bc_flight.sale_price <= ? ) OR (IFNULL(bc_flight.sale_price,0) <= 0 and bc_flight.price <= ? ) )";
-                $model_Flight->WhereRaw($raw_sql_min_max, [$pri_from, $pri_from, $pri_to, $pri_to]);
-            }
-
-            $terms = $request->query('terms', []);
-            if ($term_id = $request->query('term_id')) {
-                $terms[] = $term_id;
-            }
-
-            if (is_array($terms) && !empty($terms)) {
-                $terms = Arr::where($terms, function ($value, $key) {
-                    return !is_null($value);
-                });
-                if (!empty($terms)) {
-                    $model_Flight->join('bc_flight_term as tt', 'tt.target_id', "bc_flight.id")->whereIn('tt.term_id', $terms);
-
-                }
-            }
-
-            $review_scores = $request->query('review_score');
-            if (is_array($review_scores) && !empty($review_scores)) {
-                $where_review_score = [];
-                $params = [];
-                foreach ($review_scores as $number) {
-                    $where_review_score[] = " ( bc_flight.review_score >= ? AND bc_flight.review_score <= ? ) ";
-                    $params[] = $number;
-                    $params[] = $number.'.9';
-                }
-                $sql_where_review_score = " ( ".implode("OR", $where_review_score)." )  ";
-                $model_Flight->WhereRaw($sql_where_review_score, $params);
-            }
-            if (!empty($lat = $request->query('map_lat')) and !empty($lgn = $request->query('map_lgn'))) {
-                $model_Flight->orderByRaw("POW((bc_flight.map_lng-?),2) + POW((bc_flight.map_lat-?),2)", [$lgn, $lat]);
-            }
-            $orderby = $request->input("orderby");
-            switch ($orderby) {
-                case "price_low_high":
-                    $raw_sql = "CASE WHEN IFNULL( bc_flight.sale_price, 0 ) > 0 THEN bc_flight.sale_price ELSE bc_flight.price END AS tmp_min_price";
-                    $model_Flight->selectRaw($raw_sql);
-                    $model_Flight->orderBy("tmp_min_price", "asc");
-                    break;
-                case "price_high_low":
-                    $raw_sql = "CASE WHEN IFNULL( bc_flight.sale_price, 0 ) > 0 THEN bc_flight.sale_price ELSE bc_flight.price END AS tmp_min_price";
-                    $model_Flight->selectRaw($raw_sql);
-                    $model_Flight->orderBy("tmp_min_price", "desc");
-                    break;
-                case "rate_high_low":
-                    $model_Flight->orderBy("review_score", "desc");
-                    break;
-                default:
-                    $model_Flight->orderBy("id", "desc");
-            }
-
-            $model_Flight->groupBy("bc_flight.id");
-
-            $max_guests = (int) ($request->query('adults') + $request->query('children'));
-            if ($max_guests) {
-                $model_Flight->where('max_guests', '>=', $max_guests);
-            }
-
-            if (!empty($request->query('limit'))) {
-                $limit = $request->query('limit');
-            } else {
-                $limit = !empty(setting_item("flight_page_limit_item")) ? setting_item("flight_page_limit_item") : 9;
-            }
-            return $model_Flight->with('flightSeat', 'airportFrom', 'airportTo', 'airline')->paginate($limit);
-        }
-
         public function dataForApi($forSingle = false)
         {
             $data = parent::dataForApi($forSingle);
@@ -1008,7 +963,8 @@
                 $data['default_state'] = $this->default_state;
                 $data['booking_fee'] = setting_item_array('flight_booking_buyer_fees');
                 if (!empty($location_id = $this->location_id)) {
-                    $related = parent::query()->where('location_id', $location_id)->where("status", "publish")->take(4)->whereNotIn('id', [$this->id])->with(['location', 'translations', 'hasWishList'])->get();
+                    $related = parent::query()->where('location_id', $location_id)->where("status", "publish")->take(4)->whereNotIn('id',
+                        [$this->id])->with(['location', 'translations', 'hasWishList'])->get();
                     $data['related'] = $related->map(function ($related) {
                             return $related->dataForApi();
                         }) ?? null;
@@ -1020,45 +976,96 @@
             return $data;
         }
 
-        static public function getClassAvailability()
+        public function getReviewDataAttribute()
         {
-            return "";
-        }
-
-        static public function getFiltersSearch()
-        {
-            $min_max_price = self::getMinMaxPrice();
-            return [
-                [
-                    "title"     => __("Filter Price"),
-                    "field"     => "price_range",
-                    "position"  => "1",
-                    "min_price" => floor(Currency::convertPrice($min_max_price[0])),
-                    "max_price" => ceil(Currency::convertPrice($min_max_price[1])),
-                ],
-                [
-                    "title"    => __("Review Score"),
-                    "field"    => "review_score",
-                    "position" => "2",
-                    "min"      => "1",
-                    "max"      => "5",
-                ],
-                [
-                    "title"    => __("Attributes"),
-                    "field"    => "terms",
-                    "position" => "3",
-                    "data"     => Attributes::getAllAttributesForApi("flight")
-                ]
+            $list_score = [
+                'score_total'  => 0,
+                'score_text'   => __("Not rated"),
+                'total_review' => 0,
+                'rate_score'   => [],
             ];
+            $dataTotalReview = $this->reviewClass::selectRaw(" AVG(rate_number) as score_total , COUNT(id) as total_review ")->where('object_id',
+                $this->id)->where('object_model', $this->type)->where("status", "approved")->first();
+            if (!empty($dataTotalReview->score_total)) {
+                $list_score['score_total'] = number_format($dataTotalReview->score_total, 1);
+                $list_score['score_text'] = Review::getDisplayTextScoreByLever(round($list_score['score_total']));
+            }
+            if (!empty($dataTotalReview->total_review)) {
+                $list_score['total_review'] = $dataTotalReview->total_review;
+            }
+            $list_data_rate = $this->reviewClass::selectRaw('COUNT( CASE WHEN rate_number = 5 THEN rate_number ELSE NULL END ) AS rate_5,
+                                                            COUNT( CASE WHEN rate_number = 4 THEN rate_number ELSE NULL END ) AS rate_4,
+                                                            COUNT( CASE WHEN rate_number = 3 THEN rate_number ELSE NULL END ) AS rate_3,
+                                                            COUNT( CASE WHEN rate_number = 2 THEN rate_number ELSE NULL END ) AS rate_2,
+                                                            COUNT( CASE WHEN rate_number = 1 THEN rate_number ELSE NULL END ) AS rate_1 ')->where('object_id',
+                $this->id)->where('object_model', $this->type)->where("status", "approved")->first()->toArray();
+            for ($rate = 5; $rate >= 1; $rate--) {
+                if (!empty($number = $list_data_rate['rate_'.$rate])) {
+                    $percent = ($number / $list_score['total_review']) * 100;
+                } else {
+                    $percent = 0;
+                }
+                $list_score['rate_score'][$rate] = [
+                    'title'   => $this->reviewClass::getDisplayTextScoreByLever($rate),
+                    'total'   => $number,
+                    'percent' => round($percent),
+                ];
+            }
+            return $list_score;
         }
 
-        public static function getBookingType()
+        public static function getReviewStats()
         {
-            return setting_item('flight_booking_type', 'by_day');
+            $reviewStats = [];
+            if (!empty($list = setting_item("flight_review_stats", []))) {
+                $list = json_decode($list, true);
+                foreach ($list as $item) {
+                    $reviewStats[] = $item['title'];
+                }
+            }
+            return $reviewStats;
+        }
+
+        public function getReviewList()
+        {
+            return $this->reviewClass::select([
+                'id',
+                'title',
+                'content',
+                'rate_number',
+                'author_ip',
+                'status',
+                'created_at',
+                'vendor_id',
+                'create_user',
+            ])->where('object_id', $this->id)->where('object_model', 'Flight')->where("status", "approved")->orderBy("id",
+                "desc")->with('author')->paginate(setting_item('flight_review_number_per_page', 5));
         }
 
 
 //    new module flight
+
+        /**
+         * Get Score Review
+         *
+         * Using for loop Flight
+         */
+        public function getScoreReview()
+        {
+            $flight_id = $this->id;
+            $list_score = Cache::rememberForever('review_'.$this->type.'_'.$flight_id, function () use ($flight_id) {
+                $dataReview = $this->reviewClass::selectRaw(" AVG(rate_number) as score_total , COUNT(id) as total_review ")->where('object_id',
+                    $flight_id)->where('object_model', "Flight")->where("status", "approved")->first();
+                $score_total = !empty($dataReview->score_total) ? number_format($dataReview->score_total, 1) : 0;
+                return [
+                    'score_total'  => $score_total,
+                    'total_review' => !empty($dataReview->total_review) ? $dataReview->total_review : 0,
+                ];
+            });
+            $list_score['review_text'] = $list_score['score_total'] ? Review::getDisplayTextScoreByLever(round($list_score['score_total'])) : __("Not rated");
+            return $list_score;
+        }
+
         public function airportFrom()
         {
             return $this->hasOne(Airport::class, 'id', 'airport_from')->withDefault();
@@ -1074,11 +1081,6 @@
             return $this->hasOne(Airline::class, 'id', 'airline_id')->withDefault();
         }
 
-        public function flightSeat()
-        {
-            return $this->hasMany(FlightSeat::class, 'flight_id')->orderBy('price');
-        }
-
         public function bookingPassengers()
         {
             return $this->hasMany(BookingPassengers::class, 'flight_id')->whereHas('booking', function (Builder $query) {
@@ -1090,16 +1092,17 @@
         {
             return $this->hasMany(Booking::class, 'flight_id');
         }
-        public function getDurationAttribute(){
 
-            if(!empty($this->arrival_time) and !empty($this->departure_time)){
+        public function getDurationAttribute()
+        {
+            if (!empty($this->arrival_time) and !empty($this->departure_time)) {
                 $interval = $this->arrival_time->diff($this->departure_time);
                 return $interval->format('%h');
-            }else{
+            } else {
                 return 0;
             }
-
         }
+
         public function getCanBookAttribute()
         {
             $canBook = [];
@@ -1107,8 +1110,8 @@
             foreach ($this->flightSeat as &$value) {
                 if (!empty($bookingPassengers[$value->seat_type])) {
                     $canBook[$value->seat_type] = $value->max_passengers - $bookingPassengers[$value->seat_type];
-                }else{
-                    $canBook[$value->seat_type]= $value->max_passengers;
+                } else {
+                    $canBook[$value->seat_type] = $value->max_passengers;
                 }
             }
             if (array_sum($canBook) > 0) {
@@ -1117,7 +1120,6 @@
                 return false;
             }
             return true;
-
         }
 
     }

@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="nav-enquiry" v-if="is_form_enquiry_and_book">
-                <div class="enquiry-item active" >
+                <div class="enquiry-item active">
                     <span>{{ __("Book") }}</span>
                 </div>
                 <div class="enquiry-item" data-toggle="modal" data-target="#enquiry_form_modal">
@@ -27,7 +27,8 @@
             </div>
             <div class="form-book" :class="{'d-none':enquiry_type!='book'}">
                 <div class="form-content">
-                    <div class="form-group form-date-field form-date-search clearfix " data-format="{{get_moment_date_format()}}">
+                    <div class="form-group form-date-field form-date-search clearfix "
+                         data-format="{{get_moment_date_format()}}">
                         <div class="date-wrapper clearfix" @click="openStartDate">
                             <div class="check-in-wrapper">
                                 <label>{{__("Select Dates")}}</label>
@@ -59,7 +60,7 @@
                         </div>
                         <input type="text" class="start_date" ref="start_date" style="height: 1px; visibility: hidden">
                     </div>
-                    <div class="" >
+                    <div class="">
                         <div class="form-group form-guest-search">
                             <div class="guest-wrapper d-flex justify-content-between align-items-center">
                                 <div class="flex-grow-1">
@@ -68,7 +69,8 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <div class="input-number-group">
-                                        <i class="icon ion-ios-remove-circle-outline" @click="minusPersonType('adults')"></i>
+                                        <i class="icon ion-ios-remove-circle-outline"
+                                           @click="minusPersonType('adults')"></i>
                                         <span class="input"><input type="number" v-model="adults" min="1"/></span>
                                         <i class="icon ion-ios-add-circle-outline" @click="addPersonType('adults')"></i>
                                     </div>
@@ -83,9 +85,11 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <div class="input-number-group">
-                                        <i class="icon ion-ios-remove-circle-outline" @click="minusPersonType('children')"></i>
+                                        <i class="icon ion-ios-remove-circle-outline"
+                                           @click="minusPersonType('children')"></i>
                                         <span class="input"><input type="number" v-model="children" min="0"/></span>
-                                        <i class="icon ion-ios-add-circle-outline" @click="addPersonType('children')"></i>
+                                        <i class="icon ion-ios-add-circle-outline"
+                                           @click="addPersonType('children')"></i>
                                     </div>
                                 </div>
                             </div>
@@ -96,7 +100,8 @@
                         <div class="form-group " v-for="(type,index) in extra_price">
                             <div class="extra-price-wrap d-flex justify-content-between">
                                 <div class="flex-grow-1">
-                                    <label><input type="checkbox" true-value="1" false-value="0" v-model="type.enable"> @{{type.name}}</label>
+                                    <label><input type="checkbox" true-value="1" false-value="0" v-model="type.enable">
+                                        @{{type.name}}</label>
                                     <div class="render" v-if="type.price_type">(@{{type.price_type}})</div>
                                 </div>
                                 <div class="flex-shrink-0">@{{type.price_html}}
@@ -108,7 +113,8 @@
                         <div class="extra-price-wrap d-flex justify-content-between" v-for="(type,index) in buyer_fees">
                             <div class="flex-grow-1">
                                 <label>@{{type.type_name}}
-                                    <i class="icofont-info-circle" v-if="type.desc" data-toggle="tooltip" data-placement="top" :title="type.type_desc"></i>
+                                    <i class="icofont-info-circle" v-if="type.desc" data-toggle="tooltip"
+                                       data-placement="top" :title="type.type_desc"></i>
                                 </label>
                                 <div class="render" v-if="type.price_type">(@{{type.price_type}})</div>
                             </div>
@@ -116,7 +122,7 @@
                                 <div class="unit" v-if='type.unit == "percent"'>
                                     @{{ type.price }}%
                                 </div>
-                                <div class="unit" v-else >
+                                <div class="unit" v-else>
                                     @{{ formatMoney(type.price) }}
                                 </div>
                             </div>
@@ -143,12 +149,14 @@
                             @endif
                         </i>
                     </p>
-                    <a class="btn btn-large" @click="doSubmit($event)" :class="{'disabled':onSubmit,'btn-success':(step == 2),'btn-primary':step == 1}" name="submit">
+                    <a class="btn btn-large" @click="doSubmit($event)"
+                       :class="{'disabled':onSubmit,'btn-success':(step == 2),'btn-primary':step == 1}" name="submit">
                         <span v-if="step == 1">{{__("BOOK NOW")}}</span>
                         <span v-if="step == 2">{{__("Book Now")}}</span>
                         <i v-show="onSubmit" class="fa fa-spinner fa-spin"></i>
                     </a>
-                    <div class="alert-text mt10" v-show="message.content" v-html="message.content" :class="{'danger':!message.type,'success':message.type}"></div>
+                    <div class="alert-text mt10" v-show="message.content" v-html="message.content"
+                         :class="{'danger':!message.type,'success':message.type}"></div>
                 </div>
             </div>
             <div class="form-send-enquiry" v-show="enquiry_type=='enquiry'">

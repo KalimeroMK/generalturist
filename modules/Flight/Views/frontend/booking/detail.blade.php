@@ -7,7 +7,8 @@
                 <div>
                     @if($image_url = $service->airline->image_url)
                         @if(!empty($disable_lazyload))
-                            <img src="{{$image_url}}" class="img-responsive" alt="{!! clean($service->airline->name) !!}">
+                            <img src="{{$image_url}}" class="img-responsive"
+                                 alt="{!! clean($service->airline->name) !!}">
                         @else
                             {!! get_image_tag($service->airline->image_id,'medium',['class'=>'img-responsive','alt'=>$service->airline->name]) !!}
                         @endif
@@ -90,7 +91,8 @@
                     @foreach($flight_seat as $type)
                         @if(!empty($type['number']))
                             <li>
-                                <div class="label">{{ $type['seat_type']['name']}}: {{$type['number']}} * {{format_money($type['price'])}}</div>
+                                <div class="label">{{ $type['seat_type']['name']}}: {{$type['number']}}
+                                    * {{format_money($type['price'])}}</div>
                                 <div class="val">
                                     {{format_money($type['price'] * $type['number'])}}
                                 </div>
@@ -135,7 +137,8 @@
                         <li>
                             <div class="label">
                                 {{$item['name_'.$lang_local] ?? $item['name']}}
-                                <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top" title="{{ $item['desc_'.$lang_local] ?? $item['desc'] }}"></i>
+                                <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top"
+                                   title="{{ $item['desc_'.$lang_local] ?? $item['desc'] }}"></i>
                                 @if(!empty($item['per_person']) and $item['per_person'] == "on")
                                     : {{$booking->total_guests}} * {{format_money( $fee_price )}}
                                 @endif

@@ -1,7 +1,7 @@
 <div class="form-group">
     <div class="row">
 
-        <label class="col-md-3 text-right col-form-label" >{{$field['name_'.app()->getLocale()] ?? $field['name'] ?? $field['id']}}
+        <label class="col-md-3 text-right col-form-label">{{$field['name_'.app()->getLocale()] ?? $field['name'] ?? $field['id']}}
 
             @if(!empty($field['required']))
                 <span class="text-danger">*</span>
@@ -15,7 +15,9 @@
                     @foreach($old as $file)
                         <div>
                             <input type="hidden" name="verify_data_{{$field['id']}}[]" value="{{json_encode($file)}}">
-                            <a target="_blank" href="{{route('media.private.view',['path'=>$file['path'] ?? '','v'=>uniqid()])}}" class="file-item">{{$file['name']}} <i class="fa fa-download"></i></a>
+                            <a target="_blank"
+                               href="{{route('media.private.view',['path'=>$file['path'] ?? '','v'=>uniqid()])}}"
+                               class="file-item">{{$file['name']}} <i class="fa fa-download"></i></a>
                         </div>
                     @endforeach
                 @endif
@@ -23,7 +25,8 @@
 
             @if(empty($only_show_data))
                 <span class="btn btn-primary btn-sm "><i class="fa fa-upload"></i> {{__('Select Files')}}
-                    <input class="btn-upload-private-file" multiple data-name="verify_data_{{$field['id']}}[]"  data-multiple="true" type="file" >
+                    <input class="btn-upload-private-file" multiple data-name="verify_data_{{$field['id']}}[]"
+                           data-multiple="true" type="file">
                 </span>
             @else
                 @if(empty($field['data']))

@@ -15,7 +15,8 @@
                     @endforeach
                 @endif
             </ul>
-            <p>{{__('You can check your information here:')}} <a href="{{route('user.verification.index')}}">{{__('View verification data')}}</a></p>
+            <p>{{__('You can check your information here:')}} <a
+                        href="{{route('user.verification.index')}}">{{__('View verification data')}}</a></p>
 
             <br>
             <p>{{__('Regards')}},<br>{{setting_item('site_title')}}</p>

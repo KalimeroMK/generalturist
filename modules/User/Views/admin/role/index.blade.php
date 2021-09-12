@@ -4,8 +4,10 @@
         <div class="d-flex justify-content-between mb20">
             <h1 class="title-bar">{{ __('Role')}}</h1>
             <div class="title-actions">
-                <a href="{{route('user.admin.role.verifyFields')}}" class="btn btn-warning"><i class="fa fa-check-circle-o"></i> {{ __('Verify Configs')}}</a>
-                <a href="{{route('user.admin.role.permission_matrix')}}" class="btn btn-info">{{ __('Permission Matrix')}}</a>
+                <a href="{{route('user.admin.role.verifyFields')}}" class="btn btn-warning"><i
+                            class="fa fa-check-circle-o"></i> {{ __('Verify Configs')}}</a>
+                <a href="{{route('user.admin.role.permission_matrix')}}"
+                   class="btn btn-info">{{ __('Permission Matrix')}}</a>
                 <a href="{{route('user.admin.role.create')}}" class="btn btn-primary">{{ __('Add new role')}}</a>
             </div>
         </div>

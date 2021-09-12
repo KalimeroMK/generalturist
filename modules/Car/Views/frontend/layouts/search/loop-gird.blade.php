@@ -1,5 +1,5 @@
 @php
-    $translation = $row->translateOrOrigin(app()->getLocale());
+    $translation = $row->translateOrOrigin(app()->getLocale())
 @endphp
 <div class="item-loop {{$wrap_class ?? ''}}">
     @if($row->is_featured == "1")
@@ -26,7 +26,7 @@
             @if($row->is_instant)
                 <i class="fa fa-bolt d-none"></i>
             @endif
-                {!! clean($translation->title) !!}
+            {!! clean($translation->title) !!}
         </a>
         @if($row->discount_percent)
             <div class="sale_info">{{$row->discount_percent}}</div>
@@ -40,7 +40,7 @@
     </div>
     <div class="amenities">
         @if($row->passenger)
-            <span class="amenity total" data-toggle="tooltip"  title="{{ __("Passenger") }}">
+            <span class="amenity total" data-toggle="tooltip" title="{{ __("Passenger") }}">
                 <i class="input-icon field-icon icon-passenger  "></i>
                 <span class="text">
                     {{$row->passenger}}
@@ -56,7 +56,7 @@
             </span>
         @endif
         @if($row->baggage)
-            <span class="amenity bath" data-toggle="tooltip" title="{{__("Baggage")}}" >
+            <span class="amenity bath" data-toggle="tooltip" title="{{__("Baggage")}}">
                 <i class="input-icon field-icon icon-baggage"></i>
                 <span class="text">
                     {{$row->baggage}}
@@ -64,7 +64,7 @@
             </span>
         @endif
         @if($row->door)
-            <span class="amenity size" data-toggle="tooltip" title="{{__("Door")}}" >
+            <span class="amenity size" data-toggle="tooltip" title="{{__("Door")}}">
                 <i class="input-icon field-icon icon-door"></i>
                 <span class="text">
                     {{$row->door}}

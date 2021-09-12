@@ -1,5 +1,5 @@
 @php
-    $translation = $row->translateOrOrigin(app()->getLocale());
+    $translation = $row->translateOrOrigin(app()->getLocale())
 @endphp
 <div class="item-loop {{$wrap_class ?? ''}}">
     @if($row->is_featured == "1")
@@ -37,7 +37,7 @@
             @if($row->is_instant)
                 <i class="fa fa-bolt d-none"></i>
             @endif
-                {!! clean($translation->title) !!}
+            {!! clean($translation->title) !!}
         </a>
         @if($row->discount_percent)
             <div class="sale_info">{{$row->discount_percent}}</div>
@@ -50,22 +50,23 @@
         @endif
     </div>
     @if(setting_item('hotel_enable_review'))
-    <?php
-    $reviewData = $row->getScoreReview();
-    $score_total = $reviewData['score_total'];
-    ?>
-    <div class="service-review">
+        <?php
+        $reviewData = $row->getScoreReview();
+        $score_total = $reviewData['score_total'];
+        ?>
+        <div class="service-review">
         <span class="rate">
-            @if($reviewData['total_review'] > 0) {{$score_total}}/5 @endif <span class="rate-text">{{$reviewData['review_text']}}</span>
+            @if($reviewData['total_review'] > 0) {{$score_total}}/5 @endif <span
+                    class="rate-text">{{$reviewData['review_text']}}</span>
         </span>
-        <span class="review">
+            <span class="review">
              @if($reviewData['total_review'] > 1)
-                {{ __(":number Reviews",["number"=>$reviewData['total_review'] ]) }}
-            @else
-                {{ __(":number Review",["number"=>$reviewData['total_review'] ]) }}
-            @endif
+                    {{ __(":number Reviews",["number"=>$reviewData['total_review'] ]) }}
+                @else
+                    {{ __(":number Review",["number"=>$reviewData['total_review'] ]) }}
+                @endif
         </span>
-    </div>
+        </div>
     @endif
     <div class="info">
         <div class="g-price">

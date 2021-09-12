@@ -14,21 +14,27 @@
                 </thead>
                 @foreach(config("booking.services") as $item=>$value)
                     <?php
-                        $meta = $row->meta->where('post_type',$value)->first();
-                    ;?>
+                    $meta = $row->meta->where('post_type', $value)->first();
+                    ?>
                     <tr>
                         <td>
-                            <input style="display: inline-block" type="checkbox" name="services_options[{{$item}}][enable]" @if(@$meta->enable==1) checked @endif value="1">
+                            <input style="display: inline-block" type="checkbox"
+                                   name="services_options[{{$item}}][enable]" @if(@$meta->enable==1) checked
+                                   @endif value="1">
                         </td>
-                        <td><input type="hidden" name="services_options[{{$item}}][post_type]" value="{{$item}}">{{call_user_func([$value,'getModelName'])}}</td>
+                        <td><input type="hidden" name="services_options[{{$item}}][post_type]"
+                                   value="{{$item}}">{{call_user_func([$value,'getModelName'])}}</td>
                         <td>
-                            <input type="number" value="{{@$meta->maximum_create}}" placeholder="Items" name="services_options[{{$item}}][maximum_create]" class="form-control">
+                            <input type="number" value="{{@$meta->maximum_create}}" placeholder="Items"
+                                   name="services_options[{{$item}}][maximum_create]" class="form-control">
                         </td>
                         <td>
-                            <input type="checkbox" name="services_options[{{$item}}][auto_publish]" @if(@$meta->auto_publish==1) checked @endif value="1">
+                            <input type="checkbox" name="services_options[{{$item}}][auto_publish]"
+                                   @if(@$meta->auto_publish==1) checked @endif value="1">
                         </td>
                         <td>
-                            <input type="number" value="{{@$meta->commission}}" placeholder="Commission" name="services_options[{{$item}}][commission]" class="form-control">
+                            <input type="number" value="{{@$meta->commission}}" placeholder="Commission"
+                                   name="services_options[{{$item}}][commission]" class="form-control">
                         </td>
                     </tr>
                 @endforeach

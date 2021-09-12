@@ -2,29 +2,29 @@
     <table class="table table-striped table-inverse mb-1">
         <tbody>
         @php
-        $array = [];
-        $current_price = 0;
-        $current_from = 0;
-        foreach ($rows as $key => $item){
-            if($booking->getMeta("booking_type") == "by_day"){
-                $item['to'] = $item['from'];
-                $item['to_html'] = $item['from_html'];
+            $array = [];
+            $current_price = 0;
+            $current_from = 0;
+            foreach ($rows as $key => $item){
+                if($booking->getMeta("booking_type") == "by_day"){
+                    $item['to'] = $item['from'];
+                    $item['to_html'] = $item['from_html'];
+                }
+                if(empty($array)){
+                    $current_price = $item['price'];
+                    $current_from = $item['from'];
+                    $array[$item['from']] = $item;
+                    continue;
+                }
+                if($current_price == $item['price']){
+                    $array[$current_from]['to'] = $item['to'];
+                    $array[$current_from]['to_html'] = $item['to_html'];
+                }else{
+                    $current_price = $item['price'];
+                    $current_from = $item['from'];
+                    $array[$item['from']] = $item;
+                }
             }
-            if(empty($array)){
-                $current_price = $item['price'];
-                $current_from = $item['from'];
-                $array[$item['from']] = $item;
-                continue;
-            }
-            if($current_price == $item['price']){
-                $array[$current_from]['to'] = $item['to'];
-                $array[$current_from]['to_html'] = $item['to_html'];
-            }else{
-                $current_price = $item['price'];
-                $current_from = $item['from'];
-                $array[$item['from']] = $item;
-            }
-        }
         @endphp
         @foreach($array as $item=>$value)
             @php

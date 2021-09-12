@@ -1,13 +1,14 @@
 <?php
-namespace Modules\Flight\Models;
 
-use App\BaseModel;
+    namespace Modules\Flight\Models;
 
-class FlightTerm extends BaseModel
-{
-    protected $table = 'bravo_flight_term';
-    protected $fillable = [
-        'term_id',
-        'target_id'
-    ];
-}
+    use App\BaseModel;
+
+    class FlightTerm extends BaseModel
+    {
+        protected $table = 'bravo_flight_term';
+        protected $fillable = [
+            'term_id',
+            'target_id',
+        ];
+    }

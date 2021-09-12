@@ -1,6 +1,6 @@
 @foreach($rows as $row)
     @php
-        $translation = $row->translateOrOrigin(app()->getLocale()); @endphp
+        $translation = $row->translateOrOrigin(app()->getLocale()) @endphp
     <div class="post_item ">
         <div class="header">
             @if($image_tag = get_image_tag($row->image_id,'full',['alt'=>$translation->title]))
@@ -10,9 +10,9 @@
                     </a>
                 </header>
                 <div class="cate">
-                    @php $category = $row->getCategory; @endphp
+                    @php $category = $row->getCategory @endphp
                     @if(!empty($category))
-                        @php $t = $category->translateOrOrigin(app()->getLocale()); @endphp
+                        @php $t = $category->translateOrOrigin(app()->getLocale()) @endphp
                         <ul>
                             <li>
                                 <a href="{{$category->getDetailUrl(app()->getLocale())}}">
@@ -32,7 +32,8 @@
                         @if(!empty($row->getAuthor))
                             <li>
                                 @if($avatar_url = $row->getAuthor->getAvatarUrl())
-                                    <img class="avatar" src="{{$avatar_url}}" alt="{{$row->getAuthor->getDisplayName()}}">
+                                    <img class="avatar" src="{{$avatar_url}}"
+                                         alt="{{$row->getAuthor->getDisplayName()}}">
                                 @else
                                     <span class="avatar-text">{{ucfirst($row->getAuthor->getDisplayName()[0])}}</span>
                                 @endif

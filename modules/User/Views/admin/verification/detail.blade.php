@@ -1,7 +1,8 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <form action="{{route('user.admin.verification.store',['id'=>$row->id])}}" method="post" class="needs-validation" novalidate>
+    <form action="{{route('user.admin.verification.store',['id'=>$row->id])}}" method="post" class="needs-validation"
+          novalidate>
         @csrf
         <div class="container">
             <div class="d-flex justify-content-between mb20">
@@ -19,11 +20,11 @@
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
-                                        <tr>
-                                            <th>{{__('No')}}</th>
-                                            <th>{{__("Information")}}</th>
-                                            <th width="200px">{{__("Mark as verified")}}</th>
-                                        </tr>
+                                    <tr>
+                                        <th>{{__('No')}}</th>
+                                        <th>{{__("Information")}}</th>
+                                        <th width="200px">{{__("Mark as verified")}}</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     @php($only_show_data = true)
@@ -53,7 +54,8 @@
                                                 @endswitch
                                             </td>
                                             <td>
-                                                <input @if($row->isVerifiedField($field['id'])) checked @endif type="checkbox" name="fields[]" value="{{$field['id']}}" >
+                                                <input @if($row->isVerifiedField($field['id'])) checked
+                                                       @endif type="checkbox" name="fields[]" value="{{$field['id']}}">
                                             </td>
                                         </tr>
                                         @php($i ++)

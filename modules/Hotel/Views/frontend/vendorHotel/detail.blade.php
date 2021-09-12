@@ -10,7 +10,8 @@
                 <a class="btn btn-info" href="{{route('hotel.vendor.room.index',['hotel_id'=>$row->id])}}">
                     <i class="fa fa-hand-o-right"></i> {{__("Manage Rooms")}}
                 </a>
-                <a href="{{route('hotel.vendor.room.availability.index',['hotel_id'=>$row->id])}}" class="btn btn-warning">
+                <a href="{{route('hotel.vendor.room.availability.index',['hotel_id'=>$row->id])}}"
+                   class="btn btn-warning">
                     <i class="fa fa-calendar"></i> {{__("Availability Rooms")}}
                 </a>
             </div>
@@ -21,16 +22,18 @@
         @include('Language::admin.navigation')
     @endif
     <div class="lang-content-box">
-        <form action="{{route('hotel.vendor.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}" method="post">
+        <form action="{{route('hotel.vendor.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}"
+              method="post">
             @csrf
             <div class="form-add-service">
                 <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                    <a data-toggle="tab" href="#nav-tour-content" aria-selected="true" class="active">{{__("1. Content")}}</a>
+                    <a data-toggle="tab" href="#nav-tour-content" aria-selected="true"
+                       class="active">{{__("1. Content")}}</a>
                     <a data-toggle="tab" href="#nav-tour-location" aria-selected="false">{{__("2. Locations")}}</a>
                     @if(is_default_lang())
                         <a data-toggle="tab" href="#nav-tour-pricing" aria-selected="false">{{__("3. Pricing")}}</a>
                         <a data-toggle="tab" href="#nav-attribute" aria-selected="false">{{__("4. Attributes")}}</a>
-{{--                        <a data-toggle="tab" href="#nav-ical" aria-selected="false">{{__("5. Ical")}}</a>--}}
+                        {{--                        <a data-toggle="tab" href="#nav-ical" aria-selected="false">{{__("5. Ical")}}</a>--}}
                     @endif
                 </div>
                 <div class="tab-content" id="nav-tabContent">
@@ -54,9 +57,9 @@
                         <div class="tab-pane fade" id="nav-attribute">
                             @include('Hotel::admin/hotel/attributes')
                         </div>
-{{--                        <div class="tab-pane fade" id="nav-ical">--}}
-{{--                            @include('Hotel::admin/hotel/ical')--}}
-{{--                        </div>--}}
+                        {{--                        <div class="tab-pane fade" id="nav-ical">--}}
+                        {{--                            @include('Hotel::admin/hotel/ical')--}}
+                        {{--                        </div>--}}
                     @endif
                 </div>
             </div>
@@ -67,7 +70,7 @@
     </div>
 @endsection
 @section('footer')
-    <script type="text/javascript" src="{{ asset('libs/tinymce/js/tinymce/tinymce.min.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('libs/tinymce/js/tinymce/tinymce.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/condition.js?_ver='.config('app.version')) }}"></script>
     {!! App\Helpers\MapEngine::scripts() !!}
     <script>
@@ -75,7 +78,7 @@
             new BravoMapEngine('map_content', {
                 fitBounds: true,
                 center: [{{$row->map_lat ?? "51.505"}}, {{$row->map_lng ?? "-0.09"}}],
-                zoom:{{$row->map_zoom ?? "8"}},
+                zoom: {{$row->map_zoom ?? "8"}},
                 ready: function (engineMap) {
                     @if($row->map_lat && $row->map_lng)
                     engineMap.addMarker([{{$row->map_lat}}, {{$row->map_lng}}], {
@@ -93,8 +96,8 @@
                     engineMap.on('zoom_changed', function (zoom) {
                         $("input[name=map_zoom]").attr("value", zoom);
                     });
-                    if(bookingCore.map_provider === "gmap"){
-                        engineMap.searchBox($('#customPlaceAddress'),function (dataLatLng) {
+                    if (bookingCore.map_provider === "gmap") {
+                        engineMap.searchBox($('#customPlaceAddress'), function (dataLatLng) {
                             engineMap.clearMarkers();
                             engineMap.addMarker(dataLatLng, {
                                 icon_options: {}
@@ -103,7 +106,7 @@
                             $("input[name=map_lng]").attr("value", dataLatLng[1]);
                         });
                     }
-                    engineMap.searchBox($('.bravo_searchbox'),function (dataLatLng) {
+                    engineMap.searchBox($('.bravo_searchbox'), function (dataLatLng) {
                         engineMap.clearMarkers();
                         engineMap.addMarker(dataLatLng, {
                             icon_options: {}

@@ -43,22 +43,29 @@
             </div>
             <div class="control-action">
                 @if(!empty($recovery))
-                    <a href="{{ route("flight.vendor.restore",[$row->id]) }}" class="btn btn-recovery btn-primary" data-confirm="{{__('"Do you want to recovery?"')}}">{{__("Recovery")}}</a>
+                    <a href="{{ route("flight.vendor.restore",[$row->id]) }}" class="btn btn-recovery btn-primary"
+                       data-confirm="{{__('"Do you want to recovery?"')}}">{{__("Recovery")}}</a>
                     @if(Auth::user()->hasPermissionTo('flight_delete'))
-                        <a href="{{ route("flight.vendor.delete",['id'=>$row->id,'permanently_delete'=>1]) }}" class="btn btn-danger" data-confirm="<?php echo e(__("Do you want to permanently delete?")); ?>">{{__("Del")}}</a>
+                        <a href="{{ route("flight.vendor.delete",['id'=>$row->id,'permanently_delete'=>1]) }}"
+                           class="btn btn-danger"
+                           data-confirm="<?php echo e(__("Do you want to permanently delete?")); ?>">{{__("Del")}}</a>
                     @endif
                 @else
                     @if(Auth::user()->hasPermissionTo('flight_update'))
-                        <a href="{{ route("flight.vendor.edit",[$row->id]) }}" class="btn btn-warning">{{__("Edit")}}</a>
+                        <a href="{{ route("flight.vendor.edit",[$row->id]) }}"
+                           class="btn btn-warning">{{__("Edit")}}</a>
                     @endif
                     @if(Auth::user()->hasPermissionTo('flight_delete'))
-                        <a href="{{ route("flight.vendor.delete",[$row->id]) }}" class="btn btn-danger" data-confirm="<?php echo e(__("Do you want to delete?")); ?>">{{__("Del")}}</a>
+                        <a href="{{ route("flight.vendor.delete",[$row->id]) }}" class="btn btn-danger"
+                           data-confirm="<?php echo e(__("Do you want to delete?")); ?>">{{__("Del")}}</a>
                     @endif
                     @if($row->status == 'publish')
-                        <a href="{{ route("flight.vendor.bulk_edit",[$row->id,'action' => "make-hide"]) }}" class="btn btn-secondary">{{__("Make hide")}}</a>
+                        <a href="{{ route("flight.vendor.bulk_edit",[$row->id,'action' => "make-hide"]) }}"
+                           class="btn btn-secondary">{{__("Make hide")}}</a>
                     @endif
                     @if($row->status == 'draft')
-                        <a href="{{ route("flight.vendor.bulk_edit",[$row->id,'action' => "make-publish"]) }}" class="btn btn-success">{{__("Make publish")}}</a>
+                        <a href="{{ route("flight.vendor.bulk_edit",[$row->id,'action' => "make-publish"]) }}"
+                           class="btn btn-success">{{__("Make publish")}}</a>
                     @endif
                 @endif
             </div>

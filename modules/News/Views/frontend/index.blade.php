@@ -15,7 +15,8 @@
             }
         @endphp
         @if(!empty($title_page))
-            <div class="bravo_banner" @if($bg = setting_item("news_page_list_banner")) style="background-image: url({{get_file_url($bg,'full')}})" @endif >
+            <div class="bravo_banner"
+                 @if($bg = setting_item("news_page_list_banner")) style="background-image: url({{get_file_url($bg,'full')}})" @endif >
                 <div class="container">
                     <h1>
                         {{ $title_page }}

@@ -1,5 +1,6 @@
 <?php
-if(!$user->hasPermissionTo('hotel_create')) return;
+
+    if (!$user->hasPermissionTo('hotel_create')) return;
 ?>
 @if(!empty($services) and $services->total())
     <div class="bravo-profile-list-services">
@@ -16,7 +17,9 @@ if(!$user->hasPermissionTo('hotel_create')) return;
                     </div>
                 </div>
             @else
-                <div class="text-center mt30"><a class="btn btn-sm btn-primary" href="{{route('user.profile.services',['id'=>$user->user_name ?? $user->id,'type'=>'hotel'])}}">{{__('View all (:total)',['total'=>$services->total()])}}</a></div>
+                <div class="text-center mt30"><a class="btn btn-sm btn-primary"
+                                                 href="{{route('user.profile.services',['id'=>$user->user_name ?? $user->id,'type'=>'hotel'])}}">{{__('View all (:total)',['total'=>$services->total()])}}</a>
+                </div>
             @endif
         </div>
     </div>

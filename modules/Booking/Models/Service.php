@@ -5,49 +5,47 @@
 
 
     use App\BaseModel;
+    use Exception;
     use Illuminate\Database\Eloquent\SoftDeletes;
-    use Modules\Car\Models\Car;
-    use Modules\Hotel\Models\Hotel;
-    use Modules\Space\Models\Space;
-    use Modules\Tour\Models\Tour;
 
     class Service extends BaseModel
     {
         use SoftDeletes;
-        public $type ='service';
-        public $allowType  = [
+
+        public $type = 'service';
+        public $allowType = [
             'hotel',
             'space',
             'tour',
-            'car'
+            'car',
         ];
         protected $table = 'bravo_services';
-        protected $slugField     = 'slug';
+        protected $slugField = 'slug';
         protected $slugFromField = 'title';
-        protected $fillable=[
-          'title',
-          'location_id',
-          'category_id',
-          'address',
-          'map_lat',
-          'map_lng',
-          'is_featured',
-          'star_rate',
-          'price',
-          'sale_price',
-          'min_people',
-          'max_people',
-          'max_guests',
-          'review_score',
-          'min_day_before_booking',
-          'min_day_stays',
-          'locale',
-          'object_id',
-          'object_model',
-          'status'
+        protected $fillable = [
+            'title',
+            'location_id',
+            'category_id',
+            'address',
+            'map_lat',
+            'map_lng',
+            'is_featured',
+            'star_rate',
+            'price',
+            'sale_price',
+            'min_people',
+            'max_people',
+            'max_guests',
+            'review_score',
+            'min_day_before_booking',
+            'min_day_stays',
+            'locale',
+            'object_id',
+            'object_model',
+            'status',
         ];
 
-        public static function cloneService($model,$event)
+        public static function cloneService($model, $event)
         {
             try {
                 if (!empty($model->type) and $model->type != 'service' and in_array($model->type, (new Service())->allowType)) {
@@ -76,24 +74,23 @@
                         }
                     }
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
-
         }
+
         public static function deleteService($model)
         {
             try {
                 if (!empty($model->type) and $model->type != 'service' and in_array($model->type, (new Service())->allowType)) {
                     $service = self::where('object_model', $model->type)->where('object_id', $model->id)->first();
                     if (!empty($service)) {
-                        $a  = $service->delete();
+                        $a = $service->delete();
                     }
-
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
-
         }
+
         public static function restoreService($model)
         {
             try {
@@ -103,9 +100,8 @@
                         $service->restore();
                     }
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
-
         }
 
     }

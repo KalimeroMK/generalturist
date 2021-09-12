@@ -8,7 +8,8 @@
                     @php
                         $service_translation = $service->translateOrOrigin($lang_local);
                     @endphp
-                    <h3 class="service-name"><a href="{{$service->getDetailUrl()}}">{!! clean($service_translation->title) !!}</a></h3>
+                    <h3 class="service-name"><a
+                                href="{{$service->getDetailUrl()}}">{!! clean($service_translation->title) !!}</a></h3>
                     @if($service_translation->address)
                         <p class="address"><i class="fa fa-map-marker"></i>
                             {{$service_translation->address}}
@@ -24,7 +25,8 @@
                 @if($vendor->hasPermissionTo('dashboard_vendor_access') and !$vendor->hasPermissionTo('dashboard_access'))
                     <div class="mt-1">
                         <i class="icofont-info-circle"></i>
-                        {{ __("Vendor") }}: <a href="{{route('user.profile',['id'=>$vendor->id])}}" target="_blank" >{{$vendor->getDisplayName()}}</a>
+                        {{ __("Vendor") }}: <a href="{{route('user.profile',['id'=>$vendor->id])}}"
+                                               target="_blank">{{$vendor->getDisplayName()}}</a>
                     </div>
                 @endif
             </div>
@@ -92,7 +94,8 @@
             <ul class="review-list">
                 @if($booking->getMeta("booking_type") == "time_slot")
                     <li>
-                        <div class="label">{{ $booking->total_guests }} x {{ format_money( $booking->getJsonMeta('base_price')) }}</div>
+                        <div class="label">{{ $booking->total_guests }}
+                            x {{ format_money( $booking->getJsonMeta('base_price')) }}</div>
                         <div class="val">
                             {{format_money( $booking->getJsonMeta('base_price') * $booking->total_guests )  }}
                         </div>
@@ -103,7 +106,8 @@
                     @if(!empty($ticket_types))
                         @foreach($ticket_types as $type)
                             <li>
-                                <div class="label">{{ $type['name_'.$lang_local] ?? $type['name']}}: {{$type['number']}} * {{format_money($type['price'])}}</div>
+                                <div class="label">{{ $type['name_'.$lang_local] ?? $type['name']}}: {{$type['number']}}
+                                    * {{format_money($type['price'])}}</div>
                                 <div class="val">
                                     {{format_money($type['price'] * $type['number'])}}
                                 </div>
@@ -150,7 +154,8 @@
                         <li>
                             <div class="label">
                                 {{$item['name_'.$lang_local] ?? $item['name']}}
-                                <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top" title="{{ $item['desc_'.$lang_local] ?? $item['desc'] }}"></i>
+                                <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top"
+                                   title="{{ $item['desc_'.$lang_local] ?? $item['desc'] }}"></i>
                                 @if(!empty($item['per_ticket']) and $item['per_ticket'] == "on")
                                     : {{$booking->total_guests}} * {{format_money( $fee_price )}}
                                 @endif

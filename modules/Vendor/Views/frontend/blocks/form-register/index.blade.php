@@ -11,28 +11,34 @@
                     @csrf
 
                     <div class="form-group">
-                        <input type="text" class="form-control" name="first_name" autocomplete="off" placeholder="{{__("First Name")}}">
+                        <input type="text" class="form-control" name="first_name" autocomplete="off"
+                               placeholder="{{__("First Name")}}">
                         <span class="invalid-feedback error error-first_name"></span>
                     </div>
 
                     <div class="form-group">
-                        <input type="text" class="form-control" name="last_name" autocomplete="off" placeholder="{{__("Last Name")}}">
+                        <input type="text" class="form-control" name="last_name" autocomplete="off"
+                               placeholder="{{__("Last Name")}}">
                         <span class="invalid-feedback error error-last_name"></span>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="business_name" autocomplete="off" placeholder="{{__("Business Name")}}">
+                        <input type="text" class="form-control" name="business_name" autocomplete="off"
+                               placeholder="{{__("Business Name")}}">
                         <span class="invalid-feedback error error-business_name"></span>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="phone" autocomplete="off" placeholder="{{__("Phone")}}">
+                        <input type="text" class="form-control" name="phone" autocomplete="off"
+                               placeholder="{{__("Phone")}}">
                         <span class="invalid-feedback error error-phone"></span>
                     </div>
                     <div class="form-group">
-                        <input type="email" class="form-control" name="email" autocomplete="off" placeholder="{{__("Email")}}">
+                        <input type="email" class="form-control" name="email" autocomplete="off"
+                               placeholder="{{__("Email")}}">
                         <span class="invalid-feedback error error-email"></span>
                     </div>
                     <div class="form-group">
-                        <input type="password" class="form-control" name="password" autocomplete="off" placeholder="{{__("Password")}}">
+                        <input type="password" class="form-control" name="password" autocomplete="off"
+                               placeholder="{{__("Password")}}">
                         <span class="invalid-feedback error error-password"></span>
                     </div>
                     <div class="form-group">
@@ -52,7 +58,8 @@
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary form-submit">
                             {{ __('Sign Up') }}
-                            <span class="spinner-grow spinner-grow-sm icon-loading" role="status" aria-hidden="true" style="display: none"></span>
+                            <span class="spinner-grow spinner-grow-sm icon-loading" role="status" aria-hidden="true"
+                                  style="display: none"></span>
                         </button>
                     </div>
                     <div class="message-error"></div>
@@ -62,24 +69,29 @@
             <div class="col-12 col-lg-6">
                 <div class="bravo_gallery">
                     <div class="btn-group">
-                        <span class="btn-transparent has-icon bravo-video-popup" @if(!empty($youtube)) data-toggle="modal" @endif data-src="{{ handleVideoUrl($youtube) }}" data-target="#video-register">
+                        <span class="btn-transparent has-icon bravo-video-popup"
+                              @if(!empty($youtube)) data-toggle="modal" @endif data-src="{{ handleVideoUrl($youtube) }}"
+                              data-target="#video-register">
                             @if($bg_image)
                                 <img src="{{get_file_url($bg_image,'full')}}" class="img-fluid" alt="Youtube">
                             @endif
                             @if(!empty($youtube))
                                 <div class="play-icon">
-                                    <img src="{{asset('module/vendor/img/ico-play.svg')}}" alt="Play background" class="img-fluid play-image">
+                                    <img src="{{asset('module/vendor/img/ico-play.svg')}}" alt="Play background"
+                                         class="img-fluid play-image">
                                 </div>
                             @endif
                         </span>
                     </div>
                     @if(!empty($youtube))
-                        <div class="modal fade" id="video-register" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="video-register" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                 <div class="modal-content p-0">
                                     <div class="modal-body">
                                         <div class="embed-responsive embed-responsive-16by9">
-                                            <iframe class="embed-responsive-item bravo_embed_video" src="" allowscriptaccess="always" allow="autoplay"></iframe>
+                                            <iframe class="embed-responsive-item bravo_embed_video" src=""
+                                                    allowscriptaccess="always" allow="autoplay"></iframe>
                                         </div>
                                     </div>
                                 </div>
@@ -93,5 +105,6 @@
     </div>
 </div>
 @section('footer')
-    <script type="text/javascript" src="{{ asset("/module/vendor/js/vendor-register.js?_ver=".config('app.version')) }}"></script>
+    <script type="text/javascript"
+            src="{{ asset("/module/vendor/js/vendor-register.js?_ver=".config('app.version')) }}"></script>
 @endsection

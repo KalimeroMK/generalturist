@@ -7,13 +7,16 @@
                 <div class="">
                     <h1 class="title-bar">{{$row->id ? 'Edit: '.$row->name : 'Add new tag'}}</h1>
                     @if($row->slug)
-                        <p class="item-url-demo"> {{ __('Permalink:')}} {{url('news/tag')}}/<a href="#" class="open-edit-input" data-name="slug">{{$row->slug}}</a>
+                        <p class="item-url-demo"> {{ __('Permalink:')}} {{url('news/tag')}}/<a href="#"
+                                                                                               class="open-edit-input"
+                                                                                               data-name="slug">{{$row->slug}}</a>
                         </p>
                     @endif
                 </div>
                 <div class="">
                     @if($row->slug)
-                        <a class="btn btn-primary btn-sm" href="{{$row->getDetailUrl()}}" target="_blank"> {{ __('View')}}</a>
+                        <a class="btn btn-primary btn-sm" href="{{$row->getDetailUrl()}}"
+                           target="_blank"> {{ __('View')}}</a>
                     @endif
                 </div>
             </div>
@@ -34,7 +37,8 @@
                         <div class="panel">
                             <div class="panel-title"><strong>{{__("Publish")}}</strong></div>
                             <div class="panel-body">
-                                <button class="btn btn-success" type="submit"> <i class="fa fa-save"></i> {{ __('Save Change')}}</button>
+                                <button class="btn btn-success" type="submit"><i
+                                            class="fa fa-save"></i> {{ __('Save Change')}}</button>
                             </div>
                         </div>
                     </div>

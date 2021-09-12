@@ -1,8 +1,8 @@
 <?php
 
-    use Illuminate\Support\Facades\Schema;
-    use Illuminate\Database\Schema\Blueprint;
     use Illuminate\Database\Migrations\Migration;
+    use Illuminate\Database\Schema\Blueprint;
+    use Illuminate\Support\Facades\Schema;
     use Modules\Flight\Models\Airline;
     use Modules\Flight\Models\Airport;
     use Modules\Flight\Models\BookingPassengers;
@@ -70,7 +70,7 @@
                 $blueprint->bigIncrements('id');
                 $blueprint->string('title')->nullable();
                 $blueprint->string('code')->nullable();
-                $blueprint->decimal('review_score',2,1)->nullable();
+                $blueprint->decimal('review_score', 2, 1)->nullable();
                 $blueprint->dateTime('departure_time')->nullable();
                 $blueprint->dateTime('arrival_time')->nullable();
                 $blueprint->float('duration')->nullable();

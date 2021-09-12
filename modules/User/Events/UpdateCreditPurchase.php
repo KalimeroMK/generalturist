@@ -1,23 +1,25 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: h2 gaming
- * Date: 8/23/2019
- * Time: 10:33 PM
- */
-namespace Modules\User\Events;
+    /**
+     * Created by PhpStorm.
+     * User: h2 gaming
+     * Date: 8/23/2019
+     * Time: 10:33 PM
+     */
 
-use Illuminate\Queue\SerializesModels;
+    namespace Modules\User\Events;
 
-class  UpdateCreditPurchase
-{
-    use SerializesModels;
-    public $user;
-    public $payment;
+    use Illuminate\Queue\SerializesModels;
 
-    public function __construct($user,$payment)
+    class  UpdateCreditPurchase
     {
-        $this->user = $user;
-        $this->payment = $payment;
+        use SerializesModels;
+
+        public $user;
+        public $payment;
+
+        public function __construct($user, $payment)
+        {
+            $this->user = $user;
+            $this->payment = $payment;
+        }
     }
-}

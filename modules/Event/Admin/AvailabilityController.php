@@ -1,22 +1,23 @@
 <?php
-namespace Modules\Event\Admin;
 
-use Modules\Event\Models\EventDate;
+    namespace Modules\Event\Admin;
 
-class AvailabilityController extends \Modules\Event\Controllers\AvailabilityController
-{
-    protected $eventClass;
-    /**
-     * @var EventDate
-     */
-    protected $eventDateClass;
-    protected $indexView = 'Event::admin.availability';
+    use Modules\Event\Models\EventDate;
 
-    public function __construct()
+    class AvailabilityController extends \Modules\Event\Controllers\AvailabilityController
     {
-        parent::__construct();
-        $this->setActiveMenu(route('event.admin.index'));
-        $this->middleware('dashboard');
-    }
+        protected $eventClass;
+        /**
+         * @var EventDate
+         */
+        protected $eventDateClass;
+        protected $indexView = 'Event::admin.availability';
 
-}
+        public function __construct()
+        {
+            parent::__construct();
+            $this->setActiveMenu(route('event.admin.index'));
+            $this->middleware('dashboard');
+        }
+
+    }

@@ -4,9 +4,13 @@
             <div class="bravo_gallery">
                 <div class="btn-group">
                     @if($row->video)
-                        <a href="#" class="btn btn-transparent has-icon bravo-video-popup" data-toggle="modal" data-src="{{ handleVideoUrl($row->video) }}" data-target="#myModal">
+                        <a href="#" class="btn btn-transparent has-icon bravo-video-popup" data-toggle="modal"
+                           data-src="{{ handleVideoUrl($row->video) }}" data-target="#myModal">
                             <i class="input-icon field-icon fa">
-                                <svg height="18px" width="18px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+                                <svg height="18px" width="18px" version="1.1" id="Layer_1"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;"
+                                     xml:space="preserve">
                                     <g fill="#FFFFFF">
                                         <path d="M2.25,24C1.009,24,0,22.991,0,21.75V2.25C0,1.009,1.009,0,2.25,0h19.5C22.991,0,24,1.009,24,2.25v19.5
                                             c0,1.241-1.009,2.25-2.25,2.25H2.25z M2.25,1.5C1.836,1.5,1.5,1.836,1.5,2.25v19.5c0,0.414,0.336,0.75,0.75,0.75h19.5
@@ -25,7 +29,8 @@
                         </a>
                     @endif
                 </div>
-                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-body">
@@ -33,7 +38,8 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                                 <div class="embed-responsive embed-responsive-16by9">
-                                    <iframe class="embed-responsive-item bravo_embed_video" src="" allowscriptaccess="always" allow="autoplay"></iframe>
+                                    <iframe class="embed-responsive-item bravo_embed_video" src=""
+                                            allowscriptaccess="always" allow="autoplay"></iframe>
                                 </div>
                             </div>
                         </div>

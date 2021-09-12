@@ -10,13 +10,15 @@
                 @break
 
                 @case ('vendor')
-                <h3 class="email-headline"><strong>{{__('Hello :name',['name'=>$booking->vendor->nameOrEmail ?? ''])}}</strong></h3>
+                <h3 class="email-headline">
+                    <strong>{{__('Hello :name',['name'=>$booking->vendor->nameOrEmail ?? ''])}}</strong></h3>
                 <p>{{__('The booking status has been updated')}}</p>
                 @break
 
 
                 @case ('customer')
-                <h3 class="email-headline"><strong>{{__('Hello :name',['name'=>$booking->first_name ?? ''])}}</strong></h3>
+                <h3 class="email-headline"><strong>{{__('Hello :name',['name'=>$booking->first_name ?? ''])}}</strong>
+                </h3>
                 <p>{{__('Your booking status has been updated')}}</p>
                 @break
 

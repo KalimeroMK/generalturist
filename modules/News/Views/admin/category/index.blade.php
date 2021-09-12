@@ -31,15 +31,19 @@
                                     <option value="">{{__(" Bulk Action ")}}</option>
                                     <option value="delete">{{__(" Delete ")}}</option>
                                 </select>
-                                <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
+                                <button data-confirm="{{__("Do you want to delete?")}}"
+                                        class="btn-info btn btn-icon dungdt-apply-form-btn"
+                                        type="button">{{__('Apply')}}</button>
                             </form>
                         @endif
                     </div>
                     <div class="col-left">
-                        <form method="get" action="{{url('/admin/module/news/category/')}} " class="filter-form filter-form-right d-flex justify-content-end" role="search">
+                        <form method="get" action="{{url('/admin/module/news/category/')}} "
+                              class="filter-form filter-form-right d-flex justify-content-end" role="search">
                             @csrf
                             <input type="text" name="s" value="{{ Request()->s }}" class="form-control">
-                            <button class="btn-info btn btn-icon btn_search" id="search-submit" type="submit">{{__('Search Category')}}</button>
+                            <button class="btn-info btn btn-icon btn_search" id="search-submit"
+                                    type="submit">{{__('Search Category')}}</button>
                         </form>
                     </div>
                 </div>
@@ -72,7 +76,7 @@
                                         <td class="d-none d-md-block">{{display_date($row->updated_at)}}</td>
                                     </tr>
                                     <?php
-                                    $traverse($row->children, $prefix . '-');
+                                    $traverse($row->children, $prefix.'-');
                                     }
                                     };
                                     $traverse($rows);

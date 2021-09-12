@@ -1,5 +1,5 @@
 @php
-    $translation = $row->translateOrOrigin(app()->getLocale());
+    $translation = $row->translateOrOrigin(app()->getLocale())
 @endphp
 <div class="item">
     @if($row->is_featured == "1")

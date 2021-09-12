@@ -64,19 +64,19 @@
             $data = [
                 'rows'                 => $query->with(['author'])->paginate(20),
                 'row'                  => new $this->airport,
-                'locations'   => $this->location::get()->toTree(),
+                'locations'            => $this->location::get()->toTree(),
                 'flight_manage_others' => $this->hasPermission('flight_manage_others'),
                 'breadcrumbs'          => [
                     [
                         'name' => __('Airport'),
-                        'url'  => route('flight.admin.airport.index')
+                        'url'  => route('flight.admin.airport.index'),
                     ],
                     [
                         'name'  => __('All'),
-                        'class' => 'active'
+                        'class' => 'active',
                     ],
                 ],
-                'page_title'           => __("Airport Management")
+                'page_title'           => __("Airport Management"),
             ];
             return view('Flight::admin.airport.index', $data);
         }
@@ -99,21 +99,20 @@
                 'breadcrumbs' => [
                     [
                         'name' => __('Airport'),
-                        'url'  => route('flight.admin.airport.index')
+                        'url'  => route('flight.admin.airport.index'),
                     ],
                     [
                         'name'  => __('Edit airport'),
-                        'class' => 'active'
+                        'class' => 'active',
                     ],
                 ],
-                'page_title'  => __("Edit: :name", ['name' => $row->code])
+                'page_title'  => __("Edit: :name", ['name' => $row->code]),
             ];
             return view('Flight::admin.airport.detail', $data);
         }
 
         public function store(Request $request, $id)
         {
-
             if ($id > 0) {
                 $this->checkPermission('flight_update');
                 $row = $this->airport::find($id);
@@ -129,11 +128,11 @@
                 $row = new $this->airport();
             }
             $validator = Validator::make($request->all(), [
-                'name'=>'required',
-                'code'=>[
+                'name' => 'required',
+                'code' => [
                     'required',
                     Rule::unique(SeatType::getTableName())->ignore($row),
-                ]
+                ],
             ]);
             if ($validator->fails()) {
                 return redirect()->back()->with(['errors' => $validator->errors()]);
@@ -146,7 +145,7 @@
                 'address',
                 'map_lat',
                 'map_lng',
-                'map_zoom'
+                'map_zoom',
             ];
             if ($this->hasPermission('flight_manage_others')) {
                 $dataKeys[] = 'create_user';
@@ -161,7 +160,6 @@
 
         public function bulkEdit(Request $request)
         {
-
             $ids = $request->input('ids');
             $action = $request->input('action');
             if (empty($ids) or !is_array($ids)) {
@@ -222,34 +220,33 @@
                     return redirect()->back()->with('success', __('Update success!'));
                     break;
             }
-
-
         }
+
         public function getForSelect2(Request $request)
         {
             $pre_selected = $request->query('pre_selected');
             $selected = $request->query('selected');
 
-            if($pre_selected && $selected){
+            if ($pre_selected && $selected) {
                 $item = $this->airport::find($selected);
-                if(empty($item)){
+                if (empty($item)) {
                     return response()->json([
-                        'text'=>''
+                        'text' => '',
                     ]);
-                }else{
+                } else {
                     return response()->json([
-                        'text'=>$item->name
+                        'text' => $item->name,
                     ]);
                 }
             }
             $q = $request->query('q');
             $query = $this->airport::select('id', 'name as text');
             if ($q) {
-                $query->where('name', 'like', '%' . $q . '%');
+                $query->where('name', 'like', '%'.$q.'%');
             }
             $res = $query->orderBy('id', 'desc')->limit(20)->get();
             return response()->json([
-                'results' => $res
+                'results' => $res,
             ]);
         }
 

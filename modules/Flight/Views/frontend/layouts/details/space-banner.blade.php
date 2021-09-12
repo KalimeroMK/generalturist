@@ -6,7 +6,9 @@
                     <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a href="#">Home</a></li>
                     <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a href="#">Hotels</a></li>
                     <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1"><a href="#">London Hotels</a></li>
-                    <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">Park Avenue Baker Street London</li>
+                    <li class="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">Park Avenue
+                        Baker Street London
+                    </li>
                 </ol>
             </nav>
         </div>
@@ -45,7 +47,8 @@
 
                 @if($row->getGallery())
                     @foreach($row->getGallery() as $key=>$item)
-                        <div class="js-slide bg-img-hero min-height-550" style="background-image: url('{{$item['large']}}');"></div>
+                        <div class="js-slide bg-img-hero min-height-550"
+                             style="background-image: url('{{$item['large']}}');"></div>
                     @endforeach
                 @endif
             </div>

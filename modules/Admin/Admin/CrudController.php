@@ -1,45 +1,64 @@
 <?php
 
 
-namespace Modules\Admin\Admin;
+    namespace Modules\Admin\Admin;
 
 
-use Modules\Admin\Crud;
-use Modules\AdminController;
+    use Exception;
+    use Illuminate\Contracts\Foundation\Application;
+    use Illuminate\Contracts\View\Factory;
+    use Illuminate\Contracts\View\View;
+    use Modules\Admin\Crud;
+    use Modules\AdminController;
 
-class CrudController extends AdminController
-{
+    class CrudController extends AdminController
+    {
 
-    public function index($module = ''){
-        if(empty($module)) abort(404);
+        /**
+         * @throws Exception
+         */
+        public function index($module = '')
+        {
+            if (empty($module)) {
+                abort(404);
+            }
 
-        $crudModule = Crud::module($module);
+            $crudModule = Crud::module($module);
 
-        $configs = $crudModule->index();
+            $configs = $crudModule->index();
 
-        if(!empty($configs['permission'])){
-            $this->checkPermission($configs['permission']);
+            if (!empty($configs['permission'])) {
+                $this->checkPermission($configs['permission']);
+            }
+
+            return view("Admin::admin.crud.index");
         }
 
-        return view("Admin::admin.crud.index");
-    }
-    public function create($module = ''){
-        if(empty($module)) abort(404);
+        /**
+         * @param  string  $module
+         * @return Application|Factory|View
+         * @throws Exception
+         */
+        public function create($module = '')
+        {
+            if (empty($module)) {
+                abort(404);
+            }
 
-        $crudModule = Crud::module($module);
+            $crudModule = Crud::module($module);
 
-        $configs = $crudModule->create();
+            $configs = $crudModule->create();
 
-        if(!empty($configs['permission'])){
-            $this->checkPermission($configs['permission']);
+            if (!empty($configs['permission'])) {
+                $this->checkPermission($configs['permission']);
+            }
+            $data = [
+                'row'        => new $crudModule->model,
+                'crudModule' => $crudModule,
+                'module'     => $module,
+                'layouts'    => $configs['layouts'] ?? [],
+            ];
+
+            return view("Admin::admin.crud.detail", $data);
         }
-        $data = [
-            'row'=>new $crudModule->model,
-            'crudModule'=>$crudModule,
-            'module'=>$module,
-            'layouts'=>$configs['layouts'] ?? []
-        ];
-
-        return view("Admin::admin.crud.detail",$data);
     }
-}

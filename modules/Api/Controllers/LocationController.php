@@ -1,38 +1,40 @@
 <?php
-namespace Modules\Api\Controllers;
-use App\Http\Controllers\Controller;
-use Modules\Location\Models\Location;
 
-class LocationController extends Controller
-{
+    namespace Modules\Api\Controllers;
 
-    public function search(){
-        $rows = Location::search(request());
-        $total = $rows->total();
-        return $this->sendSuccess(
-            [
-                'total'=>$total,
-                'total_pages'=>$rows->lastPage(),
-                'data'=>$rows->map(function($row){
-                    return $row->dataForApi();
-                }),
-            ]
-        );
-    }
+    use App\Http\Controllers\Controller;
+    use Modules\Location\Models\Location;
 
-    public function detail($id = '')    {
-        if(empty($id)){
-            return $this->sendError(__("Location ID is not available"));
-        }
-        $row = Location::find($id);
-        if(empty($row))
+    class LocationController extends Controller
+    {
+
+        public function search()
         {
-            return $this->sendError(__("Location not found"));
+            $rows = Location::search(request());
+            $total = $rows->total();
+            return $this->sendSuccess(
+                [
+                    'total'       => $total,
+                    'total_pages' => $rows->lastPage(),
+                    'data'        => $rows->map(function ($row) {
+                        return $row->dataForApi();
+                    }),
+                ]
+            );
         }
 
-        return $this->sendSuccess([
-            'data'=>$row->dataForApi(true)
-        ]);
+        public function detail($id = '')
+        {
+            if (empty($id)) {
+                return $this->sendError(__("Location ID is not available"));
+            }
+            $row = Location::find($id);
+            if (empty($row)) {
+                return $this->sendError(__("Location not found"));
+            }
 
+            return $this->sendSuccess([
+                'data' => $row->dataForApi(true),
+            ]);
+        }
     }
-}

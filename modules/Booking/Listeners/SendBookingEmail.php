@@ -1,5 +1,7 @@
 <?php
-namespace Modules\Booking\Listeners;
-class SendBookingEmail
-{
-}
+
+    namespace Modules\Booking\Listeners;
+
+    class SendBookingEmail
+    {
+    }

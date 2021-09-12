@@ -2,7 +2,6 @@
 
     namespace Modules\Email\Emails;
 
-    use App\User;
     use Illuminate\Bus\Queueable;
     use Illuminate\Mail\Mailable;
     use Illuminate\Queue\SerializesModels;
@@ -14,7 +13,6 @@
 
         public function __construct()
         {
-
         }
 
         public function build()

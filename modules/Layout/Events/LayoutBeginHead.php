@@ -1,12 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Admin
- * Date: 10/18/2019
- * Time: 3:35 PM
- */
-namespace Modules\Layout\Events;
+    /**
+     * Created by PhpStorm.
+     * User: Admin
+     * Date: 10/18/2019
+     * Time: 3:35 PM
+     */
 
-class LayoutBeginHead{
+    namespace Modules\Layout\Events;
 
-}
+    class LayoutBeginHead
+    {
+
+    }

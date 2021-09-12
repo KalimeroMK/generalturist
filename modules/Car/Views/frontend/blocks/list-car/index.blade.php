@@ -1,9 +1,9 @@
 <div class="container">
     <div class="bravo-list-car layout_{{$style_list}}">
         @if($title)
-        <div class="title">
-            {{$title}}
-        </div>
+            <div class="title">
+                {{$title}}
+            </div>
         @endif
         @if($desc)
             <div class="sub-title">

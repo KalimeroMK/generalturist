@@ -1,18 +1,18 @@
 <?php
-namespace Modules\Dashboard\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Modules\AdminController;
+    namespace Modules\Dashboard\Controllers;
 
-class DashboardController extends AdminController
-{
-    public function __construct()
+    use Modules\AdminController;
+
+    class DashboardController extends AdminController
     {
-        parent::__construct();
-    }
+        public function __construct()
+        {
+            parent::__construct();
+        }
 
-    public function index()
-    {
-        return View('Dashboard::index');
+        public function index()
+        {
+            return View('Dashboard::index');
+        }
     }
-}

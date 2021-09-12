@@ -1,17 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: h2 gaming
- * Date: 8/17/2019
- * Time: 3:39 PM
- */
-$reviews = \Modules\Review\Models\Review::query()->where([
-    'vendor_id'=>$user->id,
-    'status'=>'approved'
-])
-    ->orderBy('id','desc')
-    ->with('author')
-    ->paginate(3);
+
+    /**
+     * Created by PhpStorm.
+     * User: h2 gaming
+     * Date: 8/17/2019
+     * Time: 3:39 PM
+     */
+    $reviews = \Modules\Review\Models\Review::query()->where([
+        'vendor_id' => $user->id,
+        'status'    => 'approved'
+    ])
+        ->orderBy('id', 'desc')
+        ->with('author')
+        ->paginate(3);
 ?>
 @if($reviews->total())
     <div class="bravo-reviews">
@@ -61,6 +62,8 @@ $reviews = \Modules\Review\Models\Review::query()->where([
                 @endforeach
             @endif
         </div>
-        <div class="text-center mt30"><a class="btn btn-sm btn-primary" href="{{route('user.profile.reviews',['id'=> $user->user_name ?? $user->id])}}">{{__('View all reviews (:total)',['total'=>$reviews->total()])}}</a></div>
+        <div class="text-center mt30"><a class="btn btn-sm btn-primary"
+                                         href="{{route('user.profile.reviews',['id'=> $user->user_name ?? $user->id])}}">{{__('View all reviews (:total)',['total'=>$reviews->total()])}}</a>
+        </div>
     </div>
 @endif

@@ -35,7 +35,8 @@
                                         </td>
                                         <td>
                                             @if($service = $row->service)
-                                                <a href="{{$service->getDetailUrl()}}" target="_blank">{{$service->title ?? ''}}</a>
+                                                <a href="{{$service->getDetailUrl()}}"
+                                                   target="_blank">{{$service->title ?? ''}}</a>
                                             @else
                                                 {{__("[Deleted]")}}
                                             @endif

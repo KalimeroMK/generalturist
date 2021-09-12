@@ -60,7 +60,7 @@
                 </div>
             </div>
         @endif
-            @if($row->square)
+        @if($row->square)
             <div class="col-xs-6 col-lg-3 col-md-6">
                 <div class="item">
                     <div class="icon">
@@ -76,7 +76,7 @@
             </div>
         @endif
         @if(!empty($row->location->name))
-                @php $location =  $row->location->translateOrOrigin(app()->getLocale()) @endphp
+            @php $location =  $row->location->translateOrOrigin(app()->getLocale()) @endphp
             <div class="col-xs-6 col-lg-3 col-md-6">
                 <div class="item">
                     <div class="icon">
@@ -95,7 +95,8 @@
 </div>
 @if($row->getGallery())
     <div class="g-gallery">
-        <div class="fotorama" data-width="100%" data-thumbwidth="135" data-thumbheight="135" data-thumbmargin="15" data-nav="thumbs" data-allowfullscreen="true">
+        <div class="fotorama" data-width="100%" data-thumbwidth="135" data-thumbheight="135" data-thumbmargin="15"
+             data-nav="thumbs" data-allowfullscreen="true">
             @foreach($row->getGallery() as $key=>$item)
                 <a href="{{$item['large']}}" data-thumb="{{$item['thumb']}}" data-alt="{{ __("Gallery") }}"></a>
             @endforeach
@@ -107,12 +108,16 @@
                 </span>
                 <ul class="share-wrapper">
                     <li>
-                        <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u={{$row->getDetailUrl()}}&amp;title={{$translation->title}}" target="_blank" rel="noopener" original-title="{{__("Facebook")}}">
+                        <a class="facebook"
+                           href="https://www.facebook.com/sharer/sharer.php?u={{$row->getDetailUrl()}}&amp;title={{$translation->title}}"
+                           target="_blank" rel="noopener" original-title="{{__("Facebook")}}">
                             <i class="fa fa-facebook fa-lg"></i>
                         </a>
                     </li>
                     <li>
-                        <a class="twitter" href="https://twitter.com/share?url={{$row->getDetailUrl()}}&amp;title={{$translation->title}}" target="_blank" rel="noopener" original-title="{{__("Twitter")}}">
+                        <a class="twitter"
+                           href="https://twitter.com/share?url={{$row->getDetailUrl()}}&amp;title={{$translation->title}}"
+                           target="_blank" rel="noopener" original-title="{{__("Twitter")}}">
                             <i class="fa fa-twitter fa-lg"></i>
                         </a>
                     </li>
@@ -134,28 +139,28 @@
 @endif
 @include('Space::frontend.layouts.details.space-attributes')
 @if($translation->faqs)
-<div class="g-faq">
-    <h3> {{__("FAQs")}} </h3>
-    @foreach($translation->faqs as $item)
-        <div class="item">
-            <div class="header">
-                <i class="field-icon icofont-support-faq"></i>
-                <h5>{{$item['title']}}</h5>
-                <span class="arrow"><i class="fa fa-angle-down"></i></span>
+    <div class="g-faq">
+        <h3> {{__("FAQs")}} </h3>
+        @foreach($translation->faqs as $item)
+            <div class="item">
+                <div class="header">
+                    <i class="field-icon icofont-support-faq"></i>
+                    <h5>{{$item['title']}}</h5>
+                    <span class="arrow"><i class="fa fa-angle-down"></i></span>
+                </div>
+                <div class="body">
+                    {{$item['content']}}
+                </div>
             </div>
-            <div class="body">
-                {{$item['content']}}
-            </div>
-        </div>
-    @endforeach
-</div>
+        @endforeach
+    </div>
 @endif
 @includeIf("Hotel::frontend.layouts.details.hotel-surrounding")
 @if($row->map_lat && $row->map_lng)
-<div class="g-location">
-    <h3>{{__("Location")}}</h3>
-    <div class="location-map">
-        <div id="map_content"></div>
+    <div class="g-location">
+        <h3>{{__("Location")}}</h3>
+        <div class="location-map">
+            <div id="map_content"></div>
+        </div>
     </div>
-</div>
 @endif

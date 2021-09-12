@@ -4,5 +4,6 @@
 </div>
 <div class="form-group">
     <label>{{__("Code")}}</label>
-    <input type="text" value="{{$row->code??''}}" placeholder="{{__("Code")}}" name="code" class="form-control" required>
+    <input type="text" value="{{$row->code??''}}" placeholder="{{__("Code")}}" name="code" class="form-control"
+           required>
 </div>

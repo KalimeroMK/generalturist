@@ -4,7 +4,7 @@
             @php $flight_search_fields = setting_item_array('flight_search_fields');
     $flight_search_fields = array_values(\Illuminate\Support\Arr::sort($flight_search_fields, function ($value) {
         return $value['position'] ?? 0;
-    }));
+    }))
             @endphp
             @if(!empty($flight_search_fields))
                 @foreach($flight_search_fields as $field)

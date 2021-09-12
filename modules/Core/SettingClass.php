@@ -1,16 +1,17 @@
 <?php
 
-	namespace Modules\Core;
+    namespace Modules\Core;
 
-	use Modules\Core\Abstracts\BaseSettingsClass;
+    use Modules\Core\Abstracts\BaseSettingsClass;
 
-	class SettingClass extends BaseSettingsClass
-	{
-		const UPLOAD_DRIVER=['uploads','s3'];
-		const BROADCAST_DRIVER=["null","log","pusher"];
-		public static function getSettingPages()
-		{
-			return [
+    class SettingClass extends BaseSettingsClass
+    {
+        const UPLOAD_DRIVER = ['uploads', 's3'];
+        const BROADCAST_DRIVER = ["null", "log", "pusher"];
+
+        public static function getSettingPages()
+        {
+            return [
 //				[
 //					'id'        => 'uploads',
 //					'title'     => __("Upload Settings"),
@@ -24,12 +25,12 @@
 //					'html_keys' => [
 //					]
 //				]
-                'advance'=>[
-                    'id'   => 'advance',
-                    'title' => __("Advance Settings"),
-                    'position'=>80,
-					'view'      => "Core::admin.settings.groups.advance",
-					"keys"      => [
+                'advance' => [
+                    'id'               => 'advance',
+                    'title'            => __("Advance Settings"),
+                    'position'         => 80,
+                    'view'             => "Core::admin.settings.groups.advance",
+                    "keys"             => [
                         'map_provider',
                         'map_gmap_key',
                         'google_client_secret',
@@ -58,15 +59,15 @@
                         'pusher_api_secret',
                         'pusher_app_id',
                         'pusher_cluster',
-					],
-                    'filter_demo_mode'=>[
+                    ],
+                    'filter_demo_mode' => [
                         'head_scripts',
                         'body_scripts',
                         'footer_scripts',
                         'cookie_agreement_content',
                         'cookie_agreement_button_text',
-                    ]
+                    ],
                 ],
-			];
-		}
-	}
+            ];
+        }
+    }

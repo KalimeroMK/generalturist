@@ -1,28 +1,30 @@
 <?php
-namespace Modules\User\Emails;
 
-use App\User;
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
+    namespace Modules\User\Emails;
 
-class UserVerificationSubmitToAdmin extends Mailable
-{
-    use Queueable, SerializesModels;
-    public $user;
-    protected $email_type;
+    use App\User;
+    use Illuminate\Bus\Queueable;
+    use Illuminate\Mail\Mailable;
+    use Illuminate\Queue\SerializesModels;
 
-    public function __construct(User $user)
+    class UserVerificationSubmitToAdmin extends Mailable
     {
-        $this->user = $user;
-    }
+        use Queueable, SerializesModels;
 
-    public function build()
-    {
-        $subject = __('[:site_name] An user submitted verification data',['site_name'=>setting_item('site_title')]);
+        public $user;
+        protected $email_type;
 
-        return $this->subject($subject)->view('User::emails.user-submit-verify-data')->with([
-            'user' => $this->user,
-        ]);
+        public function __construct(User $user)
+        {
+            $this->user = $user;
+        }
+
+        public function build()
+        {
+            $subject = __('[:site_name] An user submitted verification data', ['site_name' => setting_item('site_title')]);
+
+            return $this->subject($subject)->view('User::emails.user-submit-verify-data')->with([
+                'user' => $this->user,
+            ]);
+        }
     }
-}

@@ -10,15 +10,19 @@
                 @include('admin.message')
 
                 @if($ready_for_update)
-                <div class="panel">
-                    <div class="panel-title"><strong>{{__('Update booking core')}}</strong></div>
-                    <div class="panel-body">
+                    <div class="panel">
+                        <div class="panel-title"><strong>{{__('Update booking core')}}</strong></div>
+                        <div class="panel-body">
 
                             @if($updater_latest_version = setting_item('updater_latest_version') and version_compare(config('app.version'),$updater_latest_version,'='))
-                                <p class="alert-success alert"><strong>{{__("You are using newest version of Booking Core: :version",['version'=>$updater_latest_version])}}</strong></p>
+                                <p class="alert-success alert">
+                                    <strong>{{__("You are using newest version of Booking Core: :version",['version'=>$updater_latest_version])}}</strong>
+                                </p>
                             @endif
 
-                            <p><strong>{{__("Your license key: :key",['key'=>setting_item('envato_license_key')])}}</strong></p>
+                            <p>
+                                <strong>{{__("Your license key: :key",['key'=>setting_item('envato_license_key')])}}</strong>
+                            </p>
                             @if($last_check_update = setting_item('last_check_update'))
                                 <p>{{__("Last check for update: :date",['date'=>display_datetime((int)$last_check_update)])}}</p>
                             @endif
@@ -34,20 +38,28 @@
 
                             @if($updater_latest_version = setting_item('updater_latest_version') and version_compare(config('app.version'),$updater_latest_version,'<'))
                                 <hr>
-                                <p class="text-success"><strong>{{__("Your current version: :version",['version'=>config('app.version')])}}</strong></p>
-                                <p class="text-primary"><strong>{{__("Latest version available: :version",['version'=>$updater_latest_version])}}</strong></p>
-                                <p><label ><input type="checkbox" class="check_installation_term"> {{__("I already back up all files and database")}}</label></p>
-                                <button type="submit" class="btn btn-primary btn-do-update-now bravo-form ">{{__("Update now")}}
+                                <p class="text-success">
+                                    <strong>{{__("Your current version: :version",['version'=>config('app.version')])}}</strong>
+                                </p>
+                                <p class="text-primary">
+                                    <strong>{{__("Latest version available: :version",['version'=>$updater_latest_version])}}</strong>
+                                </p>
+                                <p><label><input type="checkbox"
+                                                 class="check_installation_term"> {{__("I already back up all files and database")}}
+                                    </label></p>
+                                <button type="submit"
+                                        class="btn btn-primary btn-do-update-now bravo-form ">{{__("Update now")}}
                                     <i class="fa fa-spinner fa-spin fa-fw"></i>
                                 </button>
                             @endif
 
                             <hr>
 
-                            <span>{{__('or')}} <a href="#" class="show-license-form">{{__("change license info")}}</a></span>
+                            <span>{{__('or')}} <a href="#"
+                                                  class="show-license-form">{{__("change license info")}}</a></span>
 
+                        </div>
                     </div>
-                </div>
                 @endif
                 <div class="panel @if($ready_for_update) d-none @endif" id="license_key_form">
                     <div class="panel-title"><strong>{{__('License Key Information')}}</strong></div>
@@ -60,24 +72,28 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label ><strong>{{__("Envato username")}}</strong></label>
+                                        <label><strong>{{__("Envato username")}}</strong></label>
                                         <div>
-                                            <input type="text" name="envato_username" value="{{setting_item('envato_username')}}" class="form-control">
+                                            <input type="text" name="envato_username"
+                                                   value="{{setting_item('envato_username')}}" class="form-control">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label ><strong>{{__("Your license key (Purchase code)")}}</strong></label>
+                                        <label><strong>{{__("Your license key (Purchase code)")}}</strong></label>
                                         <div>
-                                            <input type="text" name="envato_license_key" value="{{setting_item('envato_license_key')}}" class="form-control">
+                                            <input type="text" name="envato_license_key"
+                                                   value="{{setting_item('envato_license_key')}}" class="form-control">
                                         </div>
-                                        <span><i><a href="https://help.market.envato.com/hc/en-us/articles/202822600-Where-Is-My-Purchase-Code-" target="_blank">{{__("How can I get my license key?")}}</a></i></span>
+                                        <span><i><a href="https://help.market.envato.com/hc/en-us/articles/202822600-Where-Is-My-Purchase-Code-"
+                                                    target="_blank">{{__("How can I get my license key?")}}</a></i></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> {{__("Save changes")}}</button>
+                                <button type="submit" class="btn btn-success"><i
+                                            class="fa fa-save"></i> {{__("Save changes")}}</button>
                             </div>
                         </form>
                     </div>
@@ -94,34 +110,33 @@
                 e.preventDefault();
                 var me = $(this);
 
-                if(!$('.check_installation_term').prop('checked')){
+                if (!$('.check_installation_term').prop('checked')) {
                     bootbox.alert(
                         {
-                            title:'{{__("Warning")}}',
-                            message:'{{__('Please make sure you back up data before updating')}}'
+                            title: '{{__("Warning")}}',
+                            message: '{{__('Please make sure you back up data before updating')}}'
                         }
                     );
                     return;
                 }
 
                 bootbox.confirm({
-                    title:'{{__("Confirmation")}}',
-                    message:'{{__('Are you want to update now?. Please make sure you backup all your files and database first')}}',
-                    callback:function (res) {
-                        if(!res) return;
+                    title: '{{__("Confirmation")}}',
+                    message: '{{__('Are you want to update now?. Please make sure you backup all your files and database first')}}',
+                    callback: function (res) {
+                        if (!res) return;
                         me.addClass('loading');
 
                         $.ajax({
-                            url:'{{route('core.admin.updater.do_update')}}',
-                            method:'post',
-                            success:function (json) {
+                            url: '{{route('core.admin.updater.do_update')}}',
+                            method: 'post',
+                            success: function (json) {
                                 me.removeClass('loading');
-                                if(json.message)
-                                {
+                                if (json.message) {
                                     bootbox.alert(
                                         {
-                                            title:json.status ? '{{__("Warning")}}' : '{{__('Notice')}}',
-                                            message:json.message
+                                            title: json.status ? '{{__("Warning")}}' : '{{__('Notice')}}',
+                                            message: json.message
                                         }
                                     );
                                 }
@@ -130,7 +145,7 @@
                                 //     window.location.reload();
                                 // }
                             },
-                            error:function (e) {
+                            error: function (e) {
                                 me.removeClass('loading');
                             }
                         });

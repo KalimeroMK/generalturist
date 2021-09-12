@@ -8,7 +8,8 @@
                     <div class="d-flex justify-content-between">
                         <div class="col-left d-flex align-items-center">
                             <div class="filter-item">
-                                <input type="text" placeholder="{{__("Search file name....")}}" class="form-control" v-model="filter.s" @keyup.enter="filter.page = 1;reloadLists()">
+                                <input type="text" placeholder="{{__("Search file name....")}}" class="form-control"
+                                       v-model="filter.s" @keyup.enter="filter.page = 1;reloadLists()">
                             </div>
                             <div class="filter-item">
                                 <button class="btn btn-default" @click="filter.page = 1;reloadLists()">
@@ -32,21 +33,27 @@
                 </div>
                 <div class="files-list">
                     <div class="files-wraps " :class="'view-'+viewType">
-                        <file-item v-for="(file,index) in files" :key="index" :view-type="viewType" :selected="selected" :file="file" v-on:select-file="selectFile"></file-item>
+                        <file-item v-for="(file,index) in files" :key="index" :view-type="viewType" :selected="selected"
+                                   :file="file" v-on:select-file="selectFile"></file-item>
                     </div>
-                    <p class="no-files-text text-center" v-show="!total && apiFinished" style="display: none">{{__("No file found")}}</p>
+                    <p class="no-files-text text-center" v-show="!total && apiFinished"
+                       style="display: none">{{__("No file found")}}</p>
                     <div class="text-center" v-if="totalPage > 1">
                         <nav aria-label="Page navigation example">
                             <ul class="pagination">
                                 <li class="page-item" :class="{disabled:filter.page <= 1}">
                                     <a class="page-link" v-if="filter.page <=1">{{__("Previous")}}</a>
-                                    <a class="page-link" href="#" v-if="filter.page > 1" v-on:click="changePage(filter.page-1,$event)">{{__("Previous")}}</a>
+                                    <a class="page-link" href="#" v-if="filter.page > 1"
+                                       v-on:click="changePage(filter.page-1,$event)">{{__("Previous")}}</a>
                                 </li>
-                                <li class="page-item" v-if="p >= (filter.page-3) && p <= (filter.page+3)" :class="{active: p == filter.page}" v-for="p in totalPage" @click="changePage(p,$event)">
+                                <li class="page-item" v-if="p >= (filter.page-3) && p <= (filter.page+3)"
+                                    :class="{active: p == filter.page}" v-for="p in totalPage"
+                                    @click="changePage(p,$event)">
                                     <a class="page-link" href="#">@{{p}}</a></li>
                                 <li class="page-item" :class="{disabled:filter.page >= totalPage}">
                                     <a v-if="filter.page >= totalPage" class="page-link">{{__("Next")}}</a>
-                                    <a href="#" class="page-link" v-if="filter.page < totalPage" v-on:click="changePage(filter.page+1,$event)">{{__("Next")}}</a>
+                                    <a href="#" class="page-link" v-if="filter.page < totalPage"
+                                       v-on:click="changePage(filter.page+1,$event)">{{__("Next")}}</a>
                                 </li>
                             </ul>
                         </nav>
@@ -63,7 +70,8 @@
                         </div>
                     </div>
                     <div class="col-right d-none" v-show="selected.length">
-                        <button class="btn btn-primary" :class="{disabled:!selected.length}" @click="sendFiles">{{__("Use file")}}</button>
+                        <button class="btn btn-primary" :class="{disabled:!selected.length}"
+                                @click="sendFiles">{{__("Use file")}}</button>
                     </div>
                 </div>
             </div>

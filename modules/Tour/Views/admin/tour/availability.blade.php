@@ -4,7 +4,8 @@
         <h3 class="panel-body-title">{{__('Open Hours')}}</h3>
         <div class="form-group">
             <label>
-                <input type="checkbox" name="enable_open_hours" @if(!empty($row->meta->enable_open_hours)) checked @endif value="1"> {{__('Enable Open Hours')}}
+                <input type="checkbox" name="enable_open_hours" @if(!empty($row->meta->enable_open_hours)) checked
+                       @endif value="1"> {{__('Enable Open Hours')}}
             </label>
         </div>
         <?php $old = $row->meta->open_hours ?? [];?>
@@ -21,7 +22,9 @@
                 @for($i = 1 ; $i <=7 ; $i++)
                     <tr>
                         <td>
-                            <input style="display: inline-block" type="checkbox" @if($old[$i]['enable']  ?? false ) checked @endif name="open_hours[{{$i}}][enable]" value="1">
+                            <input style="display: inline-block" type="checkbox"
+                                   @if($old[$i]['enable']  ?? false ) checked @endif name="open_hours[{{$i}}][enable]"
+                                   value="1">
                         </td>
                         <td><strong>
                                 @switch($i)
@@ -56,7 +59,8 @@
 
                                 $val = date('H:i', $time + 60 * 60 * $k);
                                 ?>
-                                <option @if(isset($old[$i]) and $old[$i]['from'] == $val) selected @endif value="{{$val}}">{{$val}}</option>
+                                <option @if(isset($old[$i]) and $old[$i]['from'] == $val) selected
+                                        @endif value="{{$val}}">{{$val}}</option>
 
                                 <?php endfor;?>
                             </select>
@@ -69,7 +73,8 @@
 
                                 $val = date('H:i', $time + 60 * 60 * $k);
                                 ?>
-                                <option @if(isset($old[$i]) and  $old[$i]['to'] == $val ) selected @endif value="{{$val}}">{{$val}}</option>
+                                <option @if(isset($old[$i]) and  $old[$i]['to'] == $val ) selected
+                                        @endif value="{{$val}}">{{$val}}</option>
 
                                 <?php endfor;?>
                             </select>

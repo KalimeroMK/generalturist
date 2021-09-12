@@ -1,15 +1,17 @@
 <?php
-namespace Modules\User\Events;
 
-use Illuminate\Queue\SerializesModels;
+    namespace Modules\User\Events;
 
-class  UserSubscriberSubmit
-{
-    use SerializesModels;
-    public $subscriber;
+    use Illuminate\Queue\SerializesModels;
 
-    public function __construct($subscriber)
+    class  UserSubscriberSubmit
     {
-        $this->subscriber = $subscriber;
+        use SerializesModels;
+
+        public $subscriber;
+
+        public function __construct($subscriber)
+        {
+            $this->subscriber = $subscriber;
+        }
     }
-}

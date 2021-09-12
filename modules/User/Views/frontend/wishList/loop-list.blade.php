@@ -39,7 +39,8 @@ $service = $row->service;
                 </div>
                 <div class="location">
                     <i class="icofont-money"></i>
-                    {{__("Price")}}: <span class="sale-price">{{ $service->display_sale_price }}</span> <span class="price">{{ $service->display_price }}</span>
+                    {{__("Price")}}: <span class="sale-price">{{ $service->display_sale_price }}</span> <span
+                            class="price">{{ $service->display_price }}</span>
                 </div>
                 @if($service->getReviewEnable())
                     <div class="rate">
@@ -64,7 +65,8 @@ $service = $row->service;
                                     <li><i class="fa fa-star-o"></i></li>
                                     <li><i class="fa fa-star-o"></i></li>
                                 </ul>
-                                <div class="booking-item-rating-stars-active" style="width: {{  $score_total * 2 * 10 ?? 0  }}%">
+                                <div class="booking-item-rating-stars-active"
+                                     style="width: {{  $score_total * 2 * 10 ?? 0  }}%">
                                     <ul class="booking-item-rating-stars">
                                         <li><i class="fa fa-star"></i></li>
                                         <li><i class="fa fa-star"></i></li>
@@ -80,7 +82,8 @@ $service = $row->service;
                 @endif
                 <div class="control-action">
                     <a href="{{$service->getDetailUrl()}}" target="_blank" class="btn btn-info">{{__("View")}}</a>
-                    <a href="{{ route('user.wishList.remove',['id'=>$service->id , 'type' => $service->type]) }}" class="btn btn-warning">{{__("Remove")}}</a>
+                    <a href="{{ route('user.wishList.remove',['id'=>$service->id , 'type' => $service->type]) }}"
+                       class="btn btn-warning">{{__("Remove")}}</a>
                 </div>
             </div>
         </div>

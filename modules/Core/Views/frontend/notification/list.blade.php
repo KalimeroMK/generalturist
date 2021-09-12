@@ -35,7 +35,8 @@
                                 </div>
                             </div>
                             <div class="media-body">
-                                <a class="{{$class}} p-0" data-id="{{$idNotification}}" href="{{$link}}">{!! $title !!}</a>
+                                <a class="{{$class}} p-0" data-id="{{$idNotification}}"
+                                   href="{{$link}}">{!! $title !!}</a>
                                 <div class="notification-meta">
                                     <small class="timestamp">{{format_interval($oneNotification->created_at)}}</small>
                                 </div>

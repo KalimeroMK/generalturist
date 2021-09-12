@@ -5,9 +5,9 @@
                 <img src="{{ $image_url  }}" alt="{{$translation->title}}">
             </header>
             <div class="cate">
-                @php $category = $row->getCategory; @endphp
+                @php $category = $row->getCategory @endphp
                 @if(!empty($category))
-                    @php $t = $category->translateOrOrigin(app()->getLocale()); @endphp
+                    @php $t = $category->translateOrOrigin(app()->getLocale()) @endphp
                     <ul>
                         <li>
                             <a href="{{$category->getDetailUrl(app()->getLocale())}}">
@@ -37,14 +37,18 @@
             <div class="tags">
                 {{__("Tags:")}}
                 @foreach($tags as $tag)
-                    @php $t = $tag->translateOrOrigin(app()->getLocale()); @endphp
+                    @php $t = $tag->translateOrOrigin(app()->getLocale()) @endphp
                     <a href="{{ $tag->getDetailUrl(app()->getLocale()) }}" class="tag-item"> {{$t->name ?? ''}} </a>
                 @endforeach
             </div>
         @endif
         <div class="share"> {{__("Share")}}
-            <a class="facebook share-item" href="https://www.facebook.com/sharer/sharer.php?u={{$row->getDetailUrl()}}&amp;title={{$translation->title}}" target="_blank" original-title="{{__("Facebook")}}"><i class="fa fa-facebook fa-lg"></i></a>
-            <a class="twitter share-item" href="https://twitter.com/share?url={{$row->getDetailUrl()}}&amp;title={{$translation->title}}" target="_blank" original-title="{{__("Twitter")}}"><i class="fa fa-twitter fa-lg"></i></a>
+            <a class="facebook share-item"
+               href="https://www.facebook.com/sharer/sharer.php?u={{$row->getDetailUrl()}}&amp;title={{$translation->title}}"
+               target="_blank" original-title="{{__("Facebook")}}"><i class="fa fa-facebook fa-lg"></i></a>
+            <a class="twitter share-item"
+               href="https://twitter.com/share?url={{$row->getDetailUrl()}}&amp;title={{$translation->title}}"
+               target="_blank" original-title="{{__("Twitter")}}"><i class="fa fa-twitter fa-lg"></i></a>
         </div>
     </div>
 </div>

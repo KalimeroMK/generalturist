@@ -4,8 +4,6 @@
 
     use App\Notifications\AdminChannelServices;
     use App\Notifications\PrivateChannelServices;
-    use App\User;
-    use Illuminate\Support\Facades\Auth;
     use Modules\Vendor\Events\PayoutRequestEvent;
 
     class PayoutNotifyListener
@@ -24,7 +22,7 @@
                 'avatar'  => $user->avatar_url,
                 'link'    => route('vendor.payout.index'),
                 'type'    => 'user_verification_request',
-                'message' => __('Administrator has :action your PAYOUT request', ['action' => $action])
+                'message' => __('Administrator has :action your PAYOUT request', ['action' => $action]),
             ];
 
             if ($action == "insert") {
@@ -37,7 +35,6 @@
                     $user->notify(new PrivateChannelServices($data));
                 }
             }
-
         }
 
 

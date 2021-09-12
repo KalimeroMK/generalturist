@@ -26,8 +26,8 @@
                 $selected = '';
                 if ($row->location_id == $value->id)
                     $selected = 'selected';
-                printf("<option value='%s' %s>%s</option>", $value->id, $selected, $prefix . ' ' . $value->name);
-                $traverse($value->children, $prefix . '-');
+                printf("<option value='%s' %s>%s</option>", $value->id, $selected, $prefix.' '.$value->name);
+                $traverse($value->children, $prefix.'-');
             }
         };
         $traverse($locations);
@@ -36,14 +36,15 @@
 </div>
 <div class="form-group">
     <label>{{__("Address")}}</label>
-    <input type="text" value="{{$row->address??''}}" placeholder="{{__("Address")}}" name="address" class="form-control">
+    <input type="text" value="{{$row->address??''}}" placeholder="{{__("Address")}}" name="address"
+           class="form-control">
 </div>
 <div class="form-group form-index-hide">
     <label class="control-label">{{__("Location Map")}}</label>
     <p><i>{{__('Click onto map to place Location address')}}</i></p>
     <div class="control-map-group">
         <div id="map_content" class="{{!empty($map_full)?'mr-0 w-100':''}}"></div>
-        <div class="g-control  {{!empty($map_full)?'position-static w-100 d-flex justify-content-between':''}}" >
+        <div class="g-control  {{!empty($map_full)?'position-static w-100 d-flex justify-content-between':''}}">
             <div class="form-group">
                 <label>{{__("Map Lat")}}:</label>
                 <input type="text" name="map_lat" class="form-control" value="{{$row->map_lat}}">

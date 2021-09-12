@@ -1,6 +1,7 @@
 @extends('admin.layouts.app')
 @section('content')
-    <form action="{{route('flight.admin.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}" method="post">
+    <form action="{{route('flight.admin.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}"
+          method="post">
         @csrf
         <div class="container-fluid">
             <div class="d-flex justify-content-between mb20">
@@ -10,44 +11,49 @@
                 </div>
                 <div class="">
                     @if($row->id)
-                        <a class="btn btn-primary btn-sm" href="{{route('flight.admin.flight.seat.index',['flight_id'=>$row->id])}}" target="_blank"><i class="fa fa-ticket" aria-hidden="true"></i> {{__(" Flight Ticket type")}}</a>
+                        <a class="btn btn-primary btn-sm"
+                           href="{{route('flight.admin.flight.seat.index',['flight_id'=>$row->id])}}" target="_blank"><i
+                                    class="fa fa-ticket" aria-hidden="true"></i> {{__(" Flight Ticket type")}}</a>
                     @endif
                 </div>
             </div>
             @include('admin.message')
-                <div class="row">
-                    <div class="col-md-9">
-                        @include('Flight::admin.flight.form')
-                        @include('Core::admin/seo-meta/seo-meta')
-                    </div>
-                    <div class="col-md-3">
-                        <div class="panel">
-                            <div class="panel-title"><strong>{{__('Publish')}}</strong></div>
-                            <div class="panel-body">
-                                @if(is_default_lang())
-                                    <div>
-                                        <label><input @if($row->status=='publish') checked @endif type="radio" name="status" value="publish"> {{__("Publish")}}
-                                        </label></div>
-                                    <div>
-                                        <label><input @if($row->status=='draft') checked @endif type="radio" name="status" value="draft"> {{__("Draft")}}
-                                        </label></div>
-                                @endif
-                                <div class="text-right">
-                                    <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> {{__('Save Changes')}}</button>
-                                </div>
+            <div class="row">
+                <div class="col-md-9">
+                    @include('Flight::admin.flight.form')
+                    @include('Core::admin/seo-meta/seo-meta')
+                </div>
+                <div class="col-md-3">
+                    <div class="panel">
+                        <div class="panel-title"><strong>{{__('Publish')}}</strong></div>
+                        <div class="panel-body">
+                            @if(is_default_lang())
+                                <div>
+                                    <label><input @if($row->status=='publish') checked @endif type="radio" name="status"
+                                                  value="publish"> {{__("Publish")}}
+                                    </label></div>
+                                <div>
+                                    <label><input @if($row->status=='draft') checked @endif type="radio" name="status"
+                                                  value="draft"> {{__("Draft")}}
+                                    </label></div>
+                            @endif
+                            <div class="text-right">
+                                <button class="btn btn-primary" type="submit"><i
+                                            class="fa fa-save"></i> {{__('Save Changes')}}</button>
                             </div>
                         </div>
-                        @if(is_default_lang())
+                    </div>
+                    @if(is_default_lang())
                         <div class="panel">
                             <div class="panel-title"><strong>{{__("Author Setting")}}</strong></div>
                             <div class="panel-body">
                                 <div class="form-group">
                                     <?php
-                                    $user = !empty($row->create_user) ? App\User::find($row->create_user) : false;
-                                    \App\Helpers\AdminForm::select2('create_user', [
+                                    use App\Helpers\AdminForm;$user = !empty($row->create_user) ? App\User::find($row->create_user) : false;
+                                    AdminForm::select2('create_user', [
                                         'configs' => [
                                             'ajax'        => [
-                                                'url' => url('/admin/module/user/getForSelect2'),
+                                                'url'      => url('/admin/module/user/getForSelect2'),
                                                 'dataType' => 'json'
                                             ],
                                             'allowClear'  => true,
@@ -55,16 +61,16 @@
                                         ]
                                     ], !empty($user->id) ? [
                                         $user->id,
-                                        $user->getDisplayName() . ' (#' . $user->id . ')'
+                                        $user->getDisplayName().' (#'.$user->id.')'
                                     ] : false)
                                     ?>
                                 </div>
                             </div>
                         </div>
                         @include('Tour::admin.tour.attributes')
-                        @endif
-                    </div>
+                    @endif
                 </div>
+            </div>
         </div>
     </form>
 @endsection
@@ -78,16 +84,16 @@
                 showCalendar: false,
                 autoUpdateInput: false, //disable default date
                 sameDate: true,
-                autoApply           : true,
-                disabledPast        : true,
-                enableLoading       : true,
-                showEventTooltip    : true,
-                classNotAvailable   : ['disabled', 'off'],
+                autoApply: true,
+                disabledPast: true,
+                enableLoading: true,
+                showEventTooltip: true,
+                classNotAvailable: ['disabled', 'off'],
                 disableHightLight: true,
                 timePicker24Hour: true,
-    
-                locale:{
-                    format:'YYYY/MM/DD HH:mm:ss'
+
+                locale: {
+                    format: 'YYYY/MM/DD HH:mm:ss'
                 }
             }).on('apply.daterangepicker', function (ev, picker) {
                 $(this).val(picker.startDate.format('YYYY/MM/DD HH:mm:ss'));

@@ -1,16 +1,18 @@
 <?php
-namespace Modules\Booking\Events;
 
-use Modules\Booking\Models\Booking;
-use Illuminate\Queue\SerializesModels;
+    namespace Modules\Booking\Events;
 
-class VendorLogPayment
-{
-    use SerializesModels;
-    public $booking;
+    use Illuminate\Queue\SerializesModels;
+    use Modules\Booking\Models\Booking;
 
-    public function __construct(Booking $booking)
+    class VendorLogPayment
     {
-        $this->booking = $booking;
+        use SerializesModels;
+
+        public Booking $booking;
+
+        public function __construct(Booking $booking)
+        {
+            $this->booking = $booking;
+        }
     }
-}

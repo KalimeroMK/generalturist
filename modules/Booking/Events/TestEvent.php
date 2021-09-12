@@ -13,14 +13,15 @@
     class TestEvent implements ShouldBroadcast
     {
         use Dispatchable, InteractsWithSockets, SerializesModels;
-        public $user;
+
+        public User $user;
 
         public function __construct(User $user)
         {
             $this->user = $user;
-
         }
-        public function broadcastOn()
+
+        public function broadcastOn(): array
         {
             return ['admin-channel'];
         }

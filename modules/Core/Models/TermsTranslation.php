@@ -1,16 +1,17 @@
 <?php
-namespace Modules\Core\Models;
 
-use App\BaseModel;
+    namespace Modules\Core\Models;
 
-class TermsTranslation extends BaseModel
-{
-    protected $table = 'bravo_terms_translations';
-    protected $fillable = [
-        'name',
-        'content',
-    ];
-    protected $cleanFields = [
-        'content'
-    ];
-}
+    use App\BaseModel;
+
+    class TermsTranslation extends BaseModel
+    {
+        protected $table = 'bravo_terms_translations';
+        protected $fillable = [
+            'name',
+            'content',
+        ];
+        protected $cleanFields = [
+            'content',
+        ];
+    }

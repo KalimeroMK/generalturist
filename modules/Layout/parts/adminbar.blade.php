@@ -1,7 +1,10 @@
 <?php
-if (!Auth::id() or !Auth::user()->hasPermissionTo('dashboard_access'))
-    return;
-$activeMenu = \Modules\Core\Walkers\MenuWalker::getActiveMenu();
+
+    use Modules\Core\Walkers\MenuWalker;
+
+    if (!Auth::id() or !Auth::user()->hasPermissionTo('dashboard_access'))
+        return;
+    $activeMenu = MenuWalker::getActiveMenu();
 ?>
 <div class="bravo-admin-bar">
     <div class="container">

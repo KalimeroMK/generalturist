@@ -8,12 +8,12 @@
     use Modules\Core\Events\CreatedServicesEvent;
     use Modules\Core\Events\UpdatedServiceEvent;
     use Modules\Core\Models\Attributes;
+    use Modules\Location\Models\Location;
     use Modules\Location\Models\LocationCategory;
-    use Modules\Tour\Models\TourTerm;
     use Modules\Tour\Models\Tour;
     use Modules\Tour\Models\TourCategory;
+    use Modules\Tour\Models\TourTerm;
     use Modules\Tour\Models\TourTranslation;
-    use Modules\Location\Models\Location;
 
     class TourController extends AdminController
     {
@@ -68,13 +68,13 @@
                 'breadcrumbs'        => [
                     [
                         'name' => __('Tours'),
-                        'url'  => 'admin/module/tour'
+                        'url'  => 'admin/module/tour',
                     ],
                     [
                         'name'  => __('All'),
-                        'class' => 'active'
+                        'class' => 'active',
                     ],
-                ]
+                ],
             ];
             return view('Tour::admin.index', $data);
         }
@@ -107,13 +107,13 @@
                 'breadcrumbs'        => [
                     [
                         'name' => __('Tours'),
-                        'url'  => 'admin/module/tour'
+                        'url'  => 'admin/module/tour',
                     ],
                     [
                         'name'  => __('Recovery'),
-                        'class' => 'active'
+                        'class' => 'active',
                     ],
-                ]
+                ],
             ];
             return view('Tour::admin.index', $data);
         }
@@ -123,7 +123,7 @@
             $this->checkPermission('tour_create');
             $row = new Tour();
             $row->fill([
-                'status' => 'publish'
+                'status' => 'publish',
             ]);
             $data = [
                 'row'               => $row,
@@ -135,13 +135,13 @@
                 'breadcrumbs'       => [
                     [
                         'name' => __('Tours'),
-                        'url'  => 'admin/module/tour'
+                        'url'  => 'admin/module/tour',
                     ],
                     [
                         'name'  => __('Add Tour'),
-                        'class' => 'active'
+                        'class' => 'active',
                     ],
-                ]
+                ],
             ];
             return view('Tour::admin.detail', $data);
         }
@@ -171,20 +171,19 @@
                 'breadcrumbs'       => [
                     [
                         'name' => __('Tours'),
-                        'url'  => 'admin/module/tour'
+                        'url'  => 'admin/module/tour',
                     ],
                     [
                         'name'  => __('Edit Tour'),
-                        'class' => 'active'
+                        'class' => 'active',
                     ],
-                ]
+                ],
             ];
             return view('Tour::admin.detail', $data);
         }
 
         public function store(Request $request, $id)
         {
-
             if ($id > 0) {
                 $this->checkPermission('tour_update');
                 $row = $this->tourClass::find($id);
@@ -194,7 +193,6 @@
                 if ($row->create_user != Auth::id() and !$this->hasPermission('tour_manage_others')) {
                     return redirect(route('tour.admin.index'));
                 }
-
             } else {
                 $this->checkPermission('tour_create');
                 $row = new $this->tourClass();
@@ -236,7 +234,7 @@
                 foreach ($term_ids as $term_id) {
                     $this->tourTermClass::firstOrCreate([
                         'term_id' => $term_id,
-                        'tour_id' => $row->id
+                        'tour_id' => $row->id,
                     ]);
                 }
                 $this->tourTermClass::where('tour_id', $row->id)->whereNotIn('term_id', $term_ids)->delete();
@@ -245,7 +243,6 @@
 
         public function bulkEdit(Request $request)
         {
-
             $ids = $request->input('ids');
             $action = $request->input('action');
             if (empty($ids) or !is_array($ids)) {
@@ -263,11 +260,10 @@
                             $query->where("create_user", Auth::id());
                             $this->checkPermission('tour_delete');
                         }
-                        $row =$query->first();
+                        $row = $query->first();
                         if (!empty($row)) {
                             $row->delete();
                             event(new UpdatedServiceEvent($row));
-
                         }
                     }
                     return redirect()->back()->with('success', __('Deleted success!'));
@@ -280,7 +276,7 @@
                             $this->checkPermission('tour_delete');
                         }
                         $row = $query->withTrashed()->first();
-                        if($row){
+                        if ($row) {
                             $row->forceDelete();
                         }
                     }
@@ -293,11 +289,10 @@
                             $query->where("create_user", Auth::id());
                             $this->checkPermission('tour_delete');
                         }
-                        $row =$query->first();
+                        $row = $query->first();
                         if (!empty($row)) {
                             $row->restore();
                             event(new UpdatedServiceEvent($row));
-
                         }
                     }
                     return redirect()->back()->with('success', __('Recovery success!'));

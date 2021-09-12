@@ -7,7 +7,8 @@
 @endsection
 @section('content')
     <div class="bravo_search_flight">
-        <div class="bravo_banner" @if($bg = setting_item("flight_page_search_banner")) style="background-image: url({{get_file_url($bg,'full')}})" @endif >
+        <div class="bravo_banner"
+             @if($bg = setting_item("flight_page_search_banner")) style="background-image: url({{get_file_url($bg,'full')}})" @endif >
             <div class="container">
                 <h1>
                     {{setting_item_with_lang("flight_page_search_title")}}

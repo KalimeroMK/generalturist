@@ -40,11 +40,11 @@
                 disableScripts: true,
                 fitBounds: true,
                 center: [{{$row->map_lat}}, {{$row->map_lng}}],
-                zoom:{{$row->map_zoom ?? "8"}},
+                zoom: {{$row->map_zoom ?? "8"}},
                 ready: function (engineMap) {
                     engineMap.addMarker([{{$row->map_lat}}, {{$row->map_lng}}], {
                         icon_options: {
-                            iconUrl:"{{get_file_url(setting_item("event_icon_marker_map"),'full') ?? url('images/icons/png/pin.png') }}"
+                            iconUrl: "{{get_file_url(setting_item("event_icon_marker_map"),'full') ?? url('images/icons/png/pin.png') }}"
                         }
                     });
                 }
@@ -54,14 +54,16 @@
     </script>
     <script>
         var bravo_booking_data = {!! json_encode($booking_data) !!}
-        var bravo_booking_i18n = {
-			no_date_select:'{{__('Please select Start and End date')}}',
-            no_guest_select:'{{__('Please select at least one number')}}',
-            load_dates_url:'{{route('event.vendor.availability.loadDates')}}'
+            var
+        bravo_booking_i18n = {
+            no_date_select: '{{__('Please select Start and End date')}}',
+            no_guest_select: '{{__('Please select at least one number')}}',
+            load_dates_url: '{{route('event.vendor.availability.loadDates')}}'
         };
     </script>
     <script type="text/javascript" src="{{ asset("libs/ion_rangeslider/js/ion.rangeSlider.min.js") }}"></script>
     <script type="text/javascript" src="{{ asset("libs/fotorama/fotorama.js") }}"></script>
     <script type="text/javascript" src="{{ asset("libs/sticky/jquery.sticky.js") }}"></script>
-    <script type="text/javascript" src="{{ asset('module/event/js/single-event.js?_ver='.config('app.version')) }}"></script>
+    <script type="text/javascript"
+            src="{{ asset('module/event/js/single-event.js?_ver='.config('app.version')) }}"></script>
 @endsection

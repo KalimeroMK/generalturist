@@ -1,10 +1,10 @@
 <?php
 
 
-	namespace Modules\User\Controllers\Auth;
+    namespace Modules\User\Controllers\Auth;
 
 
-	class ForgotPasswordController extends \App\Http\Controllers\Auth\ForgotPasswordController
-	{
+    class ForgotPasswordController extends \App\Http\Controllers\Auth\ForgotPasswordController
+    {
 
-	}
+    }

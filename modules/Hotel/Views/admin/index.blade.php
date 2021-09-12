@@ -5,7 +5,7 @@
             <h1 class="title-bar">{{!empty($recovery) ? __('Recovery') : __("All Hotels")}}</h1>
             <div class="title-actions">
                 @if(empty($recovery))
-                <a href="{{route('hotel.admin.create')}}" class="btn btn-primary">{{__("Add new hotel")}}</a>
+                    <a href="{{route('hotel.admin.create')}}" class="btn btn-primary">{{__("Add new hotel")}}</a>
                 @endif
             </div>
         </div>
@@ -13,7 +13,8 @@
         <div class="filter-div d-flex justify-content-between ">
             <div class="col-left">
                 @if(!empty($rows))
-                    <form method="post" action="{{route('hotel.admin.bulkEdit')}}" class="filter-form filter-form-left d-flex justify-content-start">
+                    <form method="post" action="{{route('hotel.admin.bulkEdit')}}"
+                          class="filter-form filter-form-left d-flex justify-content-start">
                         {{csrf_field()}}
                         <select name="action" class="form-control">
                             <option value="">{{__(" Bulk Actions ")}}</option>
@@ -29,32 +30,38 @@
                             @endif
 
                         </select>
-                        <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
+                        <button data-confirm="{{__("Do you want to delete?")}}"
+                                class="btn-info btn btn-icon dungdt-apply-form-btn"
+                                type="button">{{__('Apply')}}</button>
                     </form>
                 @endif
             </div>
             <div class="col-left">
-                <form method="get" action="{{ !empty($recovery) ? route('hotel.admin.recovery') : route('hotel.admin.index')}} " class="filter-form filter-form-right d-flex justify-content-end flex-column flex-sm-row" role="search">
+                <form method="get"
+                      action="{{ !empty($recovery) ? route('hotel.admin.recovery') : route('hotel.admin.index')}} "
+                      class="filter-form filter-form-right d-flex justify-content-end flex-column flex-sm-row"
+                      role="search">
                     @if(!empty($rows) and $hotel_manage_others)
                         <?php
-                        $user = !empty(Request()->vendor_id) ? App\User::find(Request()->vendor_id) : false;
-                        \App\Helpers\AdminForm::select2('vendor_id', [
+                        use App\Helpers\AdminForm;$user = !empty(Request()->vendor_id) ? App\User::find(Request()->vendor_id) : false;
+                        AdminForm::select2('vendor_id', [
                             'configs' => [
                                 'ajax'        => [
                                     'url'      => url('/admin/module/user/getForSelect2'),
                                     'dataType' => 'json',
-                                    'data' => array("user_type"=>"vendor")
+                                    'data'     => array("user_type" => "vendor")
                                 ],
                                 'allowClear'  => true,
                                 'placeholder' => __('-- Vendor --')
                             ]
                         ], !empty($user->id) ? [
                             $user->id,
-                            $user->name_or_email . ' (#' . $user->id . ')'
+                            $user->name_or_email.' (#'.$user->id.')'
                         ] : false)
                         ?>
                     @endif
-                    <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by name')}}" class="form-control">
+                    <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by name')}}"
+                           class="form-control">
                     <button class="btn-info btn btn-icon btn_search" type="submit">{{__('Search')}}</button>
                 </form>
             </div>
@@ -66,64 +73,71 @@
             <div class="panel-body">
                 <form action="" class="bravo-form-item">
                     <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th width="60px"><input type="checkbox" class="check-all"></th>
-                            <th> {{ __('Name')}}</th>
-                            <th width="200px"> {{ __('Location')}}</th>
-                            <th width="130px"> {{ __('Author')}}</th>
-                            <th width="100px"> {{ __('Status')}}</th>
-                            <th width="100px"> {{ __('Reviews')}}</th>
-                            <th width="100px"> {{ __('Date')}}</th>
-                            <th width="100px"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @if($rows->total() > 0)
-                            @foreach($rows as $row)
-                                <tr class="{{$row->status}}">
-                                    <td><input type="checkbox" name="ids[]" class="check-item" value="{{$row->id}}">
-                                    </td>
-                                    <td class="title">
-                                        <a href="{{route('hotel.admin.edit',['id'=>$row->id])}}">{{$row->title}}</a>
-                                    </td>
-                                    <td>{{$row->location->name ?? ''}}</td>
-                                    <td>
-                                        @if(!empty($row->author))
-                                            {{$row->author->getDisplayName()}}
-                                        @else
-                                            {{__("[Author Deleted]")}}
-                                        @endif
-                                    </td>
-                                    <td><span class="badge badge-{{ $row->status }}">{{ $row->status }}</span></td>
-                                    <td>
-                                        <a target="_blank" href="{{ url("/admin/module/review?service_id=".$row->id) }}" class="review-count-approved">
-                                            {{ $row->getNumberReviewsInService() }}
-                                        </a>
-                                    </td>
-                                    <td>{{ display_date($row->updated_at)}}</td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="btn btn-sm btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                {{__("Action")}}
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item" href="{{route('hotel.admin.edit',['id'=>$row->id])}}">{{__("Edit hotel")}}</a>
-                                                <a class="dropdown-item" href="{{route('hotel.admin.room.index',['hotel_id'=>$row->id])}}">{{__("Manage Rooms")}}</a>
-                                                <a class="dropdown-item" href="{{route('hotel.admin.room.availability.index',['hotel_id'=>$row->id])}}">{{__("Manage Rooms Availability")}}</a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
+                        <table class="table table-hover">
+                            <thead>
                             <tr>
-                                <td colspan="7">{{__("No hotel found")}}</td>
+                                <th width="60px"><input type="checkbox" class="check-all"></th>
+                                <th> {{ __('Name')}}</th>
+                                <th width="200px"> {{ __('Location')}}</th>
+                                <th width="130px"> {{ __('Author')}}</th>
+                                <th width="100px"> {{ __('Status')}}</th>
+                                <th width="100px"> {{ __('Reviews')}}</th>
+                                <th width="100px"> {{ __('Date')}}</th>
+                                <th width="100px"></th>
                             </tr>
-                        @endif
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            @if($rows->total() > 0)
+                                @foreach($rows as $row)
+                                    <tr class="{{$row->status}}">
+                                        <td><input type="checkbox" name="ids[]" class="check-item" value="{{$row->id}}">
+                                        </td>
+                                        <td class="title">
+                                            <a href="{{route('hotel.admin.edit',['id'=>$row->id])}}">{{$row->title}}</a>
+                                        </td>
+                                        <td>{{$row->location->name ?? ''}}</td>
+                                        <td>
+                                            @if(!empty($row->author))
+                                                {{$row->author->getDisplayName()}}
+                                            @else
+                                                {{__("[Author Deleted]")}}
+                                            @endif
+                                        </td>
+                                        <td><span class="badge badge-{{ $row->status }}">{{ $row->status }}</span></td>
+                                        <td>
+                                            <a target="_blank"
+                                               href="{{ url("/admin/module/review?service_id=".$row->id) }}"
+                                               class="review-count-approved">
+                                                {{ $row->getNumberReviewsInService() }}
+                                            </a>
+                                        </td>
+                                        <td>{{ display_date($row->updated_at)}}</td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-info dropdown-toggle" type="button"
+                                                        id="dropdownMenuButton" data-toggle="dropdown"
+                                                        aria-haspopup="true" aria-expanded="false">
+                                                    {{__("Action")}}
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <a class="dropdown-item"
+                                                       href="{{route('hotel.admin.edit',['id'=>$row->id])}}">{{__("Edit hotel")}}</a>
+                                                    <a class="dropdown-item"
+                                                       href="{{route('hotel.admin.room.index',['hotel_id'=>$row->id])}}">{{__("Manage Rooms")}}</a>
+                                                    <a class="dropdown-item"
+                                                       href="{{route('hotel.admin.room.availability.index',['hotel_id'=>$row->id])}}">{{__("Manage Rooms Availability")}}</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="7">{{__("No hotel found")}}</td>
+                                </tr>
+                            @endif
+                            </tbody>
+                        </table>
                     </div>
                 </form>
                 {{$rows->appends(request()->query())->links('vendor.pagination.bootstrap-4')}}

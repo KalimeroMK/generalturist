@@ -1,6 +1,6 @@
 <div class="form-group">
     <div class="row align-items-center">
-        <label class="col-md-3 text-right col-form-label" >{{$field['name_'.app()->getLocale()] ?? $field['name'] ?? $field['id']}}
+        <label class="col-md-3 text-right col-form-label">{{$field['name_'.app()->getLocale()] ?? $field['name'] ?? $field['id']}}
 
             @if(!empty($field['required']))
                 <span class="text-danger">*</span>

@@ -27,16 +27,19 @@
                             @if($row->id and $row->id != $currentUser->id and !$currentUser->hasPermissionTo('user_update') )
                                 <div class="form-group">
                                     <label>{{ __('Old Password')}}</label>
-                                    <input type="password" value="" placeholder="{{ __('Old Password')}}" name="old_password" class="form-control" >
+                                    <input type="password" value="" placeholder="{{ __('Old Password')}}"
+                                           name="old_password" class="form-control">
                                 </div>
                             @endif
                             <div class="form-group">
                                 <label>{{ __('New password')}}</label>
-                                <input type="password" value="" placeholder="{{ __('Password')}}" name="password" class="form-control">
+                                <input type="password" value="" placeholder="{{ __('Password')}}" name="password"
+                                       class="form-control">
                             </div>
                             <div class="form-group">
                                 <label>{{ __('Re-Password')}}</label>
-                                <input type="password" value="" placeholder="{{ __('Re-Password')}}" name="password_confirmation" class="form-control">
+                                <input type="password" value="" placeholder="{{ __('Re-Password')}}"
+                                       name="password_confirmation" class="form-control">
                             </div>
                             <button type="submit" class="btn btn-primary"> {{ __('Change Password')}} </button>
                         </div>

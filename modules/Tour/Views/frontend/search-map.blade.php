@@ -37,7 +37,7 @@
     {!! App\Helpers\MapEngine::scripts() !!}
     <script>
         var bravo_map_data = {
-            markers:{!! json_encode($markers) !!}
+            markers: {!! json_encode($markers) !!}
         };
     </script>
     <script type="text/javascript" src="{{ asset("libs/ion_rangeslider/js/ion.rangeSlider.min.js") }}"></script>

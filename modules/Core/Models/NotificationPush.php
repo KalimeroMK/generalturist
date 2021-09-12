@@ -1,24 +1,25 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: h2 gaming
- * Date: 8/9/2019
- * Time: 11:56 PM
- */
-namespace Modules\Core\Models;
+    /**
+     * Created by PhpStorm.
+     * User: h2 gaming
+     * Date: 8/9/2019
+     * Time: 11:56 PM
+     */
 
-use App\BaseModel;
+    namespace Modules\Core\Models;
 
-class NotificationPush extends BaseModel
-{
-    protected $table  = 'notifications';
+    use App\BaseModel;
 
-    protected $fillable = [
-        'type',
-        'notifiable_type',
-        'notifiable_id',
-        'data',
-        'read_at'
-    ];
+    class NotificationPush extends BaseModel
+    {
+        protected $table = 'notifications';
 
-}
+        protected $fillable = [
+            'type',
+            'notifiable_type',
+            'notifiable_id',
+            'data',
+            'read_at',
+        ];
+
+    }

@@ -14,10 +14,10 @@
                     @foreach($rows as $key=>$row)
                         <?php
                         $size_col = 4;
-                        if( !empty($layout) and (  $layout == "style_2" or $layout == "style_3" or $layout == "style_4" )){
+                        if (!empty($layout) and ($layout == "style_2" or $layout == "style_3" or $layout == "style_4")) {
                             $size_col = 4;
-                        }else{
-                            if($key == 0){
+                        } else {
+                            if ($key == 0) {
                                 $size_col = 8;
                             }
                         }

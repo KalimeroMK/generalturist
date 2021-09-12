@@ -17,7 +17,7 @@
 
         protected $table = 'bravo_airport';
 
-        protected $fillable=[
+        protected $fillable = [
             'name',
             'code',
             'location_id',
@@ -32,7 +32,9 @@
         {
             return AirportFactory::new();
         }
-        public function location(){
-            return $this->belongsTo(Location::class,'location_id');
+
+        public function location()
+        {
+            return $this->belongsTo(Location::class, 'location_id');
         }
     }

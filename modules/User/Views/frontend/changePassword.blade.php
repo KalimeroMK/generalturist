@@ -12,15 +12,18 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>{{__("Current Password")}}</label>
-                    <input type="password" name="current-password" placeholder="{{__("Current Password")}}" class="form-control">
+                    <input type="password" name="current-password" placeholder="{{__("Current Password")}}"
+                           class="form-control">
                 </div>
                 <div class="form-group">
                     <label>{{__("New Password")}}</label>
-                    <input type="password" name="new-password" placeholder="{{__("New Password")}}" class="form-control">
-                                   </div>
+                    <input type="password" name="new-password" placeholder="{{__("New Password")}}"
+                           class="form-control">
+                </div>
                 <div class="form-group">
                     <label>{{__("New Password Again")}}</label>
-                    <input type="password" name="new-password_confirmation" placeholder="{{__("New Password Again")}}" class="form-control">
+                    <input type="password" name="new-password_confirmation" placeholder="{{__("New Password Again")}}"
+                           class="form-control">
                 </div>
             </div>
             <div class="col-md-12">

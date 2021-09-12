@@ -33,16 +33,21 @@
             </div>
             <div class="control-action">
                 @if(Auth::user()->hasPermissionTo('flight_update'))
-                    <a href="{{route('flight.vendor.seat.edit',['flight_id'=>$currentFlight->id,'id'=>$row->id])}}" class="btn btn-warning">{{__("Edit")}}</a>
+                    <a href="{{route('flight.vendor.seat.edit',['flight_id'=>$currentFlight->id,'id'=>$row->id])}}"
+                       class="btn btn-warning">{{__("Edit")}}</a>
                 @endif
                 @if(Auth::user()->hasPermissionTo('flight_update'))
-                    <a href="{{route('flight.vendor.seat.delete',['flight_id'=>$currentFlight->id,'id'=>$row->id])}}" class="btn btn-danger" data-confirm="<?php echo e(__("Do you want to delete?")); ?>">{{__("Del")}}</a>
+                    <a href="{{route('flight.vendor.seat.delete',['flight_id'=>$currentFlight->id,'id'=>$row->id])}}"
+                       class="btn btn-danger"
+                       data-confirm="<?php echo e(__("Do you want to delete?")); ?>">{{__("Del")}}</a>
                 @endif
                 @if($row->status == 'publish')
-                    <a href="{{route('flight.vendor.seat.bulk_edit',['flight_id'=>$currentFlight->id,'id'=>$row->id,'action' => "make-hide"])}}" class="btn btn-secondary">{{__("Make hide")}}</a>
+                    <a href="{{route('flight.vendor.seat.bulk_edit',['flight_id'=>$currentFlight->id,'id'=>$row->id,'action' => "make-hide"])}}"
+                       class="btn btn-secondary">{{__("Make hide")}}</a>
                 @endif
                 @if($row->status == 'draft')
-                    <a href="{{route('flight.vendor.seat.bulk_edit',['flight_id'=>$currentFlight->id,'id'=>$row->id,'action' => "make-publish"])}}" class="btn btn-success">{{__("Make publish")}}</a>
+                    <a href="{{route('flight.vendor.seat.bulk_edit',['flight_id'=>$currentFlight->id,'id'=>$row->id,'action' => "make-publish"])}}"
+                       class="btn btn-success">{{__("Make publish")}}</a>
                 @endif
             </div>
         </div>

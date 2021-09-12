@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('head')
-    <link href="{{ asset('dist/frontend/module/location/css/location.css?_ver='.config('app.version')) }}" rel="stylesheet">
+    <link href="{{ asset('dist/frontend/module/location/css/location.css?_ver='.config('app.version')) }}"
+          rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset("libs/ion_rangeslider/css/ion.rangeSlider.min.css") }}"/>
     <link rel="stylesheet" type="text/css" href="{{ asset("libs/fotorama/fotorama.css") }}"/>
 @endsection
@@ -17,7 +18,8 @@
                     <div class="col-md-12 col-lg-4">
                         @if($row->image_id)
                             <div class="g-thumbnail m-3">
-                                <img data-src="<?php echo $row->getImageUrl() ?>" class="img-fluid lazy" alt="{{$translation->name}}">
+                                <img data-src="<?php echo $row->getImageUrl() ?>" class="img-fluid lazy"
+                                     alt="{{$translation->name}}">
                             </div>
                         @endif
                     </div>
@@ -34,19 +36,20 @@
                                     @php $i = 0 @endphp
                                     @foreach($types as $type=>$moduleClass)
                                         @php
-                                        if(!$moduleClass::isEnable()) continue;
-                                        $moduleInst = new $moduleClass();
-                                        $data[$type] = $moduleInst->select($moduleInst::getTableName().'.*')
-                                        ->join('bravo_locations', function ($join) use ($row,$moduleInst) {
-                                            $join->on('bravo_locations.id', '=', $moduleInst::getTableName().'.location_id')
-                                                ->where('bravo_locations._lft', '>=', $row->_lft)
-                                                ->where('bravo_locations._rgt', '<=', $row->_rgt);
-                                        })
-                                        ->where($moduleInst::getTableName().'.status','publish')->with('location')->take(8)->get();
+                                            if(!$moduleClass::isEnable()) continue;
+                                            $moduleInst = new $moduleClass();
+                                            $data[$type] = $moduleInst->select($moduleInst::getTableName().'.*')
+                                            ->join('bravo_locations', function ($join) use ($row,$moduleInst) {
+                                                $join->on('bravo_locations.id', '=', $moduleInst::getTableName().'.location_id')
+                                                    ->where('bravo_locations._lft', '>=', $row->_lft)
+                                                    ->where('bravo_locations._rgt', '<=', $row->_rgt);
+                                            })
+                                            ->where($moduleInst::getTableName().'.status','publish')->with('location')->take(8)->get()
                                         @endphp
                                         @if($data[$type]->count()>0)
                                             <li>
-                                                <a class="{{$i==0?'active':""}}" href="#module-{{$type}}" data-toggle="tab">{{call_user_func([$moduleClass,'getModelName'])}}</a>
+                                                <a class="{{$i==0?'active':""}}" href="#module-{{$type}}"
+                                                   data-toggle="tab">{{call_user_func([$moduleClass,'getModelName'])}}</a>
                                             </li>
                                             @php $i++ @endphp
                                         @endif
@@ -57,13 +60,15 @@
                         <div class="tab-content clearfix py-5">
                             @php $i=0 @endphp
                             @foreach($types as $type=>$moduleClass)
-                                @php  if(!$moduleClass::isEnable()) continue; @endphp
+                                @php  if(!$moduleClass::isEnable()) continue @endphp
                                 @php $view = ucfirst($type).'::frontend.blocks.list-'.$type.'.index' @endphp
                                 @if(view()->exists($view))
                                     @if($data[$type]->count()>0)
                                         <div class="tab-pane {{$i==0?'active':""}}" id="module-{{$type}}">
                                             @include($view,['title'=>"",'style_list'=>'normal','desc'=>'','rows'=> $data[$type]])
-                                            <p class="text-center"><a class="btn btn-primary btn-search" href="{{$row->getLinkForPageSearch($type)}}">{{__('View More')}}</a></p>
+                                            <p class="text-center"><a class="btn btn-primary btn-search"
+                                                                      href="{{$row->getLinkForPageSearch($type)}}">{{__('View More')}}</a>
+                                            </p>
                                         </div>
                                         @php $i++ @endphp
                                     @endif
@@ -96,7 +101,7 @@
                 disableScripts: true,
                 fitBounds: true,
                 center: [{{$row->map_lat}}, {{$row->map_lng}}],
-                zoom:{{$row->map_zoom ?? "8"}},
+                zoom: {{$row->map_zoom ?? "8"}},
                 ready: function (engineMap) {
                     engineMap.addMarker([{{$row->map_lat}}, {{$row->map_lng}}], {
                         icon_options: {}

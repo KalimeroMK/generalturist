@@ -6,7 +6,6 @@
     use App\Notifications\PrivateChannelServices;
     use App\User;
     use Illuminate\Support\Facades\Auth;
-    use Illuminate\Support\Facades\Log;
     use Modules\Core\Events\UpdatedServiceEvent;
 
     class UpdatedServicesListen
@@ -14,20 +13,20 @@
         public function handle(UpdatedServiceEvent $event)
         {
             $services = $event->services;
-            if(!empty($services)){
-                $updatedBy = User::where('id',$services->update_user)->first();
+            if (!empty($services)) {
+                $updatedBy = User::where('id', $services->update_user)->first();
 
-                if(!empty($services->deleted_at)){
+                if (!empty($services->deleted_at)) {
                     $message = __(':title has been deleted by :by', [
-                        'title' => $services->title,
+                        'title'  => $services->title,
                         'status' => $services->status,
-                        'by' => !empty($updatedBy) ? $updatedBy->display_name : Auth::user()->display_name
+                        'by'     => !empty($updatedBy) ? $updatedBy->display_name : Auth::user()->display_name,
                     ]);
-                }else{
+                } else {
                     $message = __(':title was updated to :status by :by', [
-                        'title' => $services->title,
+                        'title'  => $services->title,
                         'status' => $services->status_text,
-                        'by' => !empty($updatedBy) ? $updatedBy->display_name : Auth::user()->display_name
+                        'by'     => !empty($updatedBy) ? $updatedBy->display_name : Auth::user()->display_name,
                     ]);
                 }
 
@@ -39,7 +38,7 @@
                     'avatar'  => Auth::user()->avatar_url,
                     'link'    => get_link_detail_services($services->type, $services->id, 'index'),
                     'type'    => $services->type,
-                    'message' => $message
+                    'message' => $message,
                 ];
                 // notify to admin
                 Auth::user()->notify(new AdminChannelServices($data));
@@ -51,6 +50,5 @@
                     $vendor->notify(new PrivateChannelServices($data));
                 }
             }
-
         }
     }

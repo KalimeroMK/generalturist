@@ -5,7 +5,7 @@
             <h1 class="title-bar">{{!empty($recovery) ? __('Recovery') : __("All Tour")}}</h1>
             <div class="title-actions">
                 @if(empty($recovery))
-                <a href="{{route('tour.admin.create')}}" class="btn btn-primary">{{__("Add new tour")}}</a>
+                    <a href="{{route('tour.admin.create')}}" class="btn btn-primary">{{__("Add new tour")}}</a>
                 @endif
             </div>
         </div>
@@ -13,7 +13,8 @@
         <div class="filter-div d-flex justify-content-between ">
             <div class="col-left">
                 @if(!empty($rows))
-                    <form method="post" action="{{url('admin/module/tour/bulkEdit')}}" class="filter-form filter-form-left d-flex justify-content-start">
+                    <form method="post" action="{{url('admin/module/tour/bulkEdit')}}"
+                          class="filter-form filter-form-left d-flex justify-content-start">
                         {{csrf_field()}}
                         <select name="action" class="form-control">
                             <option value="">{{__(" Bulk Actions ")}}</option>
@@ -29,32 +30,38 @@
                                 <option value="delete">{{__(" Delete ")}}</option>
                             @endif
                         </select>
-                        <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
+                        <button data-confirm="{{__("Do you want to delete?")}}"
+                                class="btn-info btn btn-icon dungdt-apply-form-btn"
+                                type="button">{{__('Apply')}}</button>
                     </form>
                 @endif
             </div>
             <div class="col-left">
-                <form method="get" action="{{ !empty($recovery) ? route('tour.admin.recovery') : route('tour.admin.index')}}" class="filter-form filter-form-right d-flex justify-content-end flex-column flex-sm-row" role="search">
+                <form method="get"
+                      action="{{ !empty($recovery) ? route('tour.admin.recovery') : route('tour.admin.index')}}"
+                      class="filter-form filter-form-right d-flex justify-content-end flex-column flex-sm-row"
+                      role="search">
                     @if(!empty($rows) and $tour_manage_others)
                         <?php
-                        $user = !empty(Request()->vendor_id) ? App\User::find(Request()->vendor_id) : false;
-                        \App\Helpers\AdminForm::select2('vendor_id', [
+                        use App\Helpers\AdminForm;$user = !empty(Request()->vendor_id) ? App\User::find(Request()->vendor_id) : false;
+                        AdminForm::select2('vendor_id', [
                             'configs' => [
                                 'ajax'        => [
                                     'url'      => url('/admin/module/user/getForSelect2'),
                                     'dataType' => 'json',
-                                    'data' => array("user_type"=>"vendor")
+                                    'data'     => array("user_type" => "vendor")
                                 ],
                                 'allowClear'  => true,
                                 'placeholder' => __('-- Vendor --')
                             ]
                         ], !empty($user->id) ? [
                             $user->id,
-                            $user->name_or_email . ' (#' . $user->id . ')'
+                            $user->name_or_email.' (#'.$user->id.')'
                         ] : false)
                         ?>
                     @endif
-                    <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by name')}}" class="form-control">
+                    <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by name')}}"
+                           class="form-control">
                     <select name="cate_id" class="form-control">
                         <option value="">{{ __('--All Category --')}} </option>
                         <?php
@@ -106,13 +113,16 @@
                                         </td>
                                         <td><span class="badge badge-{{ $row->status }}">{{ $row->status }}</span></td>
                                         <td>
-                                            <a target="_blank" href="{{ url("/admin/module/review?service_id=".$row->id) }}" class="review-count-approved">
+                                            <a target="_blank"
+                                               href="{{ url("/admin/module/review?service_id=".$row->id) }}"
+                                               class="review-count-approved">
                                                 {{ $row->getNumberReviewsInService() }}
                                             </a>
                                         </td>
                                         <td>{{ display_date($row->updated_at)}}</td>
                                         <td>
-                                            <a href="{{route('tour.admin.edit',['id'=>$row->id])}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> {{__('Edit')}}
+                                            <a href="{{route('tour.admin.edit',['id'=>$row->id])}}"
+                                               class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> {{__('Edit')}}
                                             </a>
                                         </td>
                                     </tr>

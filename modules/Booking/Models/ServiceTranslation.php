@@ -14,5 +14,5 @@
             'content',
             'locale',
         ];
-        protected $slugField     = false;
+        protected $slugField = false;
     }

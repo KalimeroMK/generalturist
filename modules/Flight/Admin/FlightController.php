@@ -12,13 +12,12 @@
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Support\Facades\Validator;
     use Modules\AdminController;
-    use Modules\Core\Events\CreatedServicesEvent;
     use Modules\Core\Events\UpdatedServiceEvent;
     use Modules\Core\Models\Attributes;
-    use Modules\Location\Models\Location;
-    use Modules\Location\Models\LocationCategory;
     use Modules\Flight\Models\Flight;
     use Modules\Flight\Models\FlightTerm;
+    use Modules\Location\Models\Location;
+    use Modules\Location\Models\LocationCategory;
 
     class FlightController extends AdminController
     {
@@ -60,7 +59,7 @@
             $query = $this->flight::query();
             $query->orderBy('id', 'desc');
             if (!empty($flight_name = $request->input('s'))) {
-                $query->where('name', 'LIKE', '%'.$flight_name.'%')->orWhere('code','like', '%'.$flight_name.'%');
+                $query->where('name', 'LIKE', '%'.$flight_name.'%')->orWhere('code', 'like', '%'.$flight_name.'%');
                 $query->orderBy('name', 'asc');
             }
 
@@ -73,19 +72,19 @@
             }
             $data = [
                 'row'                  => new $this->flight,
-                'rows'                 => $query->with(['airline','airportTo','airportFrom','author'])->paginate(20),
+                'rows'                 => $query->with(['airline', 'airportTo', 'airportFrom', 'author'])->paginate(20),
                 'flight_manage_others' => $this->hasPermission('flight_manage_others'),
                 'breadcrumbs'          => [
                     [
                         'name' => __('Flights'),
-                        'url'  => route('flight.admin.index')
+                        'url'  => route('flight.admin.index'),
                     ],
                     [
                         'name'  => __('All'),
-                        'class' => 'active'
+                        'class' => 'active',
                     ],
                 ],
-                'page_title'           => __("Flight Management")
+                'page_title'           => __("Flight Management"),
             ];
             return view('Flight::admin.index', $data);
         }
@@ -114,48 +113,48 @@
                 'breadcrumbs'          => [
                     [
                         'name' => __('Flights'),
-                        'url'  => 'admin/module/space'
+                        'url'  => 'admin/module/space',
                     ],
                     [
                         'name'  => __('Recovery'),
-                        'class' => 'active'
+                        'class' => 'active',
                     ],
                 ],
-                'page_title'           => __("Recovery Flight Management")
+                'page_title'           => __("Recovery Flight Management"),
             ];
             return view('Flight::admin.flight.index', $data);
         }
 
-    public function create(Request $request)
-    {
-        $this->checkPermission('flight_create');
-        $row = new $this->flight();
-        $row->fill([
-            'status' => 'publish'
-        ]);
-        $data = [
-            'row'            => $row,
-            'attributes'     => $this->attributes::where('service', 'flight')->get(),
-            'translation'    => $row,
-            'breadcrumbs'    => [
-                [
-                    'name' => __('Flights'),
-                    'url'  => route('flight.admin.index')
+        public function create(Request $request)
+        {
+            $this->checkPermission('flight_create');
+            $row = new $this->flight();
+            $row->fill([
+                'status' => 'publish',
+            ]);
+            $data = [
+                'row'         => $row,
+                'attributes'  => $this->attributes::where('service', 'flight')->get(),
+                'translation' => $row,
+                'breadcrumbs' => [
+                    [
+                        'name' => __('Flights'),
+                        'url'  => route('flight.admin.index'),
+                    ],
+                    [
+                        'name'  => __('Add Flight'),
+                        'class' => 'active',
+                    ],
                 ],
-                [
-                    'name'  => __('Add Flight'),
-                    'class' => 'active'
-                ],
-            ],
-            'page_title'     => __("Add new Flight")
-        ];
-        return view('Flight::admin.detail', $data);
-    }
+                'page_title'  => __("Add new Flight"),
+            ];
+            return view('Flight::admin.detail', $data);
+        }
 
         public function edit(Request $request, $id)
         {
             $this->checkPermission('flight_update');
-            $row = $this->flight::with(['airline','airportTo','airportFrom'])->find($id);
+            $row = $this->flight::with(['airline', 'airportTo', 'airportFrom'])->find($id);
             if (empty($row)) {
                 return redirect(route('flight.admin.index'));
             }
@@ -172,21 +171,20 @@
                 'breadcrumbs'       => [
                     [
                         'name' => __('Flights'),
-                        'url'  => route('flight.admin.index')
+                        'url'  => route('flight.admin.index'),
                     ],
                     [
                         'name'  => __('Edit Flight'),
-                        'class' => 'active'
+                        'class' => 'active',
                     ],
                 ],
-                'page_title'        => __("Edit: #:name", ['name' => $row->id])
+                'page_title'        => __("Edit: #:name", ['name' => $row->id]),
             ];
             return view('Flight::admin.detail', $data);
         }
 
         public function store(Request $request, $id)
         {
-
             if ($id > 0) {
                 $this->checkPermission('flight_update');
                 $row = $this->flight::find($id);
@@ -205,12 +203,12 @@
 
 
             $validator = Validator::make($request->all(), [
-                'departure_time'=>'required',
-                'arrival_time'=>'required',
-                'duration'=>'required',
-                'airport_from'=>'required',
-                'airport_to'=>'required',
-                'airline_id'=>'required',
+                'departure_time' => 'required',
+                'arrival_time'   => 'required',
+                'duration'       => 'required',
+                'airport_from'   => 'required',
+                'airport_to'     => 'required',
+                'airline_id'     => 'required',
             ]);
             if ($validator->fails()) {
                 return redirect()->back()->with(['errors' => $validator->errors()]);
@@ -233,7 +231,7 @@
             $row->fillByAttr($dataKeys, $request->input());
             $res = $row->saveOriginOrTranslation(false, true);
             if ($res) {
-                $this->saveTerms($row,$request);
+                $this->saveTerms($row, $request);
                 if ($id > 0) {
                     return back()->with('success', __('Flight updated'));
                 } else {
@@ -241,6 +239,7 @@
                 }
             }
         }
+
         public function saveTerms($row, $request)
         {
             $this->checkPermission('flight_manage_attributes');
@@ -251,7 +250,7 @@
                 foreach ($term_ids as $term_id) {
                     $this->flight_term::firstOrCreate([
                         'term_id'   => $term_id,
-                        'target_id' => $row->id
+                        'target_id' => $row->id,
                     ]);
                 }
                 $this->flight_term::where('target_id', $row->id)->whereNotIn('term_id', $term_ids)->delete();
@@ -260,7 +259,6 @@
 
         public function bulkEdit(Request $request)
         {
-
             $ids = $request->input('ids');
             $action = $request->input('action');
             if (empty($ids) or !is_array($ids)) {
@@ -282,7 +280,6 @@
                         if (!empty($row)) {
                             $row->delete();
                             event(new UpdatedServiceEvent($row));
-
                         }
                     }
                     return redirect()->back()->with('success', __('Deleted success!'));
@@ -312,7 +309,6 @@
                         if (!empty($row)) {
                             $row->restore();
                             event(new UpdatedServiceEvent($row));
-
                         }
                     }
                     return redirect()->back()->with('success', __('Recovery success!'));
@@ -340,7 +336,5 @@
                     return redirect()->back()->with('success', __('Update success!'));
                     break;
             }
-
-
         }
     }

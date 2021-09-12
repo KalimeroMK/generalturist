@@ -6,7 +6,6 @@
     use App\Notifications\PrivateChannelServices;
     use App\User;
     use Illuminate\Support\Facades\Auth;
-    use Modules\Booking\Events\BookingCreatedEvent;
     use Modules\Booking\Events\SetPaidAmountEvent;
 
     class SetPaidAmountListen
@@ -24,7 +23,8 @@
                 'avatar'  => Auth::user()->avatar_url,
                 'link'    => route('report.admin.booking'),
                 'type'    => $booking->object_model,
-                'message' => __(':name has updated the PAID amount on :title', ['name' => $vendor->display_name, 'title' => $booking->service->title]),
+                'message' => __(':name has updated the PAID amount on :title',
+                    ['name' => $vendor->display_name, 'title' => $booking->service->title]),
             ];
 
             Auth::user()->notify(new AdminChannelServices($data));

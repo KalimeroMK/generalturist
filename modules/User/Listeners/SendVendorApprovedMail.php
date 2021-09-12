@@ -1,58 +1,54 @@
 <?php
 
-namespace Modules\User\Listeners;
+    namespace Modules\User\Listeners;
 
-use Illuminate\Support\Facades\Mail;
-use Modules\User\Emails\RegisteredEmail;
-use Modules\User\Emails\VendorApprovedEmail;
-use Modules\User\Events\SendMailUserRegistered;
-use Modules\User\Events\VendorApproved;
-use Modules\User\Models\User;
-use Modules\Vendor\Models\VendorRequest;
+    use Illuminate\Support\Facades\Mail;
+    use Modules\User\Emails\VendorApprovedEmail;
+    use Modules\User\Events\VendorApproved;
+    use Modules\User\Models\User;
+    use Modules\Vendor\Models\VendorRequest;
 
-class SendVendorApprovedMail
-{
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public $user;
-    public $vendorRequest;
-
-    const CODE = [
-        'first_name' => '[first_name]',
-        'last_name'  => '[last_name]',
-        'name'       => '[name]',
-        'email'      => '[email]',
-    ];
-
-    public function __construct(User $user, VendorRequest $vendorRequest)
+    class SendVendorApprovedMail
     {
-        $this->user = $user;
-        $this->vendorRequest = $vendorRequest;
-        //
-    }
+        const CODE = [
+            'first_name' => '[first_name]',
+            'last_name'  => '[last_name]',
+            'name'       => '[name]',
+            'email'      => '[email]',
+        ];
+        /**
+         * Create the event listener.
+         *
+         * @return void
+         */
+        public $user;
+        public $vendorRequest;
 
-    /**
-     * Handle the event.
-     *
-     * @param Event $event
-     * @return void
-     */
-    public function handle(VendorApproved $event)
-    {
-        if($event->user->locale){
-            $old = app()->getLocale();
-            app()->setLocale($event->user->locale);
+        public function __construct(User $user, VendorRequest $vendorRequest)
+        {
+            $this->user = $user;
+            $this->vendorRequest = $vendorRequest;
+            //
         }
 
-        Mail::to($event->user->email)->send(new VendorApprovedEmail($event->user));
+        /**
+         * Handle the event.
+         *
+         * @param  Event  $event
+         * @return void
+         */
+        public function handle(VendorApproved $event)
+        {
+            if ($event->user->locale) {
+                $old = app()->getLocale();
+                app()->setLocale($event->user->locale);
+            }
 
-        if(!empty($old)){
-            app()->setLocale($old);
+            Mail::to($event->user->email)->send(new VendorApprovedEmail($event->user));
+
+            if (!empty($old)) {
+                app()->setLocale($old);
+            }
         }
 
     }
-
-}

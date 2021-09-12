@@ -24,22 +24,30 @@
                 <div class="filter-div d-flex justify-content-between ">
                     <div class="col-left">
                         @if(!empty($rows))
-                            <form method="post" action="{{url('admin/module/user/subscriber/bulkEdit')}}" class="filter-form filter-form-left d-flex justify-content-start">
+                            <form method="post" action="{{url('admin/module/user/subscriber/bulkEdit')}}"
+                                  class="filter-form filter-form-left d-flex justify-content-start">
                                 {{csrf_field()}}
                                 <select name="action" class="form-control">
                                     <option value="">{{__(" Bulk Action ")}}</option>
                                     <option value="delete">{{__(" Delete ")}}</option>
                                 </select>
-                                <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
+                                <button data-confirm="{{__("Do you want to delete?")}}"
+                                        class="btn-info btn btn-icon dungdt-apply-form-btn"
+                                        type="button">{{__('Apply')}}</button>
                             </form>
                         @endif
                     </div>
                     <div class="col-left">
-                        <form method="get" action="{{url('/admin/module/user/subscriber')}} " class="filter-form filter-form-right d-flex justify-content-end" role="search">
-                            <a class="btn btn-warning btn-icon" href="{{url('/admin/module/user/subscriber/export')}}" target="_blank" title="{{__("Export to excel")}}"><i class="icon ion-md-cloud-download"></i>&nbsp;{{__('Export')}}
+                        <form method="get" action="{{url('/admin/module/user/subscriber')}} "
+                              class="filter-form filter-form-right d-flex justify-content-end" role="search">
+                            <a class="btn btn-warning btn-icon" href="{{url('/admin/module/user/subscriber/export')}}"
+                               target="_blank" title="{{__("Export to excel")}}"><i
+                                        class="icon ion-md-cloud-download"></i>&nbsp;{{__('Export')}}
                             </a>
-                            <input type="text" name="s" value="{{ Request()->s }}" class="form-control" placeholder="{{__("Search by name or email")}}">
-                            <button class="btn-info btn btn-icon btn_search" id="search-submit" type="submit">{{__('Search')}}</button>
+                            <input type="text" name="s" value="{{ Request()->s }}" class="form-control"
+                                   placeholder="{{__("Search by name or email")}}">
+                            <button class="btn-info btn btn-icon btn_search" id="search-submit"
+                                    type="submit">{{__('Search')}}</button>
                         </form>
                     </div>
                 </div>

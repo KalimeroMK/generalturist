@@ -1,32 +1,36 @@
 <?php
-namespace Modules\Hotel\Admin;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Modules\AdminController;
+    namespace Modules\Hotel\Admin;
 
-class AvailabilityController extends \Modules\Hotel\Controllers\AvailabilityController
-{
-    protected $indexView = 'Hotel::admin.room.availability';
+    use Illuminate\Support\Facades\Auth;
 
-    public function __construct()
+    class AvailabilityController extends \Modules\Hotel\Controllers\AvailabilityController
     {
-        parent::__construct();
-        $this->setActiveMenu('admin/module/hotel');
-        $this->middleware('dashboard');
-    }
+        protected $indexView = 'Hotel::admin.room.availability';
 
-    protected function hasHotelPermission($hotel_id = false){
-        if(empty($hotel_id)) return false;
-
-        $hotel = $this->hotelClass::find($hotel_id);
-        if(empty($hotel)) return false;
-
-        if(!$this->hasPermission('hotel_manage_others') and $hotel->create_user != Auth::id()){
-            return false;
+        public function __construct()
+        {
+            parent::__construct();
+            $this->setActiveMenu('admin/module/hotel');
+            $this->middleware('dashboard');
         }
 
-        $this->currentHotel = $hotel;
-        return true;
+        protected function hasHotelPermission($hotel_id = false)
+        {
+            if (empty($hotel_id)) {
+                return false;
+            }
+
+            $hotel = $this->hotelClass::find($hotel_id);
+            if (empty($hotel)) {
+                return false;
+            }
+
+            if (!$this->hasPermission('hotel_manage_others') and $hotel->create_user != Auth::id()) {
+                return false;
+            }
+
+            $this->currentHotel = $hotel;
+            return true;
+        }
     }
-}

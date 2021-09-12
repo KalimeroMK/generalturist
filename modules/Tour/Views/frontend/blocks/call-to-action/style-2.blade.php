@@ -1,5 +1,6 @@
 <div class="container">
-    <div class="context" @if(!empty($bg_image_url)) style="background-image: url({{ $bg_image_url ?? "" }}) !important;" @endif>
+    <div class="context"
+         @if(!empty($bg_image_url)) style="background-image: url({{ $bg_image_url ?? "" }}) !important;" @endif>
         <div class="row">
             <div class="col-md-8">
                 <div class="title">

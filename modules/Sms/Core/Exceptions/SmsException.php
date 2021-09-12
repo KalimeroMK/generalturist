@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Sms\Core\Exceptions;
+    namespace Modules\Sms\Core\Exceptions;
 
-use Exception;
+    use Exception;
 
-class SmsException extends Exception
-{
+    class SmsException extends Exception
+    {
 
-}
+    }

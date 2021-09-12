@@ -8,7 +8,8 @@
                     @php
                         $service_translation = $service->translateOrOrigin($lang_local);
                     @endphp
-                    <h3 class="service-name"><a href="{{$service->getDetailUrl()}}">{!! clean($service_translation->title) !!}</a></h3>
+                    <h3 class="service-name"><a
+                                href="{{$service->getDetailUrl()}}">{!! clean($service_translation->title) !!}</a></h3>
                     @if($service_translation->address)
                         <p class="address"><i class="fa fa-map-marker"></i>
                             {{$service_translation->address}}
@@ -18,7 +19,8 @@
                 <div>
                     @if($image_url = $service->image_url)
                         @if(!empty($disable_lazyload))
-                            <img src="{{$service->image_url}}" class="img-responsive" alt="{!! clean($service_translation->title) !!}">
+                            <img src="{{$service->image_url}}" class="img-responsive"
+                                 alt="{!! clean($service_translation->title) !!}">
                         @else
                             {!! get_image_tag($service->image_id,'medium',['class'=>'img-responsive','alt'=>$service_translation->title]) !!}
                         @endif
@@ -28,7 +30,8 @@
                 @if($vendor->hasPermissionTo('dashboard_vendor_access') and !$vendor->hasPermissionTo('dashboard_access'))
                     <div class="mt-2">
                         <i class="icofont-info-circle"></i>
-                        {{ __("Vendor") }}: <a href="{{route('user.profile',['id'=>$vendor->id])}}" target="_blank" >{{$vendor->getDisplayName()}}</a>
+                        {{ __("Vendor") }}: <a href="{{route('user.profile',['id'=>$vendor->id])}}"
+                                               target="_blank">{{$vendor->getDisplayName()}}</a>
                     </div>
                 @endif
             </div>
@@ -81,17 +84,18 @@
                         </div>
                     </li>
                 @endif
-    
-                    <li class="flex-wrap">
-                        <div class="flex-grow-0 flex-shrink-0 w-100">
-                            <p class="text-center">
-                                <a data-toggle="modal" data-target="#detailBookingDate{{$booking->code}}" aria-expanded="false"
-                                   aria-controls="detailBookingDate{{$booking->code}}">
-                                    {{__('Detail')}} <i class="icofont-list"></i>
-                                </a>
-                            </p>
-                        </div>
-                    </li>
+
+                <li class="flex-wrap">
+                    <div class="flex-grow-0 flex-shrink-0 w-100">
+                        <p class="text-center">
+                            <a data-toggle="modal" data-target="#detailBookingDate{{$booking->code}}"
+                               aria-expanded="false"
+                               aria-controls="detailBookingDate{{$booking->code}}">
+                                {{__('Detail')}} <i class="icofont-list"></i>
+                            </a>
+                        </p>
+                    </div>
+                </li>
 
             </ul>
         </div>
@@ -149,7 +153,8 @@
                         <li>
                             <div class="label">
                                 {{$item['name_'.$lang_local] ?? $item['name']}}
-                                <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top" title="{{ $item['desc_'.$lang_local] ?? $item['desc'] }}"></i>
+                                <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top"
+                                   title="{{ $item['desc_'.$lang_local] ?? $item['desc'] }}"></i>
                                 @if(!empty($item['per_person']) and $item['per_person'] == "on")
                                     : {{$booking->total_guests}} * {{format_money( $fee_price )}}
                                 @endif
@@ -190,8 +195,9 @@
 
 <?php
 $dateDetail = $service->detailBookingEachDate($booking);
-;?>
-<div class="modal fade" id="detailBookingDate{{$booking->code}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" >
+?>
+<div class="modal fade" id="detailBookingDate{{$booking->code}}" tabindex="-1" role="dialog"
+     aria-labelledby="modelTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -201,18 +207,18 @@ $dateDetail = $service->detailBookingEachDate($booking);
                 </button>
             </div>
             <div class="modal-body">
-                    <ul class="review-list list-unstyled">
-                            <li class="mb-3 pb-1 border-bottom">
-                                <h6 class="label text-center font-weight-bold mb-1"></h6>
-                                    <div>
-                                        @includeIf("Space::frontend.booking.detail-date",['rows'=>$dateDetail])
-                                    </div>
-                                <div class="d-flex justify-content-between font-weight-bold px-2">
-                                    <span>{{__("Total:")}}</span>
-                                    <span>{{format_money(array_sum(\Illuminate\Support\Arr::pluck($dateDetail,['price'])))}}</span>
-                                </div>
-                            </li>
-                    </ul>
+                <ul class="review-list list-unstyled">
+                    <li class="mb-3 pb-1 border-bottom">
+                        <h6 class="label text-center font-weight-bold mb-1"></h6>
+                        <div>
+                            @includeIf("Space::frontend.booking.detail-date",['rows'=>$dateDetail])
+                        </div>
+                        <div class="d-flex justify-content-between font-weight-bold px-2">
+                            <span>{{__("Total:")}}</span>
+                            <span>{{format_money(array_sum(\Illuminate\Support\Arr::pluck($dateDetail,['price'])))}}</span>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

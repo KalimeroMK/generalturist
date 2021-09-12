@@ -15,7 +15,7 @@
                     <div class="panel-body pd15">
                         <div class="row area-setting-row">
                             @if($user->hasPermissionTo('language_manage'))
-                                @php $hasAvailableTools = true; @endphp
+                                @php $hasAvailableTools = true @endphp
                                 <div class="col-md-4">
                                     <div class="area-setting-item">
                                         <a class="setting-item-link" href="{{url('admin/module/language')}}">
@@ -31,10 +31,11 @@
                                 </div>
                             @endif
                             @if($user->hasPermissionTo('language_translation'))
-                                @php $hasAvailableTools = true; @endphp
+                                @php $hasAvailableTools = true @endphp
                                 <div class="col-md-4">
                                     <div class="area-setting-item">
-                                        <a class="setting-item-link" href="{{url('admin/module/language/translations')}}">
+                                        <a class="setting-item-link"
+                                           href="{{url('admin/module/language/translations')}}">
                                             <span class="setting-item-media">
                                                 <i class="icon ion-ios-globe"></i>
                                             </span>
@@ -47,7 +48,7 @@
                                 </div>
                             @endif
                             @if($user->hasPermissionTo('system_log_view'))
-                                @php $hasAvailableTools = true; @endphp
+                                @php $hasAvailableTools = true @endphp
                                 <div class="col-md-4">
                                     <div class="area-setting-item">
                                         <a class="setting-item-link" href="{{url('admin/logs')}}">
@@ -63,7 +64,7 @@
                                 </div>
                             @endif
                             @if($user->hasPermissionTo('system_log_view'))
-                                @php $hasAvailableTools = true; @endphp
+                                @php $hasAvailableTools = true @endphp
                                 <div class="col-md-4 d-none">
                                     <div class="area-setting-item">
                                         <a class="setting-item-link" href="{{route('core.admin.updater.index')}}">
@@ -79,7 +80,7 @@
                                 </div>
                             @endif
                             @if($user->hasPermissionTo('plugin_manage'))
-                                @php $hasAvailableTools = true; @endphp
+                                @php $hasAvailableTools = true @endphp
                                 <div class="col-md-4">
                                     <div class="area-setting-item">
                                         <a class="setting-item-link" href="{{route('core.admin.plugins.index')}}">

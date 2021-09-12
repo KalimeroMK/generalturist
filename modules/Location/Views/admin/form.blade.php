@@ -1,6 +1,7 @@
 <div class="form-group">
     <label>{{__("Name")}}</label>
-    <input type="text" value="{{$translation->name}}" placeholder="{{__("Location name")}}" name="name" class="form-control">
+    <input type="text" value="{{$translation->name}}" placeholder="{{__("Location name")}}" name="name"
+           class="form-control">
 </div>
 @if(is_default_lang())
     <div class="form-group">
@@ -16,8 +17,8 @@
                     $selected = '';
                     if ($row->parent_id == $category->id)
                         $selected = 'selected';
-                    printf("<option value='%s' %s>%s</option>", $category->id, $selected, $prefix . ' ' . $category->name);
-                    $traverse($category->children, $prefix . '-');
+                    printf("<option value='%s' %s>%s</option>", $category->id, $selected, $prefix.' '.$category->name);
+                    $traverse($category->children, $prefix.'-');
                 }
             };
             $traverse($parents);

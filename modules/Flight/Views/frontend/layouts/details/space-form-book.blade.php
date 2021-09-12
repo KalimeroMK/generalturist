@@ -11,7 +11,7 @@
                     </div>
                 </div>
                 <div class="nav-enquiry" v-if="is_form_enquiry_and_book">
-                    <div class="enquiry-item active" >
+                    <div class="enquiry-item active">
                         <span>{{ __("Book") }}</span>
                     </div>
                     <div class="enquiry-item" data-toggle="modal" data-target="#enquiry_form_modal">
@@ -22,9 +22,11 @@
                     <div class="p-4">
                         <span class="d-block text-gray-1 font-weight-normal mb-0 text-left">Date</span>
                         <div class="mb-4">
-                            <div class="border-bottom border-width-2 border-color-1" data-format="{{get_moment_date_format()}}">
+                            <div class="border-bottom border-width-2 border-color-1"
+                                 data-format="{{get_moment_date_format()}}">
                                 <div class="u-datepicker input-group" @click="openStartDate">
-                                    <input class="start_date w-auto height-40 font-size-16 shadow-none font-weight-bold form-control hero-form bg-transparent border-0 flatpickr-input p-0" type="text" ref="start_date">
+                                    <input class="start_date w-auto height-40 font-size-16 shadow-none font-weight-bold form-control hero-form bg-transparent border-0 flatpickr-input p-0"
+                                           type="text" ref="start_date">
                                 </div>
                                 @if(!empty($row->min_day_before_booking))
                                     <small>
@@ -54,11 +56,14 @@
                                         <small>{{__('Ages 12+')}}</small>
                                     </span>
                                     <div class="flex-horizontal-center">
-                                        <a class="font-size-10 text-dark" href="javascript:;" @click="addPersonType('adults')">
+                                        <a class="font-size-10 text-dark" href="javascript:"
+                                           @click="addPersonType('adults')">
                                             <i class="fa fa-chevron-up"></i>
                                         </a>
-                                        <input class="form-control h-auto width-30 font-weight-bold font-size-16 shadow-none bg-tranparent border-0 rounded p-0 mx-1 text-center"  type="text"  v-model="adults" min="1">
-                                        <a class="font-size-10 text-dark" href="javascript:;" @click="minusPersonType('adults')">
+                                        <input class="form-control h-auto width-30 font-weight-bold font-size-16 shadow-none bg-tranparent border-0 rounded p-0 mx-1 text-center"
+                                               type="text" v-model="adults" min="1">
+                                        <a class="font-size-10 text-dark" href="javascript:"
+                                           @click="minusPersonType('adults')">
                                             <i class="fa fa-chevron-down"></i>
                                         </a>
                                     </div>
@@ -73,11 +78,14 @@
                                         <small>{{__('Ages 2–12')}}</small>
                                     </span>
                                     <div class="flex-horizontal-center">
-                                        <a class="font-size-10 text-dark" href="javascript:;" @click="addPersonType('children')">
+                                        <a class="font-size-10 text-dark" href="javascript:"
+                                           @click="addPersonType('children')">
                                             <i class="fa fa-chevron-up"></i>
                                         </a>
-                                        <input class="form-control h-auto width-30 font-weight-bold font-size-16 shadow-none bg-tranparent border-0 rounded p-0 mx-1 text-center"  type="text"  v-model="children" min="0">
-                                        <a class="font-size-10 text-dark" href="javascript:;" @click="minusPersonType('children')">
+                                        <input class="form-control h-auto width-30 font-weight-bold font-size-16 shadow-none bg-tranparent border-0 rounded p-0 mx-1 text-center"
+                                               type="text" v-model="children" min="0">
+                                        <a class="font-size-10 text-dark" href="javascript:"
+                                           @click="minusPersonType('children')">
                                             <i class="fa fa-chevron-down"></i>
                                         </a>
                                     </div>
@@ -98,10 +106,12 @@
                             </div>
                         </div>
                         <div class="mb-2" v-if="buyer_fees.length">
-                            <div class="extra-price-wrap d-flex justify-content-between" v-for="(type,index) in buyer_fees">
+                            <div class="extra-price-wrap d-flex justify-content-between"
+                                 v-for="(type,index) in buyer_fees">
                                 <div class="flex-grow-1">
                                     <label>@{{type.type_name}}
-                                        <i class="icofont-info-circle" v-if="type.desc" data-toggle="tooltip" data-placement="top" :title="type.type_desc"></i>
+                                        <i class="icofont-info-circle" v-if="type.desc" data-toggle="tooltip"
+                                           data-placement="top" :title="type.type_desc"></i>
                                     </label>
                                     <div class="render" v-if="type.price_type">(@{{type.price_type}})</div>
                                 </div>
@@ -109,7 +119,7 @@
                                     <div class="unit" v-if='type.unit == "percent"'>
                                         @{{ type.price }}%
                                     </div>
-                                    <div class="unit" v-else >
+                                    <div class="unit" v-else>
                                         @{{ formatMoney(type.price) }}
                                     </div>
                                 </div>
@@ -135,11 +145,15 @@
                                     @endif
                                 </i>
                             </p>
-                            <button class="btn btn-primary d-flex align-items-center justify-content-center  height-60 w-100 mb-xl-0 mb-lg-1 transition-3d-hover font-weight-bold" @click="doSubmit($event)" :class="{'disabled':onSubmit,'btn-success':(step == 2),'btn-primary':step == 1}" name="submit">
+                            <button class="btn btn-primary d-flex align-items-center justify-content-center  height-60 w-100 mb-xl-0 mb-lg-1 transition-3d-hover font-weight-bold"
+                                    @click="doSubmit($event)"
+                                    :class="{'disabled':onSubmit,'btn-success':(step == 2),'btn-primary':step == 1}"
+                                    name="submit">
                                 <span class="stop-color-white">{{__("Book Now")}}</span>
                                 <i v-show="onSubmit" class="fa fa-spinner fa-spin ml-1"></i>
                             </button>
-                            <div class="alert-text mt-3 text-left" v-show="message.content" v-html="message.content" :class="{'danger':!message.type,'success':message.type}"></div>
+                            <div class="alert-text mt-3 text-left" v-show="message.content" v-html="message.content"
+                                 :class="{'danger':!message.type,'success':message.type}"></div>
                         </div>
                     </div>
                 </div>

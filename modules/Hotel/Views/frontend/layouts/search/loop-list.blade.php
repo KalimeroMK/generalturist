@@ -1,5 +1,5 @@
 @php
-    $translation = $row->translateOrOrigin(app()->getLocale());
+    $translation = $row->translateOrOrigin(app()->getLocale())
 @endphp
 <div class="item-loop-list {{$wrap_class ?? ''}}">
     @if($row->is_featured == "1")
@@ -38,7 +38,7 @@
                 @if($row->is_instant)
                     <i class="fa fa-bolt d-none"></i>
                 @endif
-                    {!! clean($translation->title) !!}
+                {!! clean($translation->title) !!}
             </a>
         </div>
         @if(!empty($attribute = $row->getAttributeInListingPage()))
@@ -66,7 +66,7 @@
     </div>
     <div class="g-rate-price">
         @if(setting_item('hotel_enable_review'))
-            @php  $reviewData = $row->getScoreReview(); @endphp
+            @php  $reviewData = $row->getScoreReview() @endphp
             <div class="service-review-pc">
                 <div class="head">
                     <div class="left">

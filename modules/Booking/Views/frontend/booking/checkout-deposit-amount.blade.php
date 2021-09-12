@@ -11,6 +11,8 @@
                 <span class="input-group-text convert_deposit_amount">{{format_money(0)}}</span>
             </div>
         </div>
-        <div class="d-flex justify-content-between"><h5 class="form-section-title">{{__("Pay now")}}:</h5> <div class="val convert_pay_now">{{format_money(floatval($booking->deposit == null ? $booking->total : $booking->deposit))}}</div></div>
+        <div class="d-flex justify-content-between"><h5 class="form-section-title">{{__("Pay now")}}:</h5>
+            <div class="val convert_pay_now">{{format_money(floatval($booking->deposit == null ? $booking->total : $booking->deposit))}}</div>
+        </div>
     </div>
 @endif

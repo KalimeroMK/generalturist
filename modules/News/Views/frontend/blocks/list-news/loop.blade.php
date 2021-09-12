@@ -1,12 +1,13 @@
 @php
-    $translation = $row->translateOrOrigin(app()->getLocale());
+    $translation = $row->translateOrOrigin(app()->getLocale())
 @endphp
 <div class="item-news">
     <div class="thumb-image">
         <a href="{{$row->getDetailUrl()}}">
             @if($row->image_id)
                 @if(!empty($disable_lazyload))
-                    <img src="{{get_file_url($row->image_id,'medium')}}" class="img-responsive" alt="{{$translation->name ?? ''}}">
+                    <img src="{{get_file_url($row->image_id,'medium')}}" class="img-responsive"
+                         alt="{{$translation->name ?? ''}}">
                 @else
                     {!! get_image_tag($row->image_id,'medium',['class'=>'img-responsive','alt'=>$row->title]) !!}
                 @endif
@@ -16,9 +17,9 @@
     <div class="caption">
         <div class="item-date">
             <ul>
-                @php $category = $row->getCategory; @endphp
+                @php $category = $row->getCategory @endphp
                 @if(!empty($category))
-                    @php $t = $category->translateOrOrigin(app()->getLocale()); @endphp
+                    @php $t = $category->translateOrOrigin(app()->getLocale()) @endphp
                     <li>
                         <a href="{{$category->getDetailUrl(app()->getLocale())}}">
                             {{$t->name ?? ''}}

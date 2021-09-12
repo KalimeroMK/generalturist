@@ -29,7 +29,8 @@
                 <div class="panel">
                     <div class="panel-title d-flex justify-content-between align-items-center">
                         <strong>{{__('Earning statistics')}}</strong>
-                        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
+                        <div id="reportrange"
+                             style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
                             <i class="fa fa-calendar"></i>&nbsp;
                             <span></span> <i class="fa fa-caret-down"></i>
                         </div>
@@ -69,7 +70,8 @@
                                             <td>#{{$booking->id}}</td>
                                             <td>
                                                 @if(get_bookable_service_by_id($booking->object_model) and $service = $booking->service)
-                                                    <a href="{{$service->getDetailUrl()}}" target="_blank">{{$service->title}}</a>
+                                                    <a href="{{$service->getDetailUrl()}}"
+                                                       target="_blank">{{$service->title}}</a>
                                                 @else
                                                     {{__("[Deleted]")}}
                                                 @endif
@@ -154,9 +156,11 @@
 
         var start = moment().startOf('week');
         var end = moment();
+
         function cb(start, end) {
             $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         }
+
         $('#reportrange').daterangepicker({
             startDate: start,
             endDate: end,

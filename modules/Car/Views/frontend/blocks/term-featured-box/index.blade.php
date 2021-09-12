@@ -13,7 +13,7 @@
                 @foreach($list_term as $item)
                     <?php
                     $image_url = get_file_url($item->image_id, 'full');
-                    $page_search = Modules\Car\Models\Car::getLinkForPageSearch(false , [ 'terms[]' =>  $item->id] );
+                    $page_search = Modules\Car\Models\Car::getLinkForPageSearch(false, ['terms[]' => $item->id]);
                     ?>
                     <div class="col-md-6 col-md-4 col-lg-3">
                         <a href="{{ $page_search }}">

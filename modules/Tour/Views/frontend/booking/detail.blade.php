@@ -8,7 +8,8 @@
                     @php
                         $service_translation = $service->translateOrOrigin($lang_local);
                     @endphp
-                    <h3 class="service-name"><a href="{{$service->getDetailUrl()}}">{!! clean($service_translation->title) !!}</a></h3>
+                    <h3 class="service-name"><a
+                                href="{{$service->getDetailUrl()}}">{!! clean($service_translation->title) !!}</a></h3>
                     @if($service_translation->address)
                         <p class="address"><i class="fa fa-map-marker"></i>
                             {{$service_translation->address}}
@@ -19,7 +20,8 @@
                 @if($vendor->hasPermissionTo('dashboard_vendor_access') and !$vendor->hasPermissionTo('dashboard_access'))
                     <div class="mt-1">
                         <i class="icofont-info-circle"></i>
-                        {{ __("Vendor") }}: <a href="{{route('user.profile',['id'=>$vendor->id])}}" target="_blank" >{{$vendor->getDisplayName()}}</a>
+                        {{ __("Vendor") }}: <a href="{{route('user.profile',['id'=>$vendor->id])}}"
+                                               target="_blank">{{$vendor->getDisplayName()}}</a>
                     </div>
                 @endif
             </div>
@@ -69,7 +71,8 @@
                 @if(!empty($person_types))
                     @foreach($person_types as $type)
                         <li>
-                            <div class="label">{{ $type['name_'.$lang_local] ?? __($type['name'])}}: {{$type['number']}} * {{format_money($type['price'])}}</div>
+                            <div class="label">{{ $type['name_'.$lang_local] ?? __($type['name'])}}: {{$type['number']}}
+                                * {{format_money($type['price'])}}</div>
                             <div class="val">
                                 {{format_money($type['price'] * $type['number'])}}
                             </div>
@@ -77,7 +80,8 @@
                     @endforeach
                 @else
                     <li>
-                        <div class="label">{{__("Guests")}}: {{$booking->total_guests}} * {{format_money($booking->getMeta('base_price'))}}</div>
+                        <div class="label">{{__("Guests")}}: {{$booking->total_guests}}
+                            * {{format_money($booking->getMeta('base_price'))}}</div>
                         <div class="val">
                             {{format_money($booking->getMeta('base_price') * $booking->total_guests)}}
                         </div>
@@ -147,7 +151,8 @@
                         <li>
                             <div class="label">
                                 {{$item['name_'.$lang_local] ?? $item['name']}}
-                                <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top" title="{{ $item['desc_'.$lang_local] ?? $item['desc'] }}"></i>
+                                <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top"
+                                   title="{{ $item['desc_'.$lang_local] ?? $item['desc'] }}"></i>
                                 @if(!empty($item['per_person']) and $item['per_person'] == "on")
                                     : {{$booking->total_guests}} * {{format_money( $fee_price )}}
                                 @endif

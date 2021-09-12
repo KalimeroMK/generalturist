@@ -4,9 +4,11 @@
         html, body {
             background: #f0f0f0;
         }
+
         .bravo_topbar, .bravo_header, .bravo_footer {
             display: none;
         }
+
         .invoice-amount {
             margin-top: 15px;
             border: 1px solid #ddd;
@@ -15,13 +17,16 @@
             display: inline-block;
             text-align: center;
         }
+
         .table-service-head {
             border: 1px solid #ddd;
             background-color: #f9f9f9;
         }
+
         .table-service-head th {
             padding: 5px 15px;
         }
+
         #invoice-print-zone {
             background: white;
             padding: 15px;
@@ -29,53 +34,65 @@
             max-width: 400px;
             border-radius: 7px;
         }
-        .invoice-company-info{
+
+        .invoice-company-info {
             margin-top: 15px;
         }
-        .invoice-company-info p{
+
+        .invoice-company-info p {
             margin-bottom: 2px;
             font-weight: normal;
         }
-        .servive-name{
+
+        .servive-name {
             font-size: 18px;
             font-weight: bold;
             color: #5191fa;
 
         }
-        .service-location{
+
+        .service-location {
 
             font-style: italic;
         }
-        .service-info{
+
+        .service-info {
             margin-bottom: 14px;
         }
-        .ticket-body{
+
+        .ticket-body {
 
             border-top: dashed 1px #dfdfdf;
             padding-top: 20px;
         }
-        .ticket-body td{
+
+        .ticket-body td {
             padding-bottom: 20px;
             vertical-align: top;
         }
-        .ticket-body .label{
+
+        .ticket-body .label {
             color: #868686;
             margin-bottom: 5px;
         }
-        .ticket-body .val{
+
+        .ticket-body .val {
             font-weight: 600;
             font-size: 15px;
         }
-        .list-ticket{
+
+        .list-ticket {
             list-style: none;
         }
-        .ticket-footer{
+
+        .ticket-footer {
             margin-top: 20px;
             border-top: dashed 1px #dfdfdf;
             padding-top: 20px;
         }
-        @media(max-width: 400px){
-            #invoice-print-zone{
+
+        @media (max-width: 400px) {
+            #invoice-print-zone {
                 margin-left: 15px;
                 margin-right: 15px;
             }
@@ -90,7 +107,8 @@
             <div class="ticket-header d-flex justify-content-between">
                 <div class="service-info">
                     <div class="servive-name">{{$booking->service->title ?? ''}}</div>
-                    <div class="service-location"><i class="fa fa-map-marker"></i> {{$booking->service->address ??''}}</div>
+                    <div class="service-location"><i class="fa fa-map-marker"></i> {{$booking->service->address ??''}}
+                    </div>
                 </div>
                 <div class="print">
                     <button onclick="window.print()" class="btn btn-warning btn-sm"><i class="fa fa-print"></i></button>
@@ -99,11 +117,13 @@
             <div class="ticket-body">
                 <table width="100%" cellspacing="0" cellpadding="0">
                     <tr>
-                        <td width="50%"><div class="label"><i class="fa fa-calendar"></i> {{__("Date")}}</div>
-                        <div class="val">{{display_date($booking->start_date)}}</div>
+                        <td width="50%">
+                            <div class="label"><i class="fa fa-calendar"></i> {{__("Date")}}</div>
+                            <div class="val">{{display_date($booking->start_date)}}</div>
                         </td>
-                        <td><div class="label"><i class="fa fa-money"></i> {{__("Price")}}</div>
-                        <div class="val">{{format_money($booking->total)}}</div>
+                        <td>
+                            <div class="label"><i class="fa fa-money"></i> {{__("Price")}}</div>
+                            <div class="val">{{format_money($booking->total)}}</div>
                         </td>
                     </tr>
                     <tr>
@@ -123,21 +143,22 @@
                                 </div>
                             @endif
                             @if($booking->getMeta("booking_type") == "time_slot")
-                                    <div class="label"><i class="fa fa-ticket"></i> {{__("Start Time")}}</div>
-                                    <div class="val">
-                                        <div class="slots-wrapper d-flex justify-content-start flex-wrap">
-                                            @if(!empty($timeSlots = $booking->time_slots))
-                                                @foreach( $timeSlots as $item )
-                                                    <div class="btn btn-sm mr-2 mb-2 btn-success">
-                                                        {{ date( "H:i",strtotime($item->start_time)) }}
-                                                    </div>
-                                                @endforeach
-                                            @endif
-                                        </div>
+                                <div class="label"><i class="fa fa-ticket"></i> {{__("Start Time")}}</div>
+                                <div class="val">
+                                    <div class="slots-wrapper d-flex justify-content-start flex-wrap">
+                                        @if(!empty($timeSlots = $booking->time_slots))
+                                            @foreach( $timeSlots as $item )
+                                                <div class="btn btn-sm mr-2 mb-2 btn-success">
+                                                    {{ date( "H:i",strtotime($item->start_time)) }}
+                                                </div>
+                                            @endforeach
+                                        @endif
                                     </div>
+                                </div>
                             @endif
                         </td>
-                        <td><div class="label"><i class="fa fa-user"></i> {{__("Customer")}}</div>
+                        <td>
+                            <div class="label"><i class="fa fa-user"></i> {{__("Customer")}}</div>
                             <div class="val">{{$booking->first_name}} {{$booking->last_name}}
                                 <br>
                                 {{$booking->email}}<br>

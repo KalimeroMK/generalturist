@@ -46,5 +46,5 @@
                 @endif
             </div>
         </div>
-    @if(!empty($link_location)) </a> @endif
+        @if(!empty($link_location)) </a> @endif
 </div>

@@ -24,7 +24,11 @@
                                         @if($booking->paid < $booking->total )
                                             <div class="d-flex justify-content-between">
                                                 <div class="label">{{__("Remain:")}}</div>
-                                                <div class="val">{{currency_symbol()}}<input class="text-right" type="number" min="0" max="{{$booking->total}}" id="set_paid_input" value="{{($booking->total - $booking->paid)}}" />
+                                                <div class="val">{{currency_symbol()}}<input class="text-right"
+                                                                                             type="number" min="0"
+                                                                                             max="{{$booking->total}}"
+                                                                                             id="set_paid_input"
+                                                                                             value="{{($booking->total - $booking->paid)}}"/>
                                                 </div>
                                             </div>
                                         @endif

@@ -4,7 +4,8 @@
             @foreach($list_slider as $item)
                 @php $img = get_file_url($item['bg_image'],'full') @endphp
                 <div class="item">
-                    <div class="item-bg" style="background-image: linear-gradient(0deg,rgba(0, 0, 0, 0.2),rgba(0, 0, 0, 0.2)),url('{{$img}}') !important"></div>
+                    <div class="item-bg"
+                         style="background-image: linear-gradient(0deg,rgba(0, 0, 0, 0.2),rgba(0, 0, 0, 0.2)),url('{{$img}}') !important"></div>
                 </div>
             @endforeach
         </div>

@@ -1,44 +1,45 @@
 <?php
-namespace Modules\User\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\WithMapping;
-use Modules\User\Models\Subscriber;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+    namespace Modules\User\Exports;
 
-class SubscriberExport implements FromCollection, WithHeadings, WithMapping
-{
-    use Exportable;
+    use Maatwebsite\Excel\Concerns\Exportable;
+    use Maatwebsite\Excel\Concerns\FromCollection;
+    use Maatwebsite\Excel\Concerns\WithHeadings;
+    use Maatwebsite\Excel\Concerns\WithMapping;
+    use Modules\User\Models\Subscriber;
 
-    public function collection()
+    class SubscriberExport implements FromCollection, WithHeadings, WithMapping
     {
-        return Subscriber::select([
-            'email',
-            'first_name',
-            'last_name'
-        ])->get();
-    }
+        use Exportable;
 
-    /**
-     * @var Subscriber $subscriber
-     * @return array
-     */
-    public function map($subscriber): array
-    {
-        return [
-            ltrim($subscriber->email,"=-"),
-            ltrim($subscriber->first_name,"=-"),
-            ltrim($subscriber->last_name,"=-"),
-        ];
-    }
+        public function collection()
+        {
+            return Subscriber::select([
+                'email',
+                'first_name',
+                'last_name',
+            ])->get();
+        }
 
-    public function headings(): array
-    {
-        return [
-            'Email',
-            'First name',
-            'Last name',
-        ];
+        /**
+         * @return array
+         * @var Subscriber $subscriber
+         */
+        public function map($subscriber): array
+        {
+            return [
+                ltrim($subscriber->email, "=-"),
+                ltrim($subscriber->first_name, "=-"),
+                ltrim($subscriber->last_name, "=-"),
+            ];
+        }
+
+        public function headings(): array
+        {
+            return [
+                'Email',
+                'First name',
+                'Last name',
+            ];
+        }
     }
-}

@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between">
-                        <h4 class="mb-0"><label ><input type="radio" checked name="how_to_pay" value="deposit">
+                        <h4 class="mb-0"><label><input type="radio" checked name="how_to_pay" value="deposit">
                                 {{__("Pay deposit")}}
                             </label></h4>
                         <span class="price"><strong>{{format_money($booking->deposit)}}</strong></span>
@@ -16,7 +16,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between">
-                        <h4 class="mb-0"><label ><input type="radio"  name="how_to_pay" value="full">
+                        <h4 class="mb-0"><label><input type="radio" name="how_to_pay" value="full">
                                 {{__("Pay in full")}}
                             </label></h4>
                         <span class="price"><strong>{{format_money($booking->total)}}</strong></span>

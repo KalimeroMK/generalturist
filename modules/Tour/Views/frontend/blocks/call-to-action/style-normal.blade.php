@@ -1,5 +1,6 @@
 <div class="container">
-    <div class="context" @if(!empty($bg_color)) style="background-color: {{ $bg_color ?? "#f6b756" }} !important;" @endif>
+    <div class="context"
+         @if(!empty($bg_color)) style="background-color: {{ $bg_color ?? "#f6b756" }} !important;" @endif>
         <div class="row">
             <div class="col-md-8">
                 <div class="title">

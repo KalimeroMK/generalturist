@@ -39,7 +39,10 @@
                                                     <td>{{$permission->name}}</td>
                                                     @foreach($roles as $role)
                                                         <td>
-                                                            <input type="checkbox" @if(in_array($permission->id,$selectedIds[$role->id])) checked @endif name="matrix[{{$role->id}}][]" value="{{$permission->id}}">
+                                                            <input type="checkbox"
+                                                                   @if(in_array($permission->id,$selectedIds[$role->id])) checked
+                                                                   @endif name="matrix[{{$role->id}}][]"
+                                                                   value="{{$permission->id}}">
                                                         </td>
                                                     @endforeach
                                                 </tr>

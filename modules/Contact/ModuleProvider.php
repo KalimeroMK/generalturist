@@ -1,28 +1,30 @@
 <?php
-namespace Modules\Contact;
 
-use Modules\ModuleServiceProvider;
+    namespace Modules\Contact;
 
-class ModuleProvider extends ModuleServiceProvider
-{
-    public function boot()
+    use Modules\ModuleServiceProvider;
+
+    class ModuleProvider extends ModuleServiceProvider
     {
-        $this->loadMigrationsFrom(__DIR__ . '/Migrations');
-    }
+        public static function getTemplateBlocks()
+        {
+            return [
+                'contact_block' => "\\Modules\\Contact\\Blocks\\Contact",
+            ];
+        }
 
-    /**
-     * Register bindings in the container.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->app->register(RouterServiceProvider::class);
-    }
+        public function boot()
+        {
+            $this->loadMigrationsFrom(__DIR__.'/Migrations');
+        }
 
-    public static function getTemplateBlocks(){
-        return [
-            'contact_block'=>"\\Modules\\Contact\\Blocks\\Contact",
-        ];
+        /**
+         * Register bindings in the container.
+         *
+         * @return void
+         */
+        public function register()
+        {
+            $this->app->register(RouterServiceProvider::class);
+        }
     }
-}

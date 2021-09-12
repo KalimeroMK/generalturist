@@ -1,16 +1,18 @@
 <?php
-namespace Modules\Core\Events;
+
+    namespace Modules\Core\Events;
 
 
-use Illuminate\Queue\SerializesModels;
+    use Illuminate\Queue\SerializesModels;
 
-class CreatedServicesEvent
-{
-    use SerializesModels;
-    public $services;
-
-    public function __construct($services)
+    class CreatedServicesEvent
     {
-        $this->services = $services;
+        use SerializesModels;
+
+        public $services;
+
+        public function __construct($services)
+        {
+            $this->services = $services;
+        }
     }
-}

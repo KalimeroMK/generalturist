@@ -1,23 +1,24 @@
 <?php
-namespace Modules\Review;
 
-use Modules\ModuleServiceProvider;
+    namespace Modules\Review;
 
-class ModuleProvider extends ModuleServiceProvider
-{
-    public function boot()
+    use Modules\ModuleServiceProvider;
+
+    class ModuleProvider extends ModuleServiceProvider
     {
-        $this->loadMigrationsFrom(__DIR__ . '/Migrations');
-    }
+        public function boot()
+        {
+            $this->loadMigrationsFrom(__DIR__.'/Migrations');
+        }
 
-    /**
-     * Register bindings in the container.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->app->register(RouterServiceProvider::class);
-    }
+        /**
+         * Register bindings in the container.
+         *
+         * @return void
+         */
+        public function register()
+        {
+            $this->app->register(RouterServiceProvider::class);
+        }
 
-}
+    }

@@ -1,6 +1,7 @@
 @extends('admin.layouts.app')
 @section('content')
-    <form action="{{route('location.admin.category.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}" method="post">
+    <form action="{{route('location.admin.category.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}"
+          method="post">
         @csrf
         <div class="container-fluid">
             <div class="d-flex justify-content-between mb20">
@@ -33,14 +34,17 @@
                             <div class="panel-body">
                                 @if(is_default_lang())
                                     <div>
-                                        <label><input @if($row->status=='publish') checked @endif type="radio" name="status" value="publish"> {{__("Publish")}}</label>
+                                        <label><input @if($row->status=='publish') checked @endif type="radio"
+                                                      name="status" value="publish"> {{__("Publish")}}</label>
                                     </div>
                                     <div>
-                                        <label><input @if($row->status=='draft') checked @endif type="radio" name="status" value="draft"> {{__("Draft")}}</label>
+                                        <label><input @if($row->status=='draft') checked @endif type="radio"
+                                                      name="status" value="draft"> {{__("Draft")}}</label>
                                     </div>
                                 @endif
                                 <div class="text-right">
-                                    <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> {{__('Save Changes')}}</button>
+                                    <button class="btn btn-primary" type="submit"><i
+                                                class="fa fa-save"></i> {{__('Save Changes')}}</button>
                                 </div>
                             </div>
                         </div>

@@ -5,7 +5,8 @@
 @endsection
 @section('content')
     <div class="bravo_search_car">
-        <div class="bravo_banner" @if($bg = setting_item("car_page_search_banner")) style="background-image: url({{get_file_url($bg,'full')}})" @endif >
+        <div class="bravo_banner"
+             @if($bg = setting_item("car_page_search_banner")) style="background-image: url({{get_file_url($bg,'full')}})" @endif >
             <div class="container">
                 <h1>
                     {{setting_item_with_lang("car_page_search_title")}}

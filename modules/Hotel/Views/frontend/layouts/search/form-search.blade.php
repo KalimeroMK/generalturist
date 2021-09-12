@@ -4,7 +4,7 @@
             @php $hotel_search_fields = setting_item_array('hotel_search_fields');
             $hotel_search_fields = array_values(\Illuminate\Support\Arr::sort($hotel_search_fields, function ($value) {
                 return $value['position'] ?? 0;
-            }));
+            }))
             @endphp
             @if(!empty($hotel_search_fields))
                 @foreach($hotel_search_fields as $field)
@@ -12,19 +12,19 @@
                     <div class="col-md-{{ $field['size'] ?? "6" }} border-right">
                         @switch($field['field'])
                             @case ('service_name')
-                                @include('Hotel::frontend.layouts.search.fields.service_name')
+                            @include('Hotel::frontend.layouts.search.fields.service_name')
                             @break
                             @case ('location')
-                                @include('Hotel::frontend.layouts.search.fields.location')
+                            @include('Hotel::frontend.layouts.search.fields.location')
                             @break
                             @case ('date')
-                                @include('Hotel::frontend.layouts.search.fields.date')
+                            @include('Hotel::frontend.layouts.search.fields.date')
                             @break
                             @case ('attr')
-                                @include('Hotel::frontend.layouts.search.fields.attr')
+                            @include('Hotel::frontend.layouts.search.fields.attr')
                             @break
                             @case ('guests')
-                                @include('Hotel::frontend.layouts.search.fields.guests')
+                            @include('Hotel::frontend.layouts.search.fields.guests')
                             @break
                         @endswitch
                     </div>

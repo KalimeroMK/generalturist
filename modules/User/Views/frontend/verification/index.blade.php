@@ -30,7 +30,8 @@
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-4">
-                <a href="{{route('user.verification.update')}}" class="btn btn-warning"> <i class="fa fa-edit"></i> {{__("Update verification data")}} </a>
+                <a href="{{route('user.verification.update')}}" class="btn btn-warning"> <i
+                            class="fa fa-edit"></i> {{__("Update verification data")}} </a>
             </div>
         </div>
     </div>

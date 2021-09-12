@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Modules\Admin\Crud\Components;
+    namespace Modules\Admin\Crud\Components;
 
 
-class PanelComponent extends BaseComponent
-{
-    public function render()
+    class PanelComponent extends BaseComponent
     {
-        view('Admin::admin.crud.components.panel')->render();
+        public function render()
+        {
+            view('Admin::admin.crud.components.panel')->render();
+        }
     }
-}

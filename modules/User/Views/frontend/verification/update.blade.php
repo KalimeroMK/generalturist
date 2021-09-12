@@ -31,7 +31,7 @@
             <div class="row">
                 <div class="col-md-3"></div>
                 <div class="col-md-4">
-                    <button class="btn btn-success"> <i class="fa fa-save"></i> {{__("Save changes")}} </button>
+                    <button class="btn btn-success"><i class="fa fa-save"></i> {{__("Save changes")}} </button>
                 </div>
             </div>
         </form>
@@ -39,7 +39,8 @@
 @endsection
 @section('footer')
     <!-- Modal -->
-    <div class="modal fade" id="modalVerifyPhone" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal fade" id="modalVerifyPhone" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -61,11 +62,12 @@
     </div>
     <script>
         var ajaxReady = 1;
-        var phone ='';
-        function sendCodeVerifyPhone(inputName,inputLabel) {
-            if(ajaxReady==1){
-                phone = $("input[name='"+inputName+"']").val();
-    
+        var phone = '';
+
+        function sendCodeVerifyPhone(inputName, inputLabel) {
+            if (ajaxReady == 1) {
+                phone = $("input[name='" + inputName + "']").val();
+
                 $.ajax({
                     url: '{{route('user.verification.phone.sendCode')}}',
                     data: {
@@ -80,51 +82,51 @@
                         ajaxReady = 0;
                     },
                     success: function (res) {
-                        if(res.status==1){
-                            if(res.verified==1){
+                        if (res.status == 1) {
+                            if (res.verified == 1) {
                                 alert(res.message)
                             }
-                            if(res.action=='openModalVerify'){
+                            if (res.action == 'openModalVerify') {
                                 $("#modalVerifyPhone").modal('toggle');
-    
+
                             }
-                        }else{
+                        } else {
                             alert(res.message)
-    
+
                         }
                         ajaxReady = 1;
-    
+
                     },
-                    error:function () {
+                    error: function () {
                         ajaxReady = 1;
                     }
                 })
             }
         }
-        
+
         function verifyPhone() {
-                var code = $("#verified_phone_code").val();
-                $.ajax({
-                    url: '{{route('user.verification.phone.field')}}',
-                    data: {
-                        code: code,
-                        _token: "{{csrf_token()}}",
-                    },
-                    dataType: 'json',
-                    type: 'post',
-                    success: function (res) {
-                        if(res.status==1){
-                            $("#modalVerifyPhone").modal('toggle');
-                            window.location.reload();
-                        }else{
-                            alert(res.message)
-                        }
+            var code = $("#verified_phone_code").val();
+            $.ajax({
+                url: '{{route('user.verification.phone.field')}}',
+                data: {
+                    code: code,
+                    _token: "{{csrf_token()}}",
+                },
+                dataType: 'json',
+                type: 'post',
+                success: function (res) {
+                    if (res.status == 1) {
+                        $("#modalVerifyPhone").modal('toggle');
+                        window.location.reload();
+                    } else {
+                        alert(res.message)
                     }
-                })
-    
+                }
+            })
+
         }
     </script>
 
-    
+
 
 @endsection

@@ -1,9 +1,10 @@
 <?php
-namespace Modules\Core\Models;
 
-use App\BaseModel;
+    namespace Modules\Core\Models;
 
-class MenuItem extends BaseModel
-{
-    protected $table = 'core_menu_items';
-}
+    use App\BaseModel;
+
+    class MenuItem extends BaseModel
+    {
+        protected $table = 'core_menu_items';
+    }

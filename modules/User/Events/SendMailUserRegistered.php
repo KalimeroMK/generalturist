@@ -1,17 +1,17 @@
 <?php
-namespace Modules\User\Events;
 
-use App\Notifications\AdminChannelServices;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Auth;
+    namespace Modules\User\Events;
 
-class SendMailUserRegistered
-{
-    use SerializesModels;
-    public $user;
+    use Illuminate\Queue\SerializesModels;
 
-    public function __construct($user)
+    class SendMailUserRegistered
     {
-        $this->user = $user;
+        use SerializesModels;
+
+        public $user;
+
+        public function __construct($user)
+        {
+            $this->user = $user;
+        }
     }
-}

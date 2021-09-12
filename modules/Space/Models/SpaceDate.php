@@ -1,21 +1,23 @@
 <?php
-namespace Modules\Space\Models;
 
-use App\BaseModel;
+    namespace Modules\Space\Models;
 
-class SpaceDate extends BaseModel
-{
-    protected $table = 'bravo_space_dates';
+    use App\BaseModel;
 
-    protected $casts = [
-        'person_types'=>'array'
-    ];
+    class SpaceDate extends BaseModel
+    {
+        protected $table = 'bravo_space_dates';
 
-    public static function getDatesInRanges($start_date,$end_date,$target_id){
-        return static::query()->where([
-            ['start_date','>=',$start_date],
-            ['end_date','<=',$end_date],
-            ['target_id','=',$target_id],
-        ])->take(100)->get();
+        protected $casts = [
+            'person_types' => 'array',
+        ];
+
+        public static function getDatesInRanges($start_date, $end_date, $target_id)
+        {
+            return static::query()->where([
+                ['start_date', '>=', $start_date],
+                ['end_date', '<=', $end_date],
+                ['target_id', '=', $target_id],
+            ])->take(100)->get();
+        }
     }
-}

@@ -23,10 +23,10 @@
                             $location_name = $translate->name;
                         }
                         $list_json[] = [
-                            'id' => $location->id,
-                            'title' => $prefix . ' ' . $translate->name,
+                            'id'    => $location->id,
+                            'title' => $prefix.' '.$translate->name,
                         ];
-                        $traverse($location->children, $prefix . '-');
+                        $traverse($location->children, $prefix.'-');
                     }
                 };
                 $traverse($list_location);

@@ -34,7 +34,8 @@
             </div>
             <div class="location">
                 <i class="icofont-money"></i>
-                {{__("Price")}}: <span class="sale-price">{{ $row->display_sale_price_admin }}</span> <span class="price">{{ $row->display_price_admin }}</span>
+                {{__("Price")}}: <span class="sale-price">{{ $row->display_sale_price_admin }}</span> <span
+                        class="price">{{ $row->display_price_admin }}</span>
             </div>
             <div class="location">
                 <i class="icofont-ui-settings"></i>
@@ -46,9 +47,12 @@
             </div>
             <div class="control-action">
                 @if(!empty($recovery))
-                    <a href="{{ route("event.vendor.restore",[$row->id]) }}" class="btn btn-recovery btn-primary" data-confirm="{{__('"Do you want to recovery?"')}}">{{__("Recovery")}}</a>
+                    <a href="{{ route("event.vendor.restore",[$row->id]) }}" class="btn btn-recovery btn-primary"
+                       data-confirm="{{__('"Do you want to recovery?"')}}">{{__("Recovery")}}</a>
                     @if(Auth::user()->hasPermissionTo('event_delete'))
-                        <a href="{{ route("event.vendor.delete",['id'=>$row->id,'permanently_delete'=>1]) }}" class="btn btn-danger" data-confirm="<?php echo e(__("Do you want to permanently delete?")); ?>">{{__("Del")}}</a>
+                        <a href="{{ route("event.vendor.delete",['id'=>$row->id,'permanently_delete'=>1]) }}"
+                           class="btn btn-danger"
+                           data-confirm="<?php echo e(__("Do you want to permanently delete?")); ?>">{{__("Del")}}</a>
                     @endif
                 @else
                     <a href="{{$row->getDetailUrl()}}" target="_blank" class="btn btn-info">{{__("View")}}</a>
@@ -57,13 +61,16 @@
                         <a href="{{ route("event.vendor.edit",[$row->id]) }}" class="btn btn-warning">{{__("Edit")}}</a>
                     @endif
                     @if(Auth::user()->hasPermissionTo('event_delete'))
-                        <a href="{{ route("event.vendor.delete",[$row->id]) }}" class="btn btn-danger" data-confirm="<?php echo e(__("Do you want to delete?")); ?>">{{__("Del")}}</a>
+                        <a href="{{ route("event.vendor.delete",[$row->id]) }}" class="btn btn-danger"
+                           data-confirm="<?php echo e(__("Do you want to delete?")); ?>">{{__("Del")}}</a>
                     @endif
                     @if($row->status == 'publish')
-                        <a href="{{ route("event.vendor.bulk_edit",[$row->id,'action' => "make-hide"]) }}" class="btn btn-secondary">{{__("Make hide")}}</a>
+                        <a href="{{ route("event.vendor.bulk_edit",[$row->id,'action' => "make-hide"]) }}"
+                           class="btn btn-secondary">{{__("Make hide")}}</a>
                     @endif
                     @if($row->status == 'draft')
-                        <a href="{{ route("event.vendor.bulk_edit",[$row->id,'action' => "make-publish"]) }}" class="btn btn-success">{{__("Make publish")}}</a>
+                        <a href="{{ route("event.vendor.bulk_edit",[$row->id,'action' => "make-publish"]) }}"
+                           class="btn btn-success">{{__("Make publish")}}</a>
                     @endif
                 @endif
             </div>

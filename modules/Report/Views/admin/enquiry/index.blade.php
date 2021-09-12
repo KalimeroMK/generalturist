@@ -8,7 +8,8 @@
         <div class="filter-div d-flex justify-content-between">
             <div class="col-left">
                 @if(!empty($enquiry_update))
-                    <form method="post" action="{{url('admin/module/report/enquiry/bulkEdit')}}" class="filter-form filter-form-left d-flex justify-content-start">
+                    <form method="post" action="{{url('admin/module/report/enquiry/bulkEdit')}}"
+                          class="filter-form filter-form-left d-flex justify-content-start">
                         @csrf
                         <select name="action" class="form-control">
                             <option value="">{{__("-- Bulk Actions --")}}</option>
@@ -19,13 +20,16 @@
                             @endif
                             <option value="delete">{{__("DELETE Enquiry")}}</option>
                         </select>
-                        <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
+                        <button data-confirm="{{__("Do you want to delete?")}}"
+                                class="btn-info btn btn-icon dungdt-apply-form-btn"
+                                type="button">{{__('Apply')}}</button>
                     </form>
                 @endif
             </div>
             <div class="col-left">
                 <form method="get" action="" class="filter-form filter-form-right d-flex justify-content-end">
-                    <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by email')}}" class="form-control">
+                    <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by email')}}"
+                           class="form-control">
                     <button class="btn-info btn btn-icon" type="submit">{{__('Filter')}}</button>
                 </form>
             </div>
@@ -48,43 +52,44 @@
                         </tr>
                         </thead>
                         <tbody>
-                            @if($rows->total() > 0)
-                                @foreach($rows as $row)
-                                    <tr>
-                                        <td><input type="checkbox" class="check-item" name="ids[]" value="{{$row->id}}">
-                                            #{{$row->id}}</td>
-                                        <td>
-                                            @if($service = $row->service)
-                                                <a href="{{$service->getDetailUrl()}}" target="_blank">{{$service->title ?? ''}}</a>
-                                                @if($service->author)
-                                                    <br>
-                                                    <span>{{__('by')}}</span>
-                                                    <a href="{{url('admin/module/user/edit/'.$service->author->id)}}"
-                                                       target="_blank">{{ $service->author->getDisplayName() .' (#'.$service->author->id.')' }}</a>
-                                                @endif
-                                            @else
-                                                {{__("[Deleted]")}}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <ul>
-                                                <li>{{__("Name:")}} {{$row->name}}</li>
-                                                <li>{{__("Email:")}} {{$row->email}}</li>
-                                                <li>{{__("Phone:")}} {{$row->phone}}</li>
-                                                <li>{{__("Notes:")}} {{$row->note}}</li>
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <span class="label label-{{$row->status}}">{{$row->statusName}}</span>
-                                        </td>
-                                        <td>{{display_datetime($row->updated_at)}}</td>
-                                    </tr>
-                                @endforeach
-                            @else
+                        @if($rows->total() > 0)
+                            @foreach($rows as $row)
                                 <tr>
-                                    <td colspan="6">{{__("No data")}}</td>
+                                    <td><input type="checkbox" class="check-item" name="ids[]" value="{{$row->id}}">
+                                        #{{$row->id}}</td>
+                                    <td>
+                                        @if($service = $row->service)
+                                            <a href="{{$service->getDetailUrl()}}"
+                                               target="_blank">{{$service->title ?? ''}}</a>
+                                            @if($service->author)
+                                                <br>
+                                                <span>{{__('by')}}</span>
+                                                <a href="{{url('admin/module/user/edit/'.$service->author->id)}}"
+                                                   target="_blank">{{ $service->author->getDisplayName() .' (#'.$service->author->id.')' }}</a>
+                                            @endif
+                                        @else
+                                            {{__("[Deleted]")}}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li>{{__("Name:")}} {{$row->name}}</li>
+                                            <li>{{__("Email:")}} {{$row->email}}</li>
+                                            <li>{{__("Phone:")}} {{$row->phone}}</li>
+                                            <li>{{__("Notes:")}} {{$row->note}}</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <span class="label label-{{$row->status}}">{{$row->statusName}}</span>
+                                    </td>
+                                    <td>{{display_datetime($row->updated_at)}}</td>
                                 </tr>
-                            @endif
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="6">{{__("No data")}}</td>
+                            </tr>
+                        @endif
                         </tbody>
                     </table>
                 </form>
