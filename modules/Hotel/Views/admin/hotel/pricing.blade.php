@@ -99,7 +99,7 @@
                                     <div class="col-md-5">
                                         @if(!empty($languages) && setting_item('site_enable_multi_lang') && setting_item('site_locale'))
                                             @foreach($languages as $language)
-                                                <?php use Modules\Language\Models\Language;$key_lang = setting_item('site_locale') != $language->locale ? "_".$language->locale : ""   ?>
+                                                <?php $key_lang = setting_item('site_locale') != $language->locale ? "_".$language->locale : ""   ?>
                                                 <div class="g-lang">
                                                     <div class="title-lang">{{$language->name}}</div>
                                                     <input type="text" name="extra_price[{{$key}}][name{{$key_lang}}]"
@@ -210,7 +210,7 @@
                         </div>
                     </div>
                     <div class="g-items">
-                        <?php  $languages = Language::getActive();?>
+                        <?php  $languages = Modules\Language\Models\Language::getActive();?>
                         @if(!empty($service_fee = $row->service_fee))
                             @foreach($service_fee as $key=>$item)
                                 <div class="item" data-number="{{$key}}">

@@ -42,8 +42,8 @@
                         <label>{{__("Terms & Conditions page")}}</label>
                         <div class="form-controls">
                             <?php
-                            use App\Helpers\AdminForm;use Modules\Page\Models\Page;$template = !empty($settings['booking_term_conditions']) ? Page::find($settings['booking_term_conditions']) : false;
-                            AdminForm::select2('booking_term_conditions', [
+                            $template = !empty($settings['booking_term_conditions']) ? Modules\Page\Models\Page::find($settings['booking_term_conditions']) : false;
+                            App\Helpers\AdminForm::select2('booking_term_conditions', [
                                 'configs' => [
                                     'ajax' => [
                                         'url'      => url('/admin/module/page/getForSelect2'),

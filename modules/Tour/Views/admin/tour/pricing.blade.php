@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <div class="g-items">
-                    <?php  use Modules\Language\Models\Language;$languages = Language::getActive();  ?>
+                    <?php  $languages = Modules\Language\Models\Language::getActive();  ?>
                     @if(!empty($row->meta->person_types))
                         @foreach($row->meta->person_types as $key=>$person_type)
                             <div class="item" data-number="{{$key}}">
@@ -361,7 +361,7 @@
                     </div>
                 </div>
                 <div class="g-items">
-                    <?php  $languages = Language::getActive();?>
+                    <?php  $languages = Modules\Language\Models\Language::getActive();?>
                     @if(!empty($service_fee = $row->service_fee))
                         @foreach($service_fee as $key=>$item)
                             <div class="item" data-number="{{$key}}">

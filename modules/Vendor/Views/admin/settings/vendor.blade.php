@@ -9,8 +9,8 @@
                     <label>{{__("Terms & Conditions")}}</label>
                     <div class="form-controls">
                         <?php
-                        use App\Helpers\AdminForm;use Modules\Page\Models\Page;$template = !empty($settings['vendor_term_conditions']) ? Page::find($settings['vendor_term_conditions']) : false;
-                        AdminForm::select2('vendor_term_conditions', [
+                        $template = !empty($settings['vendor_term_conditions']) ? Modules\Page\Models\Page::find($settings['vendor_term_conditions']) : false;
+                        App\Helpers\AdminForm::select2('vendor_term_conditions', [
                             'configs' => [
                                 'ajax' => [
                                     'url'      => url('/admin/module/page/getForSelect2'),

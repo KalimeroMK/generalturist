@@ -10,8 +10,8 @@
                         <label>{{__("Choose Layout for Mobile app")}}</label>
                         <div class="form-controls">
                             <?php
-                            use App\Helpers\AdminForm;use Modules\Template\Models\Template;$template = Template::find(setting_item('api_app_layout'));
-                            AdminForm::select2('api_app_layout', [
+                            $template = Modules\Template\Models\Template::find(setting_item('api_app_layout'));
+                            App\Helpers\AdminForm::select2('api_app_layout', [
                                 'configs' => [
                                     'ajax' => [
                                         'url'      => url('/admin/module/template/getForSelect2'),

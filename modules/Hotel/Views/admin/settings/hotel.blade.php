@@ -68,8 +68,8 @@
                                 <label class="">{{__("Which attribute show in listing page?")}}</label>
                                 <div class="form-controls">
                                     <?php
-                                    use App\Helpers\AdminForm;use Modules\Core\Models\Attributes;use Modules\Language\Models\Language;$attribute = !empty($settings['hotel_attribute_show_in_listing_page']) ? Attributes::find($settings['hotel_attribute_show_in_listing_page']) : false;
-                                    AdminForm::select2('hotel_attribute_show_in_listing_page', [
+                                    $attribute = !empty($settings['hotel_attribute_show_in_listing_page']) ? Modules\Core\Models\Attributes::find($settings['hotel_attribute_show_in_listing_page']) : false;
+                                    App\Helpers\AdminForm::select2('hotel_attribute_show_in_listing_page', [
                                         'configs' => [
                                             'ajax' => [
                                                 'url'      => url('/admin/module/hotel/attribute/getAttributeForSelect2'),

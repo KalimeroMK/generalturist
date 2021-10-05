@@ -1,4 +1,5 @@
-<?php  use Modules\Language\Models\Language;$languages = Language::getActive();  ?>
+<?php
+$languages = Modules\Language\Models\Language::getActive();  ?>
 @if(is_default_lang())
     <div class="panel">
         <div class="panel-title"><strong>{{__("Pricing")}}</strong></div>

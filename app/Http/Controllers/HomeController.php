@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Exception;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Hotel\Models\Hotel;
 use Modules\Location\Models\LocationCategory;
 use Modules\Page\Models\Page;
@@ -25,9 +27,9 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return Renderable
      */
-    public function index()
+    public function index(): Renderable
     {
         $home_page_id = setting_item('home_page_id');
         $home_hotel_id = setting_item('home_hotel_id');
@@ -109,7 +111,7 @@ class HomeController extends Controller
             }else{
                 return $this->sendSuccess(false , __("Could not find the database. Please check your configuration."));
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->sendError( $e->getMessage() );
         }
     }

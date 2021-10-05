@@ -43,8 +43,8 @@
                       role="search">
                     @if(!empty($rows) and $event_manage_others)
                         <?php
-                        use App\Helpers\AdminForm;$user = !empty(Request()->vendor_id) ? App\User::find(Request()->vendor_id) : false;
-                        AdminForm::select2('vendor_id', [
+                        $user = !empty(Request()->vendor_id) ? App\User::find(Request()->vendor_id) : false;
+                        Modules\Template\Models\Template::select2('vendor_id', [
                             'configs' => [
                                 'ajax'        => [
                                     'url'      => url('/admin/module/user/getForSelect2'),

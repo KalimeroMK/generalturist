@@ -238,7 +238,7 @@
                                 </div>
                                 <div class="g-items">
                                     <?php
-                                    use Modules\Language\Models\Language;if(!empty($settings['car_review_stats'])){
+                                    if(!empty($settings['car_review_stats'])){
                                     $social_share = json_decode($settings['car_review_stats']);
                                     ?>
                                     @foreach($social_share as $key=>$item)
@@ -307,7 +307,7 @@
                             </div>
                         </div>
                         <div class="g-items">
-                            <?php  $languages = Language::getActive();  ?>
+                            <?php  $languages = Modules\Language\Models\Language::getActive();  ?>
                             @if(!empty($settings['car_booking_buyer_fees']))
                                 <?php $car_booking_buyer_fees = json_decode($settings['car_booking_buyer_fees'],
                                     true); ?>

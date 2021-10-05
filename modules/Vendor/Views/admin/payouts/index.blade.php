@@ -25,8 +25,8 @@
                       role="search">
                     @if(!empty($rows))
                         <?php
-                        use App\Helpers\AdminForm;$user = !empty(Request()->vendor_id) ? App\User::find(Request()->vendor_id) : false;
-                        AdminForm::select2('vendor_id', [
+                        $user = !empty(Request()->vendor_id) ? App\User::find(Request()->vendor_id) : false;
+                        App\Helpers\AdminForm::select2('vendor_id', [
                             'configs' => [
                                 'ajax'        => [
                                     'url'      => url('/admin/module/user/getForSelect2'),

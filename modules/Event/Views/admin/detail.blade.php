@@ -61,8 +61,8 @@
                                 <div class="panel-body">
                                     <div class="form-group">
                                         <?php
-                                        use App\Helpers\AdminForm;$user = !empty($row->create_user) ? App\User::find($row->create_user) : false;
-                                        AdminForm::select2('create_user', [
+                                        $user = !empty($row->create_user) ? App\User::find($row->create_user) : false;
+                                        App\Helpers\AdminForm::select2('create_user', [
                                             'configs' => [
                                                 'ajax'        => [
                                                     'url'      => url('/admin/module/user/getForSelect2'),

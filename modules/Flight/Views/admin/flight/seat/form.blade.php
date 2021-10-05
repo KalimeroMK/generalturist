@@ -2,8 +2,8 @@
     <div class="form-group">
         <label for="">{{__('Seat type')}}</label>
         <?php
-        use App\Helpers\AdminForm;$jsons = !empty($row->seatType) ? $row->seatType : false;
-        AdminForm::select2('seat_type', [
+        $jsons = !empty($row->seatType) ? $row->seatType : false;
+        App\Helpers\AdminForm::select2('seat_type', [
             'configs' => [
                 'ajax'        => [
                     'url'      => route('flight.admin.seat_type.getForSelect2'),

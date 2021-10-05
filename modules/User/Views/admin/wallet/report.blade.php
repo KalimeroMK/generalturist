@@ -34,8 +34,8 @@
                     </select>
                     @csrf
                     <?php
-                    use App\Helpers\AdminForm;$user = !empty(Request()->user_id) ? App\User::find(Request()->user_id) : false;
-                    AdminForm::select2('user_id', [
+                    $user = !empty(Request()->user_id) ? App\User::find(Request()->user_id) : false;
+                    App\Helpers\AdminForm::select2('user_id', [
                         'configs' => [
                             'ajax'        => [
                                 'url'      => url('/admin/module/user/getForSelect2'),

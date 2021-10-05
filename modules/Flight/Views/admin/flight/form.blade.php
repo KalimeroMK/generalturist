@@ -24,8 +24,8 @@
                 <div class="form-group">
                     <label for="">{{__('From')}}</label>
                     <?php
-                    use App\Helpers\AdminForm;$jsons = !empty($row->airportFrom) ? $row->airportFrom : false;
-                    AdminForm::select2('airport_from', [
+                    use$jsons = !empty($row->airportFrom) ? $row->airportFrom : false;
+                    App\Helpers\AdminForm::select2('airport_from', [
                         'configs' => [
                             'ajax'        => [
                                 'url'      => route('flight.admin.airport.getForSelect2'),
