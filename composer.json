@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3.0",
+        "ext-json": "*",
         "aws/aws-sdk-php": "~3.0",
         "bavix/laravel-wallet": "^6.1",
         "eluceo/ical": "^0.15.1",
@@ -35,8 +36,7 @@
         "simplesoftwareio/simple-qrcode": "^2.0",
         "spatie/laravel-image-optimizer": "^1.4",
         "spatie/laravel-permission": "^3.16",
-        "tymon/jwt-auth": "^1.0",
-      "ext-json": "*"
+        "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
