@@ -14,7 +14,6 @@
          */
         protected string $moduleNamespace = 'Modules\Admin\Controllers';
         protected string $moduleApiNamespace = 'Modules\Admin\Api';
-
         protected string $adminModuleNamespace = 'Modules\Admin\Admin';
 
         /**
