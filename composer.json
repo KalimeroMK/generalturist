@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "=>7.3",
+        "php": ">= 7.3.0",
         "ext-json": "*",
         "aws/aws-sdk-php": "~3.0",
         "bavix/laravel-wallet": "^6.1",
@@ -30,7 +30,6 @@
         "omnipay/paypal": "^3.0",
         "omnipay/stripe": "^3.0",
         "propaganistas/laravel-phone": "^4.2",
-        "pusher/pusher-php-server": "^7.0",
         "rachidlaasri/laravel-installer": "^4.0",
         "rap2hpoutre/laravel-log-viewer": "^1.1",
         "simplesoftwareio/simple-qrcode": "^2.0",
