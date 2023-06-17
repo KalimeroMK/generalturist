@@ -1,13 +1,17 @@
 <?php
+namespace Modules\Core\Admin;
 
-    namespace Modules\Core\Admin;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Modules\AdminController;
+use Modules\Core\Models\Settings;
+use Illuminate\Support\Facades\Cache;
 
-    use Illuminate\Http\Request;
-    use Modules\AdminController;
-
-    class TermController extends AdminController
+class TermController extends AdminController
+{
+    public function getForSelect2(Request $request)
     {
-        public function getForSelect2(Request $request)
-        {
-        }
+        
     }
+}

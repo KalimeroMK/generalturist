@@ -36,22 +36,19 @@
                         <div class="form-group">
                             <label class="">{{__("Nexmo Api Key")}}</label>
                             <div class="form-controls">
-                                <input type="text" class="form-control" name="sms_nexmo_api_key"
-                                       value="{{setting_item('sms_nexmo_api_key',config('sms.nexmo.key')) }}">
+                                <input type="text" class="form-control" name="sms_nexmo_api_key" value="{{setting_item('sms_nexmo_api_key',config('sms.nexmo.key')) }}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="">{{__("Nexmo Api Secret")}}</label>
                             <div class="form-controls">
-                                <input type="text" class="form-control" name="sms_nexmo_api_secret"
-                                       value="{{setting_item('sms_nexmo_api_secret',config('sms.nexmo.secret'))}}">
+                                <input type="text" class="form-control" name="sms_nexmo_api_secret" value="{{setting_item('sms_nexmo_api_secret',config('sms.nexmo.secret'))}}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="">{{__("From")}}</label>
                             <div class="form-controls">
-                                <input type="text" class="form-control" name="sms_nexmo_api_from"
-                                       value="{{setting_item('sms_nexmo_api_from',config('sms.nexmo.from'))}}">
+                                <input type="text" class="form-control" name="sms_nexmo_api_from" value="{{setting_item('sms_nexmo_api_from',config('sms.nexmo.from'))}}">
                             </div>
                         </div>
                     </div>
@@ -70,22 +67,19 @@
                         <div class="form-group">
                             <label class="">{{__("Twilio Account Sid")}}</label>
                             <div class="form-controls">
-                                <input type="text" class="form-control" name="sms_twilio_account_sid"
-                                       value="{{setting_item('sms_twilio_account_sid',config('sms.twilio.sid'))}}">
+                                <input type="text" class="form-control" name="sms_twilio_account_sid" value="{{setting_item('sms_twilio_account_sid',config('sms.twilio.sid'))}}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="">{{__("Twilio Account Token")}}</label>
                             <div class="form-controls">
-                                <input type="text" class="form-control" name="sms_twilio_account_token"
-                                       value="{{setting_item('sms_twilio_account_token',config('sms.twilio.token'))}}">
+                                <input type="text" class="form-control" name="sms_twilio_account_token" value="{{setting_item('sms_twilio_account_token',config('sms.twilio.token'))}}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="">{{__("From")}}</label>
                             <div class="form-controls">
-                                <input type="number" class="form-control" name="sms_twilio_api_from"
-                                       value="{{setting_item('sms_twilio_api_from',config('sms.twilio.from'))}}">
+                                <input type="number" class="form-control" name="sms_twilio_api_from" value="{{setting_item('sms_twilio_api_from',config('sms.twilio.from'))}}">
                             </div>
                         </div>
                     </div>
@@ -114,24 +108,22 @@
             <div class="panel-title"><strong>{{__("Config Phone Administrator")}}</strong></div>
             <div class="panel-body">
                 @if(is_default_lang())
-                    <div class="form-group">
-                        <label>{{__('Admin Phone')}} </label>
-                        <div class="form-controls">
-                            <input type="number" class="form-control" name="admin_phone_has_booking"
-                                   value="{{setting_item_with_lang('admin_phone_has_booking',request()->query('lang')) ?? ''}}">
-                        </div>
+                <div class="form-group">
+                    <label>{{__('Admin Phone')}} </label>
+                    <div class="form-controls">
+                        <input type="number" class="form-control" name="admin_phone_has_booking" value="{{setting_item_with_lang('admin_phone_has_booking',request()->query('lang')) ?? ''}}">
                     </div>
-                    <div class="form-group">
-                        <label class="">{{__("Country")}}</label>
-                        <select name="admin_country_has_booking" class="form-control">
-                            <option value="">{{__('-- Select --')}}</option>
-                            @foreach(get_country_lists() as $id=>$name)
-                                <option @if(setting_item_with_lang('admin_country_has_booking',request()->query('lang')) ==$id) selected
-                                        @endif value="{{$id}}">{{$name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                @else
+                </div>
+                <div class="form-group">
+                    <label class="">{{__("Country")}}</label>
+                    <select name="admin_country_has_booking" class="form-control">
+                        <option value="">{{__('-- Select --')}}</option>
+                        @foreach(get_country_lists() as $id=>$name)
+                            <option @if(setting_item_with_lang('admin_country_has_booking',request()->query('lang')) ==$id) selected @endif value="{{$id}}">{{$name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                    @else
                     <p>{{__('You can edit on main lang.')}}</p>
                 @endif
             </div>
@@ -142,35 +134,24 @@
                 <div class="form-group">
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab"
-                               href="#SmsAdminEventCreateBooking">{{__("Administrator")}}</a>
+                            <a class="nav-link active" data-toggle="tab" href="#SmsAdminEventCreateBooking">{{__("Administrator")}}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " data-toggle="tab"
-                               href="#SmsVendorEventCreateBooking">{{__("Vendor")}}</a>
+                            <a class="nav-link " data-toggle="tab" href="#SmsVendorEventCreateBooking">{{__("Vendor")}}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " data-toggle="tab"
-                               href="#SmsUserEventCreateBooking">{{__("Customer")}}</a>
+                            <a class="nav-link " data-toggle="tab" href="#SmsUserEventCreateBooking">{{__("Customer")}}</a>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="SmsAdminEventCreateBooking">
                             @if(is_default_lang())
                                 <div class="form-group">
-                                    <label> <input type="checkbox"
-                                                   @if(setting_item('enable_sms_admin_has_booking')?? '' == 1) checked
-                                                   @endif name="enable_sms_admin_has_booking"
-                                                   value="1"> {{__("Enable send sms to Administrator when have booking?")}}
-                                    </label>
+                                    <label> <input type="checkbox" @if(setting_item('enable_sms_admin_has_booking')?? '' == 1) checked @endif name="enable_sms_admin_has_booking" value="1"> {{__("Enable send sms to Administrator when have booking?")}}</label>
                                 </div>
                             @else
                                 <div class="form-group">
-                                    <label> <input type="checkbox"
-                                                   @if(setting_item('enable_sms_admin_has_booking') ?? '' == 1) checked
-                                                   @endif name="enable_sms_admin_has_booking" disabled
-                                                   value="1"> {{__("Enable send sms to Administrator when have booking?")}}
-                                    </label>
+                                    <label> <input type="checkbox" @if(setting_item('enable_sms_admin_has_booking') ?? '' == 1) checked @endif name="enable_sms_admin_has_booking" disabled value="1"> {{__("Enable send sms to Administrator when have booking?")}}</label>
                                 </div>
                                 @if(setting_item('enable_sms_admin_has_booking')!= 1)
                                     <p>{{__('You must enable on main lang.')}}</p>
@@ -180,8 +161,7 @@
                                 <div class="form-group">
                                     <label>{{__("Message to Administrator")}}</label>
                                     <div class="form-controls">
-                                        <textarea name="sms_message_admin_when_booking" rows="8"
-                                                  class="form-control">{{setting_item_with_lang('sms_message_admin_when_booking',request()->query('lang')) ?? '' }}</textarea>
+                                        <textarea name="sms_message_admin_when_booking" rows="8" class="form-control">{{setting_item_with_lang('sms_message_admin_when_booking',request()->query('lang')) ?? '' }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -189,19 +169,11 @@
                         <div class="tab-pane" id="SmsVendorEventCreateBooking">
                             @if(is_default_lang())
                                 <div class="form-group">
-                                    <label> <input type="checkbox"
-                                                   @if(setting_item('enable_sms_vendor_has_booking') ?? '' == 1) checked
-                                                   @endif name="enable_sms_vendor_has_booking"
-                                                   value="1"> {{__("Enable send sms to Vendor when have booking?")}}
-                                    </label>
+                                    <label> <input type="checkbox" @if(setting_item('enable_sms_vendor_has_booking') ?? '' == 1) checked @endif name="enable_sms_vendor_has_booking" value="1"> {{__("Enable send sms to Vendor when have booking?")}}</label>
                                 </div>
                             @else
                                 <div class="form-group">
-                                    <label> <input type="checkbox"
-                                                   @if(setting_item('enable_sms_vendor_has_booking') ?? '' == 1) checked
-                                                   @endif name="enable_sms_vendor_has_booking" disabled
-                                                   value="1"> {{__("Enable send sms to Vendor when have booking?")}}
-                                    </label>
+                                    <label> <input type="checkbox" @if(setting_item('enable_sms_vendor_has_booking') ?? '' == 1) checked @endif name="enable_sms_vendor_has_booking" disabled value="1"> {{__("Enable send sms to Vendor when have booking?")}}</label>
                                 </div>
                                 @if(setting_item('enable_sms_vendor_has_booking') != 1)
                                     <p>{{__('You must enable on main lang.')}}</p>
@@ -210,27 +182,18 @@
                             <div class="form-group" data-condition="enable_sms_vendor_has_booking:is(1)">
                                 <label>{{__("Message to Customer")}}</label>
                                 <div class="form-controls">
-                                    <textarea name="sms_message_vendor_when_booking" rows="8"
-                                              class="form-control">{{setting_item_with_lang('sms_message_vendor_when_booking',request()->query('lang')) ?? '' }}</textarea>
+                                    <textarea name="sms_message_vendor_when_booking" rows="8" class="form-control">{{setting_item_with_lang('sms_message_vendor_when_booking',request()->query('lang')) ?? '' }}</textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane" id="SmsUserEventCreateBooking">
                             @if(is_default_lang())
                                 <div class="form-group">
-                                    <label> <input type="checkbox"
-                                                   @if(setting_item('enable_sms_user_has_booking') ?? '' == 1) checked
-                                                   @endif name="enable_sms_user_has_booking"
-                                                   value="1"> {{__("Enable send sms to Customer when have booking?")}}
-                                    </label>
+                                    <label> <input type="checkbox" @if(setting_item('enable_sms_user_has_booking') ?? '' == 1) checked @endif name="enable_sms_user_has_booking" value="1"> {{__("Enable send sms to Customer when have booking?")}}</label>
                                 </div>
                             @else
                                 <div class="form-group">
-                                    <label> <input type="checkbox"
-                                                   @if(setting_item('enable_sms_user_has_booking') ?? '' == 1) checked
-                                                   @endif name="enable_sms_user_has_booking" disabled
-                                                   value="1"> {{__("Enable send sms to Customer when have booking?")}}
-                                    </label>
+                                    <label> <input type="checkbox" @if(setting_item('enable_sms_user_has_booking') ?? '' == 1) checked @endif name="enable_sms_user_has_booking" disabled value="1"> {{__("Enable send sms to Customer when have booking?")}}</label>
                                 </div>
                                 @if(setting_item('enable_sms_user_has_booking') != 1)
                                     <p>{{__('You must enable on main lang.')}}</p>
@@ -239,8 +202,7 @@
                             <div class="form-group" data-condition="enable_sms_user_has_booking:is(1)">
                                 <label>{{__("Message to Customer")}}</label>
                                 <div class="form-controls">
-                                    <textarea name="sms_message_user_when_booking" rows="8"
-                                              class="form-control">{{setting_item_with_lang('sms_message_user_when_booking',request()->query('lang')) ?? '' }}</textarea>
+                                    <textarea name="sms_message_user_when_booking" rows="8" class="form-control">{{setting_item_with_lang('sms_message_user_when_booking',request()->query('lang')) ?? '' }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -254,35 +216,24 @@
                 <div class="form-group">
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab"
-                               href="#SmsAdminEventUpdateBooking">{{__("Administrator")}}</a>
+                            <a class="nav-link active" data-toggle="tab" href="#SmsAdminEventUpdateBooking">{{__("Administrator")}}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " data-toggle="tab"
-                               href="#SmsVendorEventUpdateBooking">{{__("Vendor")}}</a>
+                            <a class="nav-link " data-toggle="tab" href="#SmsVendorEventUpdateBooking">{{__("Vendor")}}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " data-toggle="tab"
-                               href="#SmsUserEventUpdateBooking">{{__("Customer")}}</a>
+                            <a class="nav-link " data-toggle="tab" href="#SmsUserEventUpdateBooking">{{__("Customer")}}</a>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="SmsAdminEventUpdateBooking">
                             @if(is_default_lang())
                                 <div class="form-group">
-                                    <label> <input type="checkbox"
-                                                   @if(setting_item('enable_sms_admin_update_booking') ?? '' == 1) checked
-                                                   @endif name="enable_sms_admin_update_booking"
-                                                   value="1"> {{__("Enable send sms to Administrator when update booking?")}}
-                                    </label>
+                                    <label> <input type="checkbox" @if(setting_item('enable_sms_admin_update_booking') ?? '' == 1) checked @endif name="enable_sms_admin_update_booking" value="1"> {{__("Enable send sms to Administrator when update booking?")}}</label>
                                 </div>
                             @else
                                 <div class="form-group">
-                                    <label> <input type="checkbox"
-                                                   @if(setting_item('enable_sms_admin_update_booking') ?? '' == 1) checked
-                                                   @endif name="enable_sms_admin_update_booking" disabled
-                                                   value="1"> {{__("Enable send sms to Administrator when update booking?")}}
-                                    </label>
+                                    <label> <input type="checkbox" @if(setting_item('enable_sms_admin_update_booking') ?? '' == 1) checked @endif name="enable_sms_admin_update_booking" disabled value="1"> {{__("Enable send sms to Administrator when update booking?")}}</label>
                                 </div>
                                 @if(@setting_item('enable_sms_admin_update_booking') != 1)
                                     <p>{{__('You must enable on main lang.')}}</p>
@@ -292,8 +243,7 @@
                                 <div class="form-group">
                                     <label>{{__("Message to Administrator")}}</label>
                                     <div class="form-controls">
-                                        <textarea name="sms_message_admin_update_booking" rows="8"
-                                                  class="form-control">{{setting_item_with_lang('sms_message_admin_update_booking',request()->query('lang')) ?? '' }}</textarea>
+                                        <textarea name="sms_message_admin_update_booking" rows="8" class="form-control">{{setting_item_with_lang('sms_message_admin_update_booking',request()->query('lang')) ?? '' }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -301,19 +251,11 @@
                         <div class="tab-pane" id="SmsVendorEventUpdateBooking">
                             @if(is_default_lang())
                                 <div class="form-group">
-                                    <label> <input type="checkbox"
-                                                   @if(setting_item('enable_sms_vendor_update_booking') ?? '' == 1) checked
-                                                   @endif name="enable_sms_vendor_update_booking"
-                                                   value="1"> {{__("Enable send sms to Vendor when update booking?")}}
-                                    </label>
+                                    <label> <input type="checkbox" @if(setting_item('enable_sms_vendor_update_booking') ?? '' == 1) checked @endif name="enable_sms_vendor_update_booking" value="1"> {{__("Enable send sms to Vendor when update booking?")}}</label>
                                 </div>
                             @else
                                 <div class="form-group">
-                                    <label> <input type="checkbox"
-                                                   @if(@setting_item('enable_sms_vendor_update_booking') ?? '' == 1) checked
-                                                   @endif name="enable_sms_vendor_update_booking" disabled
-                                                   value="1"> {{__("Enable send sms to Vendor when update booking?")}}
-                                    </label>
+                                    <label> <input type="checkbox" @if(@setting_item('enable_sms_vendor_update_booking') ?? '' == 1) checked @endif name="enable_sms_vendor_update_booking" disabled value="1"> {{__("Enable send sms to Vendor when update booking?")}}</label>
                                 </div>
                                 @if(@setting_item('enable_sms_vendor_update_booking') != 1)
                                     <p>{{__('You must enable on main lang.')}}</p>
@@ -322,27 +264,18 @@
                             <div class="form-group" data-condition="enable_sms_vendor_update_booking:is(1)">
                                 <label>{{__("Message to Customer")}}</label>
                                 <div class="form-controls">
-                                    <textarea name="sms_message_vendor_update_booking" rows="8"
-                                              class="form-control">{{setting_item_with_lang('sms_message_vendor_update_booking',request()->query('lang')) ?? '' }}</textarea>
+                                    <textarea name="sms_message_vendor_update_booking" rows="8" class="form-control">{{setting_item_with_lang('sms_message_vendor_update_booking',request()->query('lang')) ?? '' }}</textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane" id="SmsUserEventUpdateBooking">
                             @if(is_default_lang())
                                 <div class="form-group">
-                                    <label> <input type="checkbox"
-                                                   @if(@setting_item('enable_sms_user_update_booking') ?? '' == 1) checked
-                                                   @endif name="enable_sms_user_update_booking"
-                                                   value="1"> {{__("Enable send sms to Customer when update booking?")}}
-                                    </label>
+                                    <label> <input type="checkbox" @if(@setting_item('enable_sms_user_update_booking') ?? '' == 1) checked @endif name="enable_sms_user_update_booking" value="1"> {{__("Enable send sms to Customer when update booking?")}}</label>
                                 </div>
                             @else
                                 <div class="form-group">
-                                    <label> <input type="checkbox"
-                                                   @if(setting_item('enable_sms_user_has_booking') ?? '' == 1) checked
-                                                   @endif name="enable_sms_user_has_booking" disabled
-                                                   value="1"> {{__("Enable send sms to Customer when update booking?")}}
-                                    </label>
+                                    <label> <input type="checkbox" @if(setting_item('enable_sms_user_has_booking') ?? '' == 1) checked @endif name="enable_sms_user_has_booking" disabled value="1"> {{__("Enable send sms to Customer when update booking?")}}</label>
                                 </div>
                                 @if(@setting_item('enable_sms_user_update_booking') != 1)
                                     <p>{{__('You must enable on main lang.')}}</p>
@@ -351,8 +284,7 @@
                             <div class="form-group" data-condition="enable_sms_user_update_booking:is(1)">
                                 <label>{{__("Message to Customer")}}</label>
                                 <div class="form-controls">
-                                    <textarea name="sms_message_user_update_booking" rows="8"
-                                              class="form-control">{{setting_item_with_lang('sms_message_user_update_booking',request()->query('lang')) ?? '' }}</textarea>
+                                    <textarea name="sms_message_user_update_booking" rows="8" class="form-control">{{setting_item_with_lang('sms_message_user_update_booking',request()->query('lang')) ?? '' }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -393,8 +325,7 @@
                     </div>
                     <div class="form-controls">
                         <br>
-                        <div id="sms-testing" style="cursor: pointer;"
-                             class="btn btn-primary">{{__('Send Sms Test')}}</div>
+                        <div id="sms-testing" style="cursor: pointer;" class="btn btn-primary">{{__('Send Sms Test')}}</div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -407,7 +338,7 @@
         </div>
     </div>
 </div>
-@section('script.body')
+@push('js')
     <script>
         $(document).ready(function () {
             var cant_test = 1;
@@ -417,7 +348,7 @@
                 var message = $('#message-sms-testing').val();
                 var country = $('#country-sms-testing').val();
                 $.ajax({
-                    url: '{{url('admin/module/sms/testSms')}}',
+                    url: '{{route('sms.admin.testSms')}}',
                     type: 'get',
                     data: {to: to, country: country, message: message},
                     beforeSend: function () {
@@ -450,4 +381,4 @@
 
         })
     </script>
-@endsection
+@endpush

@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\UserMeta;
+use Carbon\Carbon;
+use Dotenv\Util\Str;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Matrix\Exception;
 use Modules\User\Events\SendMailUserRegistered;
-use Socialite;
+use \Laravel\Socialite\Facades\Socialite;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -47,7 +49,7 @@ class LoginController extends Controller
 
     public function redirectTo()
     {
-        if(Auth::user()->hasPermissionTo('dashboard_access')){
+        if(Auth::user()->hasPermission('dashboard_access')){
             return '/admin';
         }else{
             return $this->redirectTo;
@@ -62,6 +64,9 @@ class LoginController extends Controller
     public function socialLogin($provider)
     {
         $this->initConfigs($provider);
+        $redirectTo = request()->server('HTTP_REFERER',url('/'));
+        session()->put('url.intended',$redirectTo);
+
         return Socialite::driver($provider)->redirect();
     }
 
@@ -87,6 +92,10 @@ class LoginController extends Controller
 
             $user = Socialite::driver($provider)->user();
 
+            $redirectTo = $this->getRedirectTo();
+            session()->forget('url.intended');
+
+
             if (empty($user)) {
                 return redirect()->to('login')->with('error', __('Can not authorize'));
             }
@@ -100,32 +109,33 @@ class LoginController extends Controller
                     $meta->delete();
                 }
 
-                if (empty($user->getEmail())) {
-                    return redirect()->route('login')->with('error', __('Can not get email address from your social account'));
-                }
+                // if we can not get email, then fake email will be generated
+                $email = $user->getEmail();
+                $email = $email?:$user->getId().'@'.$provider;
 
-                $userByEmail = User::query()->where('email', $user->getEmail())->first();
+                $userByEmail = User::query()->where('email', $email)->first();
                 if (!empty($userByEmail)) {
-                    return redirect()->route('login')->with('error', __('Email :email exists. Can not register new account with your social email', ['email' => $user->getEmail()]));
+                    return redirect()->route('login')->with('error', __('Email :email exists. Can not register new account with your social email', ['email' => $email]));
                 }
 
                 // Create New User
                 $realUser = new User();
-                $realUser->email = $user->getEmail();
+                $realUser->email = $email;
                 $realUser->password = Hash::make(uniqid() . time());
                 $realUser->name = $user->getName();
                 $realUser->first_name = $user->getName();
                 $realUser->status = 'publish';
+                $realUser->email_verified_at = Carbon::now();
 
                 $realUser->save();
 
                 $realUser->addMeta('social_' . $provider . '_id', $user->getId());
-                $realUser->addMeta('social_' . $provider . '_email', $user->getEmail());
+                $realUser->addMeta('social_' . $provider . '_email', $email);
                 $realUser->addMeta('social_' . $provider . '_name', $user->getName());
                 $realUser->addMeta('social_' . $provider . '_avatar', $user->getAvatar());
                 $realUser->addMeta('social_meta_avatar', $user->getAvatar());
 
-                $realUser->assignRole('customer');
+                $realUser->assignRole(setting_item('user_role'));
 
                 try {
                     event(new SendMailUserRegistered($realUser));
@@ -136,7 +146,7 @@ class LoginController extends Controller
                 // Login with user
                 Auth::login($realUser);
 
-                return redirect('/');
+                return redirect($redirectTo);
 
             } else {
 
@@ -149,7 +159,7 @@ class LoginController extends Controller
 
                 Auth::login($existUser);
 
-                return redirect('/');
+                return redirect($redirectTo);
             }
         }catch (\Exception $exception)
         {
@@ -159,6 +169,15 @@ class LoginController extends Controller
 
             return redirect()->route('login')->with('error',$message);
         }
+    }
+
+    public function getRedirectTo(){
+        $url = session()->get('url.intended', url('/'));
+        session()->forget('url.intended');
+        if($url == url('/') or $url ==route('login') or $url == route('auth.register')){
+            $url = url('/');
+        }
+        return $url;
     }
 
 

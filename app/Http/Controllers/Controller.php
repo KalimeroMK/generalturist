@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Assets;
-use function Clue\StreamFilter\fun;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Modules\Page\Models\Page;
 use Illuminate\Support\Facades\Auth;
 
 class Controller extends BaseController

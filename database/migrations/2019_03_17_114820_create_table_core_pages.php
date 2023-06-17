@@ -22,6 +22,7 @@ class CreateTableCorePages extends Migration
             $table->dateTime('publish_date')->nullable();
             $table->integer('image_id')->nullable();
             $table->integer('template_id')->nullable();
+            $table->tinyInteger('show_template')->nullable();
 
             $table->bigInteger('create_user')->nullable();
             $table->bigInteger('update_user')->nullable();

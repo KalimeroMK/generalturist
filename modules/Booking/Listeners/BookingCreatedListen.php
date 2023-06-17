@@ -16,10 +16,10 @@
             $booking->sendNewBookingEmails();
 
             //case guest checkout
-            if (!Auth::id()) {
+            if(!Auth::id()){
                 $name = 'Guests';
                 $avatar = '';
-            } else {
+            }else{
                 $name = Auth::user()->display_name;
                 $avatar = Auth::user()->avatar_url;
             }
@@ -32,23 +32,22 @@
                 'avatar'  => $avatar,
                 'link'    => route('report.admin.booking'),
                 'type'    => $booking->object_model,
-                'message' => __(':name has created new Booking', ['name' => $name]),
+                'message' => __(':name has created new Booking', ['name' => $name])
             ];
 
-            $vendor = User::where('id', $booking->vendor_id)->where('status', 'publish')->first();
-
+            $vendor = $booking->vendor()->where('status', 'publish')->first();
             //to Admin
-            if (!Auth::id()) {
+            if(!Auth::id()){
                 // case guest checkout use vendor object to push notify
-                if ($vendor) {
+                if($vendor) {
                     $vendor->notify(new AdminChannelServices($data));
                 }
-            } else {
+            }else{
                 Auth::user()->notify(new AdminChannelServices($data));
             }
 
             //to Vendor
-            if ($vendor and !$vendor->hasAnyPermission(['dashboard_access'])) {
+            if (!empty($vendor) and !$vendor->hasPermission('dashboard_access')) {
                 $data['link'] = route('vendor.bookingReport');
                 $data['to'] = 'vendor';
                 $vendor->notify(new PrivateChannelServices($data));

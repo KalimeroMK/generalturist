@@ -15,21 +15,19 @@
                     <div class="panel-body">
                         <ul class="panel-navs">
                             @foreach($groups as $k=>$row)
-                                <li class="@if($current_group == $k) active @endif"><a
-                                            href="{{url('admin/module/core/settings/index/'.$k)}}">
-                                        @if($row['icon'])
-                                            <i class="{{$row['icon']}}"></i>
-                                        @endif
-                                        {{$row['name']}}
-                                    </a></li>
+                                <li class="@if($current_group == $k) active @endif"><a href="{{route('core.admin.settings.index',['group'=>$k])}}">
+                                    @if($row['icon'])
+                                    <i class="{{$row['icon']}}"></i>
+                                    @endif
+                                    {{$row['name']}}
+                                </a></li>
                             @endforeach
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="col-md-12">
-                <form action="{{url('admin/module/core/settings/store/'.$current_group)}}" method="post"
-                      autocomplete="off">
+                <form action="{{route('core.admin.settings.store',['group'=>$current_group])}}" method="post" autocomplete="off">
                     @csrf
 
                     @include('Language::admin.navigation')

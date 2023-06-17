@@ -15,8 +15,9 @@ return [
 
     'password' => __('Passwords must be at least eight characters and match the confirmation.'),
     'reset' => __('Your password has been reset!'),
-    'sent' => __('We have e-mailed your password reset link!'),
+    'sent' => 'We have emailed your password reset link!',
     'token' => __('This password reset token is invalid.'),
-    'user' => __("We can't find a user with that e-mail address."),
+    'user' => "We can't find a user with that email address.",
+
 
 ];

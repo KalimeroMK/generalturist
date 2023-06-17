@@ -1,7 +1,6 @@
 @extends('admin.layouts.app')
 @section('content')
-    <form action="{{route('flight.admin.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}"
-          method="post">
+    <form action="{{route('flight.admin.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}" method="post">
         @csrf
         <input type="hidden" name="id" value="{{$row->id}}">
         <div class="container">
@@ -34,7 +33,7 @@
         </div>
     </form>
 @endsection
-@section('script.body')
+@push('js')
     <script>
         $(document).ready(function () {
             $('.has-datetimepicker').daterangepicker({
@@ -43,20 +42,20 @@
                 showCalendar: false,
                 autoUpdateInput: false, //disable default date
                 sameDate: true,
-                autoApply: true,
-                disabledPast: true,
-                enableLoading: true,
-                showEventTooltip: true,
-                classNotAvailable: ['disabled', 'off'],
+                autoApply           : true,
+                disabledPast        : true,
+                enableLoading       : true,
+                showEventTooltip    : true,
+                classNotAvailable   : ['disabled', 'off'],
                 disableHightLight: true,
                 timePicker24Hour: true,
-                locale: {
-                    format: 'YYYY/MM/DD HH:mm:ss'
+                locale:{
+                    format:'YYYY/MM/DD HH:mm:ss'
                 }
             }).on('apply.daterangepicker', function (ev, picker) {
                 $(this).val(picker.startDate.format('YYYY/MM/DD HH:mm:ss'));
             });
         })
     </script>
-@endsection
+@endpush
 

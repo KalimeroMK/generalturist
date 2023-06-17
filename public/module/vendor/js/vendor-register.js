@@ -61,6 +61,9 @@ $('.bravo-form-register-vendor [type=submit]').click(function (e) {
             if(typeof e.responseJSON !== "undefined" && typeof e.responseJSON.message !='undefined'){
                 form.find('.message-error').show().html('<div class="alert alert-danger">' + e.responseJSON.message + '</div>');
             }
+            if(typeof BravoReCaptcha != "undefined"){
+                BravoReCaptcha.reset('register_vendor');
+            }
         }
     });
 })

@@ -1,6 +1,8 @@
 <?php
 namespace App;
 
+use App\Traits\HasStatus;
+use App\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -12,6 +14,9 @@ use Modules\Media\Helpers\FileHelper;
 
 class BaseModel extends Model
 {
+    use HasStatus;
+    use HasTranslations;
+
     protected $dateFormat    = 'Y-m-d H:i:s';
     protected $slugField     = '';
     protected $slugFromField = '';
@@ -111,18 +116,13 @@ class BaseModel extends Model
         return '';
     }
 
-    public function getAuthor()
-    {
-        return $this->belongsTo("App\User", "create_user", "id")->withDefault();
-    }
-
     public function author()
     {
-        return $this->belongsTo("App\User", "create_user", "id")->withDefault();
+        return $this->belongsTo(User::class, "author_id", "id")->withDefault();
     }
 
     public function vendor(){
-        return $this->belongsTo("App\User", "vendor_id", 'id')->withDefault();
+        return $this->belongsTo(User::class, "vendor_id", 'id')->withDefault();
     }
 
     public function cacheKey(){
@@ -162,40 +162,6 @@ class BaseModel extends Model
         return $res;
     }
 
-
-//    public static function findWithLang($id,$lang = '')
-//    {
-//        if(!$lang) $lang = request()->query('lang');
-//
-//        if(empty($lang) || is_default_lang($lang)) return parent::find($id);
-//
-//        $item = parent::where('origin_id',$id)->where('lang',$lang)->first();
-//
-//        if(empty($item)){
-//            $origin = parent::find($id);
-//
-//            $clone = $origin->replicate();
-//            $clone->lang = $lang;
-//            $clone->origin_id = $id;
-//            $clone->save();
-//
-//            return $clone;
-//        }
-//
-//        return $item;
-//    }
-//
-//    public static function findByWithLang($key,$value,$lang = '')
-//    {
-//        if(!$lang) $lang = request()->query('lang');
-//        if(!$lang) $lang = request()->route('lang');
-//
-//        if(empty($lang) || is_default_lang($lang)) return parent::where($key,$value)->first();
-//
-//        $item = parent::where($key,$value)->where('lang',$lang)->first();
-//
-//        return $item;
-//    }
 
     public function getIsPublishedAttribute(){
 
@@ -252,95 +218,6 @@ class BaseModel extends Model
             return $meta;
         }
     }
-    /**
-     * @internal will change to private
-     */
-    public function getTranslationModelNameDefault(): string
-    {
-        $modelName = get_class($this);
-
-        return $modelName.config('translatable.translation_suffix', 'Translation');
-    }
-
-    public function translations(){
-        return $this->hasMany($this->getTranslationModelNameDefault(),'origin_id');
-    }
-    public function translate($locale = false){
-        $translations = $this->translations;
-        if(!empty($translations)){
-            foreach ($translations as $translation)
-            {
-                if($translation->locale == $locale) return $translation;
-            }
-        }
-        return false;
-    }
-    public function getNewTranslation($locale){
-
-        $modelName = $this->getTranslationModelNameDefault();
-
-        $translation = new $modelName();
-        $translation->locale = $locale;
-        $translation->origin_id = $this->id;
-
-        return $translation;
-    }
-
-    public function translateOrOrigin($locale = false){
-        if(empty($locale) or is_default_lang($locale)){
-            $a = $this->getNewTranslation($locale);
-            $a->fill($this->getAttributes());
-        }else{
-            $a = $this->translate($locale);
-            if(!empty($a)) return $a;
-            $a = $this->getNewTranslation($locale);
-            $a->fill($this->getAttributes());
-        }
-        if(!empty($this->casts))
-        {
-            foreach ($this->casts as $key=>$type){
-	            if(!empty($a->casts) and !empty($a->casts[$key])){
-		            $a->setAttribute($key,$this->getAttribute($key));
-	            }
-            }
-        }
-        return $a;
-    }
-
-    /**
-     * @todo Save Translation or Origin Language
-     * @param bool $locale
-     * @param bool $saveSeo
-     * @return bool|null
-     */
-    public function saveOriginOrTranslation($locale = false,$saveSeo = true)
-    {
-        if(!$locale or is_default_lang($locale) or empty(setting_item('site_enable_multi_lang'))){
-            $res = $this->save();
-            if($res && $saveSeo){
-                $this->saveSEO(request());
-            }
-            return $res;
-
-        }elseif($locale && $this->id){
-            $translation = $this->translateOrOrigin($locale);
-            if($translation){
-                $translation->fill(request()->input());
-                $res = $translation->save();
-                if($res && $saveSeo){
-                    $translation->saveSEO(request() , $locale);
-                }
-                return $res;
-            }
-        }
-
-        return false;
-    }
-
-    public function fillData($attributes)
-    {
-        parent::fill($attributes);
-    }
 
     public function fillByAttr($attributes , $input)
     {
@@ -351,7 +228,7 @@ class BaseModel extends Model
         }
     }
 
-    public function check_enable_review_after_booking(){
+    public function review_after_booking(){
 
     }
 
@@ -365,13 +242,18 @@ class BaseModel extends Model
         if($this->status == "publish"){
             return true;
         }
-        if(Auth::id() and $this->create_user == Auth::id() and Auth::user()->hasPermissionTo('dashboard_vendor_access')){
+        if(Auth::id() and $this->author_id == Auth::id() and Auth::user()->hasPermission('dashboard_vendor_access')){
             return true;
         }
         return false;
     }
 
     public function getForSitemap(){
+        switch ($this->type){
+            case("location");
+            // code here
+            break;
+        }
         $all = parent::query()->where('status','publish')->get();
         $res = [];
         foreach ($all as $item){
@@ -387,5 +269,32 @@ class BaseModel extends Model
     {
         $url = FileHelper::url($this->image_id, $size);
         return $url ? $url : '';
+    }
+
+    public function getGallery($featuredIncluded = false)
+    {
+        if (empty($this->gallery))
+        {
+            return [];
+        }
+        $list_item = [];
+        if ($featuredIncluded and $this->image_id) {
+            $list_item[] = [
+                'large' => FileHelper::url($this->image_id, 'full'),
+                'thumb' => FileHelper::url($this->image_id, 'thumb')
+            ];
+        }
+        $items = explode(",", $this->gallery);
+        foreach ($items as $k => $item) {
+            $large = FileHelper::url($item, 'full');
+            $thumb = FileHelper::url($item, 'thumb');
+            if(!empty($large)){
+                $list_item[] = [
+                    'large' => $large,
+                    'thumb' => $thumb
+                ];
+            }
+        }
+        return $list_item;
     }
 }

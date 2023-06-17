@@ -1,15 +1,15 @@
 <?php
+namespace Modules\Email;
 
-    namespace Modules\Email;
+use Illuminate\Support\ServiceProvider;
+use Modules\ModuleServiceProvider;
 
-    use Modules\ModuleServiceProvider;
+class ModuleProvider extends ModuleServiceProvider
+{
 
-    class ModuleProvider extends ModuleServiceProvider
+    public function register()
     {
-
-        public function register()
-        {
-            $this->app->register(RouterServiceProvider::class);
-        }
-
+        $this->app->register(RouterServiceProvider::class);
     }
+
+}

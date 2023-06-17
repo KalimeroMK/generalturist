@@ -15,10 +15,10 @@ body{
 .fa-lg{    font-size: 1.1333333em;}
 .bravo_wrap .bravo_topbar .content .topbar-right .topbar-items li a i{margin-right: 5px;}
 .bravo-news .space-between{    display: block;  text-align: right;}
-.blog-breadcrumb ul li:not(:last-child):after{ right : auto; left: -10px; }
-.blog-breadcrumb ul li:first-child {    padding-left: 10px;  padding-right: 0px;}
-.blog-breadcrumb ul li{padding-right: 25px}
-.blog-breadcrumb ul{ text-align: right; }
+.blog-breadcrumb .ul li:not(:last-child):after{ right : auto; left: -10px; }
+.blog-breadcrumb .ul li:first-child {    padding-left: 10px;  padding-right: 0px;}
+.blog-breadcrumb .ul li{padding-right: 25px}
+.blog-breadcrumb .ul{ text-align: right; }
 .bravo-news .widget_search form .icon_search{    margin-right: -2px; border-radius: 3px 0px 0px 3px;}
 .bravo-news .widget_bloglist ul li .thumb img {   margin-left: 15px; margin-right: 0px;  }
 .bravo-news .widget_category ul li span{    margin-left: 15px;}
@@ -954,6 +954,131 @@ body.has-search-map{ direction: rtl; }
 .bravo_wrap .page-template-content .bravo-form-search-slider .effect {
     direction: ltr;
 }
+.bravo_wrap .page-template-content .bravo-form-search-all.carousel_v2  .effect {
+    direction: ltr;
+}
 .bravo_wrap .bravo_search_tour .bravo_search_map .bravo-list-item .list-item .item-tour .service-review .list-star .booking-item-rating-stars-active {
     transform: rotateY(180deg);
+}
+.bravo_wrap .bravo-form-search-tour.carousel_v2 .effect {
+    direction: ltr;
+}
+.bravo_wrap .page-template-content .bravo-list-tour.carousel_simple .owl-nav{
+    right: -100px;
+    left: auto;
+}
+.bravo_wrap .page-template-content .bravo-box-category-tour{
+    direction: ltr;
+    .title,.desc{
+        text-align: right;
+    }
+}
+.bravo_wrap .page-template-content .bravo-client-feedback{
+     direction: ltr;
+    .list-item{
+        .item{
+            text-align: right;
+            .icofont-quote-right {
+                float: left;
+            }
+        }
+    }
+ }
+
+
+//Boat
+.bravo_wrap .bravo_search_boat .bravo-list-item .list-item .item-tour .service-review .list-star .booking-item-rating-stars-active {
+    right: 0;
+    left: auto;
+}
+.bravo_wrap .bravo_search_boat .bravo-list-item .list-item .item-tour .service-review .review {
+    margin-right: 10px;
+    margin-left: 0;
+}
+.bravo_wrap .bravo_search_boat .bravo-list-item .list-item .item-tour .info .duration {
+    text-align: right;
+}
+.bravo_wrap .bravo_detail_boat .bravo_content .g-header .review-score .head .score {
+    margin-left: 0;
+}
+.bravo_wrap .bravo_detail_boat .bravo_content .g-header .review-score .foot {
+    text-align: left;
+}
+.bravo_wrap .bravo_detail_boat .bravo_content .g-include-exclude .item .icon-exclude {
+    top: 0;
+    float: right;
+    margin-left: 5px;
+}
+.bravo_wrap .bravo_detail_boat .bravo_content .g-include-exclude .item .icon-include {
+    top: 0;
+    float: right;
+    margin-left: 5px;
+}
+.bravo_wrap .bravo_detail_boat .bravo_content .g-itinerary {
+    direction: ltr;
+}
+.bravo_wrap .bravo_detail_boat .bravo_content .g-attributes .list-attributes .item i {
+    float: right;
+    top: 3px;
+    margin-left: 5px;
+}
+.bravo_wrap .bravo_detail_boat .bravo-list-tour-related .item-tour .info .duration {
+    text-align: left;
+}
+.bravo_wrap .bravo_detail_boat .bravo-list-tour-related .item-tour .service-review .list-star .booking-item-rating-stars-active {
+    right: 0;
+    left: auto;
+}
+.bravo_wrap .bravo_detail_boat .bravo_content .g-overview {
+    text-align: right;
+}
+
+.bravo_wrap .bravo_detail_boat .bravo_content .g-overview ul li:before {
+    margin-right: 0;
+    margin-left: 20px;
+}
+.bravo_wrap .bravo_detail_boat .bravo_content .g-specs {
+    text-align: right;
+}
+.bravo_wrap .bravo_detail_boat .bravo_content .g-attributes {
+    text-align: right;
+}
+
+.bravo_wrap .bravo_detail_boat .bravo_content .g-faq .item .header h5
+{
+    margin-left: 20px;
+}
+
+.bravo_wrap .bravo_detail_boat .bravo_content .g-faq .item .header .arrow
+{
+    float: left;
+}
+
+.bravo_wrap .bravo_detail_boat .bravo_content .g-faq .item .header h5,
+.bravo_wrap .bravo_detail_boat .bravo_content .g-faq .item .header .field-icon{
+    float: right;
+    margin-left: 10px;
+}
+
+.bravo_wrap .bravo_detail_boat .bravo_content .g-faq
+{
+    text-align: right;
+}
+
+.bravo_wrap .bravo_detail_boat .bravo-list-boat-related {
+    text-align: right;
+}
+
+.bravo_wrap .bravo_detail_boat .bravo_content .g-gallery .social .social-share .share-wrapper {
+    left:0;
+    right: 10px;
+}
+.bravo_wrap .bravo_detail_boat .bravo_content .g-gallery .social .social-share {
+    position: relative;
+}
+.bravo_wrap .bravo-list-item .topbar-search .control a {
+    line-height: 16px;
+}
+.bravo_wrap .page-template-content .bravo-list-vendor{
+    text-align: right;
 }

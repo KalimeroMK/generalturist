@@ -10,48 +10,48 @@ return [
     'item_url'=>'https://codecanyon.net/item/booking-core-ultimate-booking-system/24043972',
     'list_demo'=>[
         [
-            'url'=>'https://www.bookingcore.org',
+            'url'=>'https://sandbox.bookingcore.org',
             'name'=>'Homepage',
             'thumb'=>'img/demo/home.png',
         ],
         [
-            'url'=>'https://www.bookingcore.org/tour',
+            'url'=>'https://sandbox.bookingcore.org/tour',
             'name'=>'Tour Search',
             'thumb'=>'img/demo/tour.png'
         ],
         [
-            'url'=>'https://www.bookingcore.org/tour/paris-vacation-travel',
+            'url'=>'https://sandbox.bookingcore.org/tour/paris-vacation-travel',
             'name'=>'Single Tour',
             'thumb'=>'img/demo/tour_single.png'
         ],
         [
-            'url'=>'https://www.bookingcore.org/en/page/space',
+            'url'=>'https://sandbox.bookingcore.org/en/page/space',
             'name'=>'Home Space',
             'thumb'=>'img/demo/home-space.png',
         ],
         [
-            'url'=>'https://www.bookingcore.org/en/space',
+            'url'=>'https://sandbox.bookingcore.org/en/space',
             'name'=>'Space Search',
             'thumb'=>'img/demo/space-search.png'
         ],
         [
-            'url'=>'https://www.bookingcore.org/en/space/stay-greenwich-village',
+            'url'=>'https://sandbox.bookingcore.org/en/space/stay-greenwich-village',
             'name'=>'Single Space',
             'thumb'=>'img/demo/single-space.png'
         ],
         [
-            'url'=>'https://www.bookingcore.org/tour?_layout=map',
+            'url'=>'https://sandbox.bookingcore.org/tour?_layout=map',
             'name'=>'Search Map',
             'thumb'=>'img/demo/tour_map.png',
             'class'=>'col-lg-8 col-md-12 col-sm-12'
         ],
         [
-            'url'=>'https://www.bookingcore.org/news',
+            'url'=>'https://sandbox.bookingcore.org/news',
             'name'=>'Blog List',
             'thumb'=>'img/demo/news.png'
         ],
 //        [
-//            'url'=>'https://www.bookingcore.org/contact',
+//            'url'=>'https://sandbox.bookingcore.org/contact',
 //            'name'=>'Contact Page',
 //            'thumb'=>'img/demo/contact.png'
 //        ],

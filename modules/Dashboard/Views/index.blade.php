@@ -29,8 +29,7 @@
                 <div class="panel">
                     <div class="panel-title d-flex justify-content-between align-items-center">
                         <strong>{{__('Earning statistics')}}</strong>
-                        <div id="reportrange"
-                             style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
+                        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
                             <i class="fa fa-calendar"></i>&nbsp;
                             <span></span> <i class="fa fa-caret-down"></i>
                         </div>
@@ -47,7 +46,7 @@
                 <div class="panel">
                     <div class="panel-title d-flex justify-content-between">
                         <strong>{{__('Recent Bookings')}}</strong>
-                        <a href="{{url('admin/module/report/booking')}}" class="btn-link">{{__("More")}}
+                        <a href="{{route('report.admin.booking')}}" class="btn-link">{{__("More")}}
                             <i class="icon ion-ios-arrow-forward"></i></a>
                     </div>
                     <div class="panel-body">
@@ -70,8 +69,7 @@
                                             <td>#{{$booking->id}}</td>
                                             <td>
                                                 @if(get_bookable_service_by_id($booking->object_model) and $service = $booking->service)
-                                                    <a href="{{$service->getDetailUrl()}}"
-                                                       target="_blank">{{$service->title}}</a>
+                                                    <a href="{{$service->getDetailUrl()}}" target="_blank">{{$service->title}}</a>
                                                 @else
                                                     {{__("[Deleted]")}}
                                                 @endif
@@ -102,10 +100,10 @@
     </div>
 @endsection
 
-@section('script.body')
+@push('js')
     <script src="{{url('libs/chart_js/Chart.min.js')}}"></script>
     <script src="{{url('libs/daterange/moment.min.js')}}"></script>
-    <script src="{{url('libs/daterange/daterangepicker.min.js?_ver='.config('app.version'))}}"></script>
+    <script src="{{url('libs/daterange/daterangepicker.min.js?_ver='.config('app.asset_version'))}}"></script>
     <link rel="stylesheet" href="{{url('libs/daterange/daterangepicker.css')}}"/>
     <script>
         var ctx = document.getElementById('earning_chart').getContext('2d');
@@ -156,11 +154,9 @@
 
         var start = moment().startOf('week');
         var end = moment();
-
         function cb(start, end) {
             $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         }
-
         $('#reportrange').daterangepicker({
             startDate: start,
             endDate: end,
@@ -180,7 +176,7 @@
         }, cb).on('apply.daterangepicker', function (ev, picker) {
             // Reload Earning JS
             $.ajax({
-                url: '{{url('admin/module/dashboard/reloadChart')}}',
+                url: '{{route('report.admin.statistic.reloadChart')}}',
                 data: {
                     chart: 'earning',
                     from: picker.startDate.format('YYYY-MM-DD'),
@@ -198,4 +194,4 @@
         });
         cb(start, end);
     </script>
-@endsection
+@endpush

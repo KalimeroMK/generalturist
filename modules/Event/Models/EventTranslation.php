@@ -1,42 +1,45 @@
 <?php
 
-    namespace Modules\Event\Models;
+namespace Modules\Event\Models;
 
-    class EventTranslation extends Event
-    {
-        protected $table = 'bravo_event_translations';
+use App\BaseModel;
 
-        protected $fillable = [
-            'title',
-            'content',
-            'faqs',
-            'address',
-            'surrounding',
-        ];
+class EventTranslation extends Event
+{
+    protected $table = 'bravo_event_translations';
 
-        protected $slugField = false;
-        protected $seo_type = 'event_translation';
+    protected $fillable = [
+        'title',
+        'content',
+        'faqs',
+        'address',
+        'surrounding'
+    ];
 
-        protected $cleanFields = [
-            'content',
-        ];
-        protected $casts = [
-            'faqs'        => 'array',
-            'surrounding' => 'array',
-        ];
+    protected $slugField     = false;
+    protected $seo_type = 'event_translation';
 
-        public static function boot()
-        {
-            parent::boot();
-            static::saving(function ($table) {
-                unset($table->extra_price);
-                unset($table->price);
-                unset($table->sale_price);
-            });
-        }
+    protected $cleanFields = [
+        'content'
+    ];
+    protected $casts = [
+        'faqs'  => 'array',
+        'surrounding'  => 'array',
+    ];
 
-        public function getSeoType()
-        {
-            return $this->seo_type;
-        }
+    public function getSeoType(){
+        return $this->seo_type;
     }
+    public function getRecordRoot(){
+        return $this->belongsTo(Event::class,'origin_id');
+
+    }
+    public static function boot() {
+		parent::boot();
+		static::saving(function($table)  {
+			unset($table->extra_price);
+			unset($table->price);
+			unset($table->sale_price);
+		});
+	}
+}

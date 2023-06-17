@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 @section('content')
-    <form action="{{url('/admin/module/user/subscriber/store')}}" method="post">
+    <form action="{{route('user.admin.subscriber.store')}}" method="post">
         <input type="hidden" name="id" value="{{$row->id}}">
         @csrf
         <div class="container-fluid">
@@ -22,13 +22,10 @@
                     </div>
                     <hr>
                     <div class="text-right">
-                        <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> {{__("Save changes")}}
-                        </button>
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> {{__("Save changes")}}</button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
-@endsection
-@section ('script.body')
 @endsection

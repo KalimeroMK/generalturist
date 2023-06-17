@@ -1,19 +1,17 @@
 <?php
+namespace Modules\Booking\Events;
 
-    namespace Modules\Booking\Events;
 
+use Modules\Booking\Models\Booking;
+use Illuminate\Queue\SerializesModels;
 
-    use Illuminate\Queue\SerializesModels;
-    use Modules\Booking\Models\Booking;
+class BookingCreatedEvent
+{
+    use SerializesModels;
+    public $booking;
 
-    class BookingCreatedEvent
+    public function __construct(Booking $booking)
     {
-        use SerializesModels;
-
-        public Booking $booking;
-
-        public function __construct(Booking $booking)
-        {
-            $this->booking = $booking;
-        }
+        $this->booking = $booking;
     }
+}

@@ -1,4 +1,6 @@
+
 (function ($) {
+
 
     new Vue({
         el:'#bravo-checkout-page',
@@ -53,6 +55,9 @@
                             }
                             me.message.content = html;
                         }
+                        if(typeof BravoReCaptcha != "undefined"){
+                            BravoReCaptcha.reset('booking');
+                        }
 
                     },
                     error:function (e) {
@@ -66,8 +71,9 @@
 								me.message.type = false;
                             }
                         }
-
-
+                        if(typeof BravoReCaptcha != "undefined"){
+                            BravoReCaptcha.reset('booking');
+                        }
                     }
                 })
             },
@@ -77,3 +83,10 @@
         }
     })
 })(jQuery)
+$('#confirmRegister').change(function() {
+    if( $(this).prop('checked')) {
+       $('#confirmRegisterContent').removeClass('d-none');
+    }else {
+        $('#confirmRegisterContent').addClass('d-none');
+    }
+});

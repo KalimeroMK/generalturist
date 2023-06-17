@@ -8,39 +8,33 @@
         @include('admin.message')
         <div class="filter-div d-flex justify-content-between ">
             <div class="col-left">
-                <form method="post" action="{{ route("user.admin.verification.bulkEdit") }}"
-                      class="filter-form filter-form-left d-flex justify-content-start">
+                <form method="post" action="{{ route("user.admin.verification.bulkEdit") }}" class="filter-form filter-form-left d-flex justify-content-start">
                     {{csrf_field()}}
                     <select name="action" class="form-control">
                         <option value="">{{__(" Bulk Actions ")}}</option>
                         <option value="delete">{{__(" Delete ")}}</option>
                     </select>
-                    <button data-confirm="{{__("Do you want to delete?")}}"
-                            class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
+                    <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
                 </form>
             </div>
             <div class="col-left">
-                <form method="get"
-                      class="filter-form filter-form-right d-flex justify-content-end flex-column flex-sm-row"
-                      role="search">
+                <form method="get" class="filter-form filter-form-right d-flex justify-content-end flex-column flex-sm-row" role="search">
                     <select class="form-control" name="role">
                         <option value="">{{ __('-- Select --')}}</option>
                         @foreach($roles as $role)
-                            <option value="{{$role->name}}"
-                                    @if(Request()->role == $role->name) selected @endif >{{ucfirst($role->name)}}</option>
+                            <option value="{{$role->name}}" @if(Request()->role == $role->name) selected @endif >{{ucfirst($role->name)}}</option>
                         @endforeach
                     </select>
-                    <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by name')}}"
-                           class="form-control">
+                    <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by name')}}" class="form-control">
                     <button class="btn-info btn btn-icon btn_search" type="submit">{{__('Search User')}}</button>
                 </form>
             </div>
         </div>
         <div class="text-right">
             <div class="header-status-control">
-                <a href="{{ url("/admin/module/user/verification") }}">{{__("All Verification")}}</a> -
-                <a href="{{ url("/admin/module/user/verification?status=pending") }}">{{__("Pending")}}</a> -
-                <a href="{{ url("/admin/module/user/verification?status=approved") }}">{{__("Approved")}}</a>
+                <a href="{{ route('user.admin.verification.index') }}">{{__("All Verification")}}</a> -
+                <a href="{{ route('user.admin.verification.index',['status'=>'pending']) }}">{{__("Pending")}}</a> -
+                <a href="{{ route('user.admin.verification.index',['status'=>'approved'])  }}">{{__("Approved")}}</a>
             </div>
             <p><i>{{__('Found :total items',['total'=>$rows->total()])}}</i></p>
         </div>
@@ -73,21 +67,17 @@
                                         <td>{{$row->email}}</td>
                                         <td>{{$row->phone}}</td>
                                         <td>
-                                            @php $roles = $row->getRoleNames();
-                                    if(!empty($roles[0])){
-                                        echo e(ucfirst($roles[0]));
-                                    }
+                                            @php
+                                                echo e(ucfirst($row->role_name));
                                             @endphp
                                         </td>
                                         <td>{{ display_date($row->created_at)}}</td>
                                         <td class="status">{{$row->verify_submit_status}}</td>
                                         <td>
                                             @if($row->verify_submit_status == "completed")
-                                                <a class="btn btn-sm btn-info"
-                                                   href="{{route('user.admin.verification.detail',['id'=>$row->id])}}">{{__('View Verification')}}</a>
+                                                <a class="btn btn-sm btn-info" href="{{route('user.admin.verification.detail',['id'=>$row->id])}}">{{__('View Verification')}}</a>
                                             @else
-                                                <a class="btn btn-sm btn-primary"
-                                                   href="{{route('user.admin.verification.detail',['id'=>$row->id])}}">{{__('View request')}}</a>
+                                                <a class="btn btn-sm btn-primary" href="{{route('user.admin.verification.detail',['id'=>$row->id])}}">{{__('View request')}}</a>
                                             @endif
                                         </td>
                                     </tr>
@@ -101,7 +91,7 @@
                         </table>
                     </div>
                 </form>
-                {{$rows->appends(request()->query())->links('vendor.pagination.bootstrap-4')}}
+                {{$rows->appends(request()->query())->links()}}
             </div>
         </div>
     </div>

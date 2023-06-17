@@ -23,17 +23,19 @@
                 'avatar'  => Auth::user()->avatar_url,
                 'link'    => route('review.admin.index'),
                 'type'    => $services->type,
-                'message' => __(':name has created a Review :review on :title',
-                    ['name' => Auth::user()->display_name, 'review' => $review->title, 'title' => $services->title]),
+                'message' => __(':name has created a Review :review on :title', ['name' => Auth::user()->display_name, 'review' => $review->title, 'title' => $services->title])
             ];
             // notify admin
             Auth::user()->notify(new AdminChannelServices($data));
 
             // notify vendor
-            $vendor = User::where('id', $services->create_user)->where('status', 'publish')->first();
-            if ($vendor and !$vendor->hasAnyPermission(['dashboard_access'])) {
+            $vendor = User::where('id', $services->author_id)->where('status', 'publish')->first();
+            if ($vendor and !$vendor->hasPermission('dashboard_access')) {
                 $data['to'] = 'vendor';
                 $vendor->notify(new PrivateChannelServices($data));
+
             }
+
+
         }
     }

@@ -2,8 +2,7 @@
 
     namespace App;
 
-    use Bavix\Wallet\Interfaces\Wallet;
-    use Chatify\Http\Models\Message;
+    use App\Models\ChMessage as Message;
     use Illuminate\Notifications\Notifiable;
     use Illuminate\Contracts\Auth\MustVerifyEmail;
     use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,26 +10,33 @@
     use Illuminate\Support\Facades\Config;
     use Illuminate\Support\Facades\Mail;
     use Illuminate\Support\Facades\URL;
+    use Laravel\Fortify\TwoFactorAuthenticatable;
+    use Laravel\Sanctum\HasApiTokens;
     use Modules\Booking\Models\Booking;
+    use Modules\Booking\Models\Service;
     use Modules\Review\Models\Review;
     use Modules\User\Emails\EmailUserVerifyRegister;
     use Modules\User\Emails\ResetPasswordToken;
-//    use Modules\Vendor\Models\VendorPlan;
+    use Modules\User\Emails\UserPermanentlyDelete;
+    use Modules\User\Events\UpdatePlanRequest;
+    use Modules\User\Models\Plan;
+    use Modules\User\Models\UserPlan;
     use Modules\Vendor\Models\VendorPayout;
     use Modules\Vendor\Models\VendorRequest;
-    use Spatie\Permission\Traits\HasRoles;
+    use Modules\Vendor\Traits\HasMembers;
+    use Modules\User\Traits\HasRoles;
     use Illuminate\Support\Facades\DB;
     use Illuminate\Database\Eloquent\SoftDeletes;
     use Illuminate\Support\Facades\Auth;
-    use Tymon\JWTAuth\Contracts\JWTSubject;
-    use App\Traits\HasWallet;
 
-    class User extends Authenticatable implements MustVerifyEmail,JWTSubject,Wallet
+    class User extends Authenticatable implements MustVerifyEmail
     {
         use SoftDeletes;
         use Notifiable;
         use HasRoles;
-        use HasWallet;
+        use TwoFactorAuthenticatable;
+        use HasApiTokens;
+        use HasMembers;
 
         /**
          * The attributes that are mass assignable.
@@ -56,6 +62,7 @@
             'avatar_id',
             'bio',
             'business_name',
+            'status',
 //            'vendor_plan_id',
 //            'vendor_plan_enable',
 //            'vendor_plan_start_date',
@@ -211,6 +218,10 @@
             return $name;
         }
 
+        public function getFirstCharacterDisplayName(){
+            return ucfirst(mb_substr($this->getDisplayName(), 0, 1, "UTF-8"));
+        }
+
         public function getDisplayNameAttribute()
         {
             $name = $this->name;
@@ -330,18 +341,6 @@
             return $res;
         }
 
-        public function getRoleNameAttribute(){
-            $all = $this->getRoleNames();
-
-            if(count($all)){
-                return ucfirst($all[0]);
-            }
-            return '';
-        }
-
-        public function getRoleIdAttribute(){
-            return $this->roles[0]->id ?? '';
-        }
 
         /**
          * @todo get All Fields That you need to verification
@@ -405,6 +404,23 @@
 	        $a  = Mail::to($this->email)->send(new EmailUserVerifyRegister($this, $actionUrl));
         }
 
+        public function sendEmailPermanentlyDelete(){
+            if(!empty(setting_item('user_enable_permanently_delete_email'))){
+//                to admin
+                if(!empty(setting_item_with_lang('user_permanently_delete_content_email_to_admin'))){
+                    $subject = setting_item_with_lang('user_permanently_delete_subject_email_to_admin');
+                    $content = setting_item_with_lang('user_permanently_delete_content_email_to_admin');
+                    Mail::to(setting_item('admin_email'))->send(new UserPermanentlyDelete($this,$subject,$content));
+                }
+                if(!empty(setting_item_with_lang('user_permanently_delete_content_email'))){
+                    $subject = setting_item_with_lang('user_permanently_delete_subject_email');
+                    $content = setting_item_with_lang('user_permanently_delete_content_email');
+                    Mail::to($this->email)->send(new UserPermanentlyDelete($this,$subject,$content));
+                }
+            }
+
+        }
+
 
         public function verificationUrl(){
 	        return URL::temporarySignedRoute(
@@ -438,10 +454,83 @@
         }
 
         public function getNameAttribute(){
-            return $this->first_name.' '.$this->last_name;
+            return $this->business_name ? $this->business_name : $this->first_name.' '.$this->last_name;
         }
         public function getUnseenMessageCountAttribute(){
             return Message::query()->where('to_id',$this->id)->where('from_id','!=',$this->id)->where('seen',0)->count(['id']);
         }
+
+        public function user_plan(){
+            return $this->hasOne(UserPlan::class,'user_id');
+        }
+
+        public function userPlans(){
+            return $this->hasMany(UserPlan::class,'user_id');
+        }
+
+        public function applyPlan(Plan $plan,$price,$is_annual = false,$active=true){
+            $max_service = $plan->max_service;
+            if($active){
+                $user_plan = UserPlan::firstOrNew(['plan_id'=>$plan->id,'user_id'=>$this->id,'status'=>0,'price'=>$price]);
+            }else{
+                $user_plan = new UserPlan();
+            }
+
+            if($is_annual){
+                $end_date = strtotime('+ 1 year');
+            }else{
+                $end_date = strtotime('+ '.$plan->duration.' '.$plan->duration_type);
+            }
+            $plan_data = $plan->toArray();
+            $plan_data['is_annual'] = $is_annual;
+            $data = [
+                'plan_id'=>$plan->id,
+                'price'=>$price,
+                'start_date'=>date('Y-m-d H:i:s'),
+                'end_date'=>date('Y-m-d H:i:s',$end_date),
+                'max_service'=>$max_service,
+                'plan_data'=>$plan_data,
+                'user_id'=>$this->id,
+                'status'=>0
+            ];
+            if($active){
+                if(!empty($user_plan->end_date)){
+                    unset($data['end_date']);
+                    unset($data['start_date']);
+                    unset($data['max_service']);
+                }
+                $data['status']=1;
+            }
+            $user_plan->fillByAttr(array_keys($data),$data);
+            $user_plan->save();
+            if($active){
+                event(new UpdatePlanRequest($this));
+            }
+
+        }
+        public function checkUserPlan(){
+
+            if(!is_enable_plan()) return true;
+
+            $user_plans = $this->userPlans()->where('status',1)->where('end_date','>',now())->get();
+
+            if(!$user_plans) return false;
+            $end_date = $user_plans->max('end_date');
+
+            if($end_date <= now()) return false;
+
+            $maxService = $user_plans->sum('max_service');
+            $count_service = $this->service()->where('status','publish')->count('id');
+
+            if($maxService and $count_service > $maxService){
+                return false;
+            }
+            return true;
+        }
+
+        public function service(){
+            return $this->hasMany(Service::class,'author_id');
+        }
+
     }
 

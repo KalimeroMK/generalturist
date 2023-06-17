@@ -24,26 +24,22 @@
                 <div class="filter-div d-flex justify-content-between ">
                     <div class="col-left">
                         @if(!empty($rows))
-                            <form method="post" action="{{url('admin/module/news/category/bulkEdit')}}"
+                            <form method="post" action="{{route('news.admin.category.bulkEdit')}}"
                                   class="filter-form filter-form-left d-flex justify-content-start">
                                 {{csrf_field()}}
                                 <select name="action" class="form-control">
                                     <option value="">{{__(" Bulk Action ")}}</option>
                                     <option value="delete">{{__(" Delete ")}}</option>
                                 </select>
-                                <button data-confirm="{{__("Do you want to delete?")}}"
-                                        class="btn-info btn btn-icon dungdt-apply-form-btn"
-                                        type="button">{{__('Apply')}}</button>
+                                <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
                             </form>
                         @endif
                     </div>
                     <div class="col-left">
-                        <form method="get" action="{{url('/admin/module/news/category/')}} "
-                              class="filter-form filter-form-right d-flex justify-content-end" role="search">
+                        <form method="get" action="{{route('news.admin.category.index')}} " class="filter-form filter-form-right d-flex justify-content-end" role="search">
                             @csrf
                             <input type="text" name="s" value="{{ Request()->s }}" class="form-control">
-                            <button class="btn-info btn btn-icon btn_search" id="search-submit"
-                                    type="submit">{{__('Search Category')}}</button>
+                            <button class="btn-info btn btn-icon btn_search" id="search-submit" type="submit">{{__('Search Category')}}</button>
                         </form>
                     </div>
                 </div>
@@ -69,14 +65,14 @@
                                         <td><input type="checkbox" name="ids[]" value="{{$row->id}}" class="check-item">
                                         </td>
                                         <td class="title">
-                                            <a href="{{url('admin/module/news/category/edit/'.$row->id)}}">{{$prefix.' '.$row->name}}</a>
+                                            <a href="{{route('news.admin.category.edit',['id'=>$row->id])}}">{{$prefix.' '.$row->name}}</a>
                                         </td>
                                         <td>{{$row->slug}}</td>
 
                                         <td class="d-none d-md-block">{{display_date($row->updated_at)}}</td>
                                     </tr>
                                     <?php
-                                    $traverse($row->children, $prefix.'-');
+                                    $traverse($row->children, $prefix . '-');
                                     }
                                     };
                                     $traverse($rows);

@@ -1,14 +1,14 @@
 <?php
 
-    namespace Modules\Dashboard;
+namespace  Modules\Dashboard;
 
-    use Modules\Core\Abstracts\BaseSettingsClass;
+use Modules\Core\Abstracts\BaseSettingsClass;
 
-    class SettingClass extends BaseSettingsClass
+class SettingClass extends BaseSettingsClass
+{
+    public static function getSettingPages()
     {
-        public static function getSettingPages()
-        {
-            return [
-            ];
-        }
+        return [
+        ];
     }
+}

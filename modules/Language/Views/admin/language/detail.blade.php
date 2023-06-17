@@ -7,9 +7,7 @@
                 <div class="">
                     <h1 class="title-bar">{{$row->id ? 'Edit: '.$row->name : __("Add new location")}}</h1>
                     @if($row->slug)
-                        <p class="item-url-demo">{{__("Permalink")}}: {{url('news-category')}}/<a href="#"
-                                                                                                  class="open-edit-input"
-                                                                                                  data-name="slug">{{$row->slug}}</a>
+                        <p class="item-url-demo">{{__("Permalink")}}: {{url('news-category')}}/<a href="#" class="open-edit-input" data-name="slug">{{$row->slug}}</a>
                         </p>
                     @endif
                 </div>
@@ -38,6 +36,4 @@
             </div>
         </div>
     </form>
-@endsection
-@section ('script.body')
 @endsection

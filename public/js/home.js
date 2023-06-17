@@ -1,5 +1,6 @@
 jQuery(function ($) {
     $.fn.bravoAutocomplete = function (options) {
+        var key = typeof options.key != 'undefined' ? options.key : 'id'
         return this.each(function () {
             var $this = $(this);
             var main = $(this).closest(".smart-search");
@@ -18,7 +19,7 @@ jQuery(function ($) {
                 var items = '';
                 for (var index in options.dataDefault) {
                     var item = options.dataDefault[index];
-                    items += '<div class="item" data-id="' + item.id + '" data-text="' + item.title + '"> <i class="'+options.iconItem+'"></i> ' + item.title + ' </div>';
+                    items += '<div class="item" data-id="' + item[key] + '" data-text="' + item.title + '"> <i class="'+options.iconItem+'"></i> ' + item.title + ' </div>';
                 }
                 main.find('.bravo-autocomplete .list-item').html(items);
                 main.find('.bravo-autocomplete').removeClass("on-message");
@@ -36,7 +37,7 @@ jQuery(function ($) {
                             var items = '';
                             for (var index in options.dataDefault) {
                                 var item = options.dataDefault[index];
-                                items += '<div class="item" data-id="' + item.id + '" data-text="' + item.title + '"> <i class="' + options.iconItem + '"></i> ' + item.title + ' </div>';
+                                items += '<div class="item" data-id="' + item[key] + '" data-text="' + item.title + '"> <i class="' + options.iconItem + '"></i> ' + item.title + ' </div>';
                             }
                             main.find('.bravo-autocomplete .list-item').html(items);
                             main.find('.bravo-autocomplete').removeClass("on-message");
@@ -60,7 +61,7 @@ jQuery(function ($) {
                                     var items = '';
                                     for (var ix in res.data) {
                                         var item = res.data[ix];
-                                        items += '<div class="item" data-id="' + item.id + '" data-text="' + item.title + '"> <i class="' + options.iconItem + '"></i> ' + get_highlight(item.title, query) + ' </div>';
+                                        items += '<div class="item" data-id="' + item[key] + '" data-text="' + item.title + '"> <i class="' + options.iconItem + '"></i> ' + get_highlight(item.title, query) + (item.desc ? '<span class="item-desc">'+item.desc+'</span>' : '') +' </div>';
                                     }
                                     main.find('.bravo-autocomplete .list-item').html(items);
                                     main.find('.bravo-autocomplete').removeClass("on-message");
@@ -311,6 +312,25 @@ jQuery(function ($) {
             }
         })
     });
+    $(".bravo-list-boat").each(function () {
+        $(this).find(".owl-carousel").owlCarousel({
+            items: 4,
+            loop: false,
+            margin: 15,
+            nav: false,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                768: {
+                    items: 2
+                },
+                1000: {
+                    items: 4
+                }
+            }
+        })
+    });
     $(".bravo-list-event").each(function () {
         $(this).find(".owl-carousel").owlCarousel({
             items: 4,
@@ -341,6 +361,10 @@ jQuery(function ($) {
 
     // Date Picker Range
     $('.form-date-search').each(function () {
+        var single_picker = false;
+        if($(this).hasClass("is_single_picker")){
+            single_picker = true;
+        }
         var nowDate = new Date();
         var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
         var parent = $(this),
@@ -351,7 +375,7 @@ jQuery(function ($) {
             check_in_render = $('.check-in-render', parent),
             check_out_render = $('.check-out-render', parent);
         var options = {
-            singleDatePicker: false,
+            singleDatePicker: single_picker,
             autoApply: true,
             disabledPast: true,
             customClass: '',
@@ -471,31 +495,47 @@ jQuery(function ($) {
             listItems.removeClass('hovered');
         });
     });
+    window.ajax_error_to_string =  function(e){
+        if(typeof e.responseJSON !== 'undefined'){
+            if(e.responseJSON.errors){
+                var html = [];
+                for(var k in e.responseJSON.errors){
+                    html.push(e.responseJSON.errors[k].join("<br/>"));
+                }
 
+                return html.join("<br/>");
+            }
+
+            if(e.responseJSON.message){
+                return e.responseJSON.message;
+            }
+        }
+    }
     //Login
     $('.bravo-form-login [type=submit]').click(function (e) {
         e.preventDefault();
         let form = $(this).closest('.bravo-form-login');
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': form.find('meta[name="csrf-token"]').attr('content')
-            }
-        });
+        var redirect = form.find('input[name=redirect]').val();
+
         $.ajax({
-            'url': bookingCore.routes.login,
-            'data': {
+            url: bookingCore.url + '/login',
+            data: {
                 'email': form.find('input[name=email]').val(),
                 'password': form.find('input[name=password]').val(),
                 'remember': form.find('input[name=remember]').is(":checked") ? 1 : '',
                 'g-recaptcha-response': form.find('[name=g-recaptcha-response]').val(),
                 'redirect':form.find('input[name=redirect]').val()
             },
-            'type': 'POST',
+            method: 'POST',
             beforeSend: function () {
                 form.find('.error').hide();
                 form.find('.icon-loading').css("display", 'inline-block');
             },
+            dataType:'json',
             success: function (data) {
+                if(data.two_factor){
+                    return window.location.href = bookingCore.url + '/two-factor-challenge';
+                }
                 form.find('.icon-loading').hide();
                 if (data.error === true) {
                     if (data.messages !== undefined) {
@@ -508,8 +548,31 @@ jQuery(function ($) {
                         form.find('.message-error').show().html('<div class="alert alert-danger">' + data.messages.message_error[0] + '</div>');
                     }
                 }
-                if (typeof data.redirect !== 'undefined' && data.redirect) {
-                    window.location.href = data.redirect
+                if(data.message){
+                    form.find('.message-error').show().html('<div class="alert alert-danger">' + data.message + '</div>');
+                }
+                if (typeof BravoReCaptcha !== 'undefined') {
+                    BravoReCaptcha.reset('login');
+                    BravoReCaptcha.reset('login_normal');
+
+                }
+                if(redirect.trim('/')){
+                    window.location.href = bookingCore.url_root + form.find('input[name=redirect]').val();
+                }else{
+                    window.location.reload();
+                }
+
+            },
+            error:function (e){
+                form.find('.icon-loading').hide();
+                var html = ajax_error_to_string(e);
+                if (typeof BravoReCaptcha !== 'undefined') {
+                    BravoReCaptcha.reset('login');
+                    BravoReCaptcha.reset('login_normal');
+
+                }
+                if(html){
+                    form.find('.message-error').show().html('<div class="alert alert-danger">' + html + '</div>');
                 }
             }
         });
@@ -549,7 +612,12 @@ jQuery(function ($) {
                     }
                     if (data.messages.message_error !== undefined) {
                         form.find('.message-error').show().html('<div class="alert alert-danger">' + data.messages.message_error[0] + '</div>');
+
                     }
+                }
+                if (typeof BravoReCaptcha !== 'undefined') {
+                    BravoReCaptcha.reset('register');
+                    BravoReCaptcha.reset('register_normal');
                 }
                 if (data.redirect !== undefined) {
                     window.location.href = data.redirect
@@ -559,6 +627,11 @@ jQuery(function ($) {
                 form.find('.icon-loading').hide();
                 if(typeof e.responseJSON !== "undefined" && typeof e.responseJSON.message !='undefined'){
                     form.find('.message-error').show().html('<div class="alert alert-danger">' + e.responseJSON.message + '</div>');
+                }
+
+                if (typeof BravoReCaptcha !== 'undefined') {
+                    BravoReCaptcha.reset('register');
+                    BravoReCaptcha.reset('register_normal');
                 }
             }
         });
@@ -802,11 +875,14 @@ jQuery(function ($) {
         if(string_list.length > 0){
             default_list = JSON.parse(string_list);
         }
+        var url = $this.data('url');
+        var key = $this.data('key');
         var options = {
-            url: bookingCore.url+'/location/search/searchForSelect2',
+            url: url ? url : bookingCore.url+'/location/search/searchForSelect2',
             dataDefault: default_list,
             textLoading: $this.attr("data-onLoad"),
             iconItem: "icofont-location-pin",
+            key: key ? key : 'id'
         };
         $this.bravoAutocomplete(options);
     });
@@ -883,6 +959,9 @@ jQuery(function ($) {
                     me.find('input').val('');
                     me.find('textarea').val('');
                 }
+                if(typeof BravoReCaptcha != "undefined"){
+                    BravoReCaptcha.reset('contact');
+                }
             },
             error: function (e) {
                 console.log(e);
@@ -893,6 +972,9 @@ jQuery(function ($) {
                 }else
                 if (e.responseText) {
                     me.find('.form-mess').html('<span class="text-danger">' + e.responseText + '</span>');
+                }
+                if(typeof BravoReCaptcha != "undefined"){
+                    BravoReCaptcha.reset('contact');
                 }
             }
         });
@@ -932,7 +1014,7 @@ jQuery(function ($) {
                 form.find('.icon-loading').hide();
 
                 if(res.status){
-                    form.find('textarea,input,select').val('');
+                    form.find('textarea').val('');
                 }
 
                 if(typeof BravoReCaptcha != "undefined"){
@@ -1016,10 +1098,15 @@ jQuery(function ($) {
 
     });
 
+    $('.bc_popup').modal('show').on('hidden.bs.modal',function(){
+        var id = $(this).attr('id');
+        setCookie(id,1,parseInt($(this).data('days')));
+    })
+
 });
 
 jQuery(function($){
-
+    'use strict';
 
     var notificationsWrapper   = $('.dropdown-notifications');
     var notificationsToggle    = notificationsWrapper.find('a[data-toggle]');
@@ -1097,6 +1184,22 @@ jQuery(function($){
         channelPrivate.bind('App\\Events\\PusherNotificationPrivateEvent', callback);
     }
 
+    if ($('.tabs-box').length) {
+        $('.tabs-box .tab-buttons .tab-btn').on('click', function(e) {
+            e.preventDefault();
+            var target = $($(this).attr('data-tab'));
+            if ($(target).is(':visible')) {
+                return false;
+            } else {
+                target.parents('.tabs-box').find('.tab-buttons').find('.tab-btn').removeClass('active-btn');
+                $(this).addClass('active-btn');
+                target.parents('.tabs-box').find('.tabs-content').find('.tab').fadeOut(0);
+                target.parents('.tabs-box').find('.tabs-content').find('.tab').removeClass('active-tab animated fadeIn');
+                $(target).fadeIn(300);
+                $(target).addClass('active-tab animated fadeIn');
+            }
+        });
+    }
 
 });
 

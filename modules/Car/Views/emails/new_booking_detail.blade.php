@@ -1,7 +1,6 @@
 <?php
-
-    $translation = $service->translateOrOrigin(app()->getLocale());
-    $lang_local = app()->getLocale();
+$translation = $service->translate();
+$lang_local = app()->getLocale();
 ?>
 <div class="b-panel-title">{{__('Car information')}}</div>
 <div class="b-table-wrap">
@@ -87,8 +86,7 @@
                             @else
                                 {{__(':count days',['count'=>$booking->duration_days])}}
                             @endif
-                            :
-                        </td>
+                            :</td>
                         <td class="val no-r-padding">
                             <strong>{{format_money($booking->total_before_fees)}}</strong>
                         </td>
@@ -137,8 +135,7 @@
                             <tr>
                                 <td class="label">
                                     {{$item['name_'.$lang_local] ?? $item['name']}}
-                                    <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top"
-                                       title="{{ $item['desc_'.$lang_local] ?? $item['desc'] }}"></i>
+                                    <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top" title="{{ $item['desc_'.$lang_local] ?? $item['desc'] }}"></i>
                                     @if(!empty($item['per_person']) and $item['per_person'] == "on")
                                         : {{$booking->total_guests}} * {{format_money( $fee_price )}}
                                     @endif
@@ -153,7 +150,16 @@
                             </tr>
                         @endforeach
                     @endif
-
+                    @if(!empty($booking->coupon_amount) and $booking->coupon_amount > 0)
+                        <tr>
+                            <td class="label">
+                                {{__("Coupon")}}
+                            </td>
+                            <td class="val">
+                                -{{ format_money($booking->coupon_amount) }}
+                            </td>
+                        </tr>
+                    @endif
                 </table>
             </td>
         </tr>
@@ -166,15 +172,13 @@
             <td class="val fsz21"><strong style="color: #FA5636">{{format_money($booking->paid)}}</strong></td>
         </tr>
         @if($booking->total > $booking->paid)
-            <tr>
-                <td class="label fsz21">{{__('Remain')}}</td>
-                <td class="val fsz21"><strong
-                            style="color: #FA5636">{{format_money($booking->total - $booking->paid)}}</strong></td>
-            </tr>
+        <tr>
+            <td class="label fsz21">{{__('Remain')}}</td>
+            <td class="val fsz21"><strong style="color: #FA5636">{{format_money($booking->total - $booking->paid)}}</strong></td>
+        </tr>
         @endif
     </table>
 </div>
 <div class="text-center mt20">
-    <a href="{{ route("user.booking_history") }}" target="_blank"
-       class="btn btn-primary manage-booking-btn">{{__('Manage Bookings')}}</a>
+    <a href="{{ route("user.booking_history") }}" target="_blank" class="btn btn-primary manage-booking-btn">{{__('Manage Bookings')}}</a>
 </div>

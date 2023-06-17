@@ -1,41 +1,35 @@
 <?php
+namespace Modules\Template\Blocks;
+class Text extends BaseBlock
+{
 
-    namespace Modules\Template\Blocks;
-
-    class Text extends BaseBlock
+    public function getName()
     {
-        public function __construct()
-        {
-            $this->setOptions([
-                'settings' => [
-                    [
-                        'id'    => 'content',
-                        'type'  => 'editor',
-                        'label' => __('Editor'),
-                    ],
-                    [
-                        'id'        => 'class',
-                        'type'      => 'input',
-                        'inputType' => 'text',
-                        'label'     => __('Wrapper Class (opt)'),
-                    ],
-//                [
-//                    'id'    => 'bg',
-//                    'type'  => 'uploader',
-//                    'label' => __('Image Uploader')
-//                ],
-                ],
-                'category' => __("Other Block"),
-            ]);
-        }
-
-        public function getName()
-        {
-            return __('Text');
-        }
-
-        public function content($model = [])
-        {
-            return view('Template::frontend.blocks.text', $model);
-        }
+        return __('Text');
     }
+
+    public function getOptions()
+    {
+        return [
+            'settings' => [
+                [
+                    'id'    => 'content',
+                    'type'  => 'editor',
+                    'label' => __('Editor')
+                ],
+                [
+                    'id'        => 'class',
+                    'type'      => 'input',
+                    'inputType' => 'text',
+                    'label'     => __('Wrapper Class (opt)')
+                ],
+            ],
+            'category'=>__("Other Block")
+        ];
+    }
+
+    public function content($model = [])
+    {
+        return $this->view('Template::frontend.blocks.text', $model);
+    }
+}

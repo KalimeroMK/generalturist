@@ -283,8 +283,13 @@
             var rd = me.getOption('ready');
             if(typeof rd == "function"){
                 rd(me);
+                if(me.getOption('markerClustering'))
+                {
+                    new markerClusterer.MarkerClusterer(me.map, me.markers, {
+                        imagePath: "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+                    });
+                }
             }
-
         });
 
     };

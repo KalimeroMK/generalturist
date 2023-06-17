@@ -1,11 +1,11 @@
 @extends ('admin.layouts.app')
-@section('script.head')
+@push('css')
     <style type="text/css">
         .select2-container.select2-container--open .select2-dropdown {
             min-width: 220px !important;
         }
     </style>
-@endsection
+@endpush
 @section ('content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between mb20">
@@ -34,10 +34,10 @@
                                 <div class="group-icon">
                                     <?php
                                     $user = !empty(Request()->user_id) ? App\User::find(Request()->user_id) : false;
-                                    App\Helpers\AdminForm::select2('user_id', [
+                                    \App\Helpers\AdminForm::select2('user_id', [
                                         'configs' => [
                                             'ajax'        => [
-                                                'url'      => url('/admin/module/user/getForSelect2'),
+                                                'url' => route('user.admin.getForSelect2'),
                                                 'dataType' => 'json'
                                             ],
                                             'allowClear'  => true,
@@ -45,7 +45,7 @@
                                         ]
                                     ], !empty($user->id) ? [
                                         $user->id,
-                                        $user->getDisplayName().' (#'.$user->id.')'
+                                        $user->getDisplayName() . ' (#' . $user->id . ')'
                                     ] : false)
                                     ?>
                                 </div>
@@ -104,10 +104,10 @@
         </div>
     </div>
 @endsection
-@section('script.body')
+@push('js')
     <script src="{{url('libs/chart_js/Chart.min.js')}}"></script>
     <script src="{{url('libs/daterange/moment.min.js')}}"></script>
-    <script src="{{url('libs/daterange/daterangepicker.min.js?_ver='.config('app.version'))}}"></script>
+    <script src="{{url('libs/daterange/daterangepicker.min.js?_ver='.config('app.asset_version'))}}"></script>
     <link rel="stylesheet" href="{{url('libs/daterange/daterangepicker.css')}}"/>
 
     <script>
@@ -194,7 +194,7 @@
                 e.preventDefault(); // avoid to execute the actual submit of the form.
                 var form = $(this);
                 $.ajax({
-                    url: '{{url('admin/module/report/statistic/reloadChart')}}',
+                    url: '{{route('report.admin.statistic.reloadChart')}}',
                     data: form.serialize(),
                     dataType: 'json',
                     type: 'post',
@@ -217,4 +217,4 @@
             })
         })
     </script>
-@endsection
+@endpush

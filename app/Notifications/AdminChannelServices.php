@@ -33,7 +33,7 @@ class AdminChannelServices extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return [DatabaseChannel::class];
     }
 
     /**

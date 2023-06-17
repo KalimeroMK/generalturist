@@ -11,14 +11,15 @@
                 <div class="d-flex justify-content-between mb20">
                     <h1 class="title-bar">{{__('Tools')}}</h1>
                 </div>
+                @include('admin.message')
                 <div class="panel">
                     <div class="panel-body pd15">
                         <div class="row area-setting-row">
-                            @if($user->hasPermissionTo('language_manage'))
-                                @php $hasAvailableTools = true @endphp
+                            @if($user->hasPermission('language_manage'))
+                                @php $hasAvailableTools = true; @endphp
                                 <div class="col-md-4">
                                     <div class="area-setting-item">
-                                        <a class="setting-item-link" href="{{url('admin/module/language')}}">
+                                        <a class="setting-item-link" href="{{route('language.admin.index')}}">
                                             <span class="setting-item-media">
                                                 <i class="icon ion-ios-globe"></i>
                                             </span>
@@ -30,12 +31,11 @@
                                     </div>
                                 </div>
                             @endif
-                            @if($user->hasPermissionTo('language_translation'))
-                                @php $hasAvailableTools = true @endphp
+                            @if($user->hasPermission('language_translation'))
+                                @php $hasAvailableTools = true; @endphp
                                 <div class="col-md-4">
                                     <div class="area-setting-item">
-                                        <a class="setting-item-link"
-                                           href="{{url('admin/module/language/translations')}}">
+                                        <a class="setting-item-link" href="{{route('language.admin.translations.index')}}">
                                             <span class="setting-item-media">
                                                 <i class="icon ion-ios-globe"></i>
                                             </span>
@@ -47,8 +47,8 @@
                                     </div>
                                 </div>
                             @endif
-                            @if($user->hasPermissionTo('system_log_view'))
-                                @php $hasAvailableTools = true @endphp
+                            @if($user->hasPermission('system_log_view'))
+                                @php $hasAvailableTools = true; @endphp
                                 <div class="col-md-4">
                                     <div class="area-setting-item">
                                         <a class="setting-item-link" href="{{url('admin/logs')}}">
@@ -63,8 +63,8 @@
                                     </div>
                                 </div>
                             @endif
-                            @if($user->hasPermissionTo('system_log_view'))
-                                @php $hasAvailableTools = true @endphp
+                            @if($user->hasPermission('system_log_view'))
+                                @php $hasAvailableTools = true; @endphp
                                 <div class="col-md-4 d-none">
                                     <div class="area-setting-item">
                                         <a class="setting-item-link" href="{{route('core.admin.updater.index')}}">
@@ -79,8 +79,8 @@
                                     </div>
                                 </div>
                             @endif
-                            @if($user->hasPermissionTo('plugin_manage'))
-                                @php $hasAvailableTools = true @endphp
+                            @if($user->hasPermission('plugin_manage'))
+                                @php $hasAvailableTools = true; @endphp
                                 <div class="col-md-4">
                                     <div class="area-setting-item">
                                         <a class="setting-item-link" href="{{route('core.admin.plugins.index')}}">
@@ -95,6 +95,19 @@
                                     </div>
                                 </div>
                             @endif
+                                <div class="col-md-4">
+                                    <div class="area-setting-item">
+                                        <a class="setting-item-link" href="{{route('core.tool.clearCache')}}">
+                                        <span class="setting-item-media">
+                                            <i class="icon ion-ios-hammer"></i>
+                                        </span>
+                                            <span class="setting-item-info">
+                                            <span class="setting-item-title">{{__("Clear Cache")}}</span>
+                                            <span class="setting-item-desc">{{__("Clear Cache for Booking Core")}}</span>
+                                        </span>
+                                        </a>
+                                    </div>
+                                </div>
                             @if(!$hasAvailableTools)
                                 <div class="col-md-12">
                                     {{__("No tools available")}}

@@ -3,9 +3,10 @@
 @import "review";
 @import "404";
 @import "block";
+@import "inbox";
 
 //Modules Media
-@import "../../resources/module/media/admin/scss/browser";
+@import "../themes/admin/module/media/admin/scss/browser";
 body {
     color: #1A2B48;
     font-size: 14px;

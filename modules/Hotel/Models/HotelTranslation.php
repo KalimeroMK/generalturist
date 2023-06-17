@@ -1,37 +1,36 @@
 <?php
 
-    namespace Modules\Hotel\Models;
+namespace Modules\Hotel\Models;
 
-    class HotelTranslation extends Hotel
-    {
-        protected $table = 'bravo_hotel_translations';
+use App\BaseModel;
 
-        protected $fillable = [
-            'title',
-            'content',
-            'address',
-            'policy',
-            'surrounding',
-        ];
+class HotelTranslation extends Hotel
+{
+    protected $table = 'bravo_hotel_translations';
 
-        protected $slugField = false;
-        protected $seo_type = 'hotel_translation';
+    protected $fillable = [
+        'title',
+        'content',
+        'address',
+        'policy',
+        'surrounding'
+    ];
 
-        protected $cleanFields = [
-            'content',
-        ];
-        protected $casts = [
-            'policy'      => 'array',
-            'surrounding' => 'array',
-        ];
+    protected $slugField     = false;
+    protected $seo_type = 'hotel_translation';
 
-        public function getSeoType()
-        {
-            return $this->seo_type;
-        }
+    protected $cleanFields = [
+        'content'
+    ];
+    protected $casts = [
+        'policy'  => 'array',
+        'surrounding' => 'array',
+    ];
 
-        public function getRecordRoot()
-        {
-            return $this->belongsTo(Hotel::class, 'origin_id');
-        }
+    public function getSeoType(){
+        return $this->seo_type;
     }
+    public function getRecordRoot(){
+        return $this->belongsTo(Hotel::class,'origin_id');
+    }
+}

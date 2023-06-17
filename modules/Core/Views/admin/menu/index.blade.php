@@ -4,23 +4,20 @@
         <div class="d-flex justify-content-between mb20">
             <h1 class="title-bar">{{__('Menu Management')}}</h1>
             <div class="title-actions">
-                <a href="{{url('admin/module/core/menu/create')}}" class="btn btn-primary">{{__("Add new")}}</a>
+                <a href="{{route('core.admin.menu.create')}}" class="btn btn-primary">{{__("Add new")}}</a>
             </div>
         </div>
         @include('admin.message')
         <div class="filter-div d-flex justify-content-between ">
             <div class="col-left">
                 @if(!empty($rows))
-                    <form method="post" action="{{url('admin/module/core/menu/bulkEdit')}}"
-                          class="filter-form filter-form-left d-flex justify-content-start">
+                    <form method="post" action="{{route('core.admin.menu.bulkEdit')}}" class="filter-form filter-form-left d-flex justify-content-start">
                         {{csrf_field()}}
                         <select name="action" class="form-control">
                             <option value="">{{__(" Bulk Actions ")}}</option>
                             <option value="delete">{{__(" Delete ")}}</option>
                         </select>
-                        <button data-confirm="{{__("Do you want to delete?")}}"
-                                class="btn-info btn btn-icon dungdt-apply-form-btn"
-                                type="button">{{__('Apply')}}</button>
+                        <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
                     </form>
                 @endif
             </div>
@@ -47,7 +44,7 @@
                                 <td><input type="checkbox" name="ids[]" class="check-item" value="{{$row->id}}">
                                 </td>
                                 <td>
-                                    <a href="{{url('admin/module/core/menu/edit/'.$row->id)}}">{{$row->name}}</a>
+                                    <a href="{{route('core.admin.menu.edit',['id'=>$row->id])}}">{{$row->name}}</a>
                                 </td>
                                 <td>
                                     @foreach($menu_locations as $l=>$menu_id)

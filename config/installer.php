@@ -15,12 +15,12 @@ return [
     |
     */
     'core' => [
-        'minPhpVersion' => '7.3.0'
+        'minPhpVersion' => '8.0'
     ],
     'final' => [
         'key' => true,
         'publish' => false
-    ],    
+    ],
     'requirements' => [
         'php' => [
             'openssl',
@@ -69,7 +69,7 @@ return [
                 'environment_custom'    => 'required_if:environment,other|max:50',
                 'app_debug'             => [
                     'required',
-                    Rule::in(['true', 'false']),
+                    'in:1,0',
                 ],
                 'app_log_level'         => 'required|string|max:50',
                 'app_url'               => 'required|url',
@@ -94,6 +94,7 @@ return [
                 'pusher_app_id'         => 'max:50',
                 'pusher_app_key'        => 'max:50',
                 'pusher_app_secret'     => 'max:50',
+                'database_password'     => 'not_regex:/([#])/',
             ],
         ],
     ],

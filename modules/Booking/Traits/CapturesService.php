@@ -1,11 +1,9 @@
 <?php
-
     namespace Modules\Booking\Traits;
 
     use Modules\Booking\Models\Service;
 
-    trait CapturesService
-    {
+    trait CapturesService {
 
 
         protected static function bootCapturesService()
@@ -16,13 +14,12 @@
                 });
             }
         }
-
         protected static function getModelEvents()
         {
             if (isset(static::$capturedEvents)) {
                 return static::$capturedEvents;
             }
-            return ['saved', 'deleted', 'restored'];
+            return ['saved','deleted','restored'];
         }
 
         public function getActivityName($model, $action)
@@ -34,14 +31,16 @@
 
         public function capturesService($event)
         {
-            if (in_array($event, ['saved', 'created', 'updated'])) {
-                Service::cloneService($this, $event);
+            if(in_array($event,['saved','created', 'updated'])){
+                Service::cloneService($this,$event);
             }
-            if ($event == 'deleted') {
+            if($event=='deleted'){
                 Service::deleteService($this);
             }
-            if ($event == 'restored') {
+            if($event=='restored'){
                 Service::restoreService($this);
             }
+
+
         }
     }

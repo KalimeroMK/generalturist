@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <form action="{{url('admin/module/user/changepass/'.$row->id)}}" method="post">
+    <form action="{{route('user.admin.changepass',['id'=>$row->id])}}" method="post">
         @csrf
         <div class="container">
             <div class="d-flex justify-content-between mb20">
@@ -24,22 +24,19 @@
                         </div>
                         <div class="panel-body">
 
-                            @if($row->id and $row->id != $currentUser->id and !$currentUser->hasPermissionTo('user_update') )
+                            @if($row->id and $row->id != $currentUser->id and !$currentUser->hasPermission('user_update') )
                                 <div class="form-group">
                                     <label>{{ __('Old Password')}}</label>
-                                    <input type="password" value="" placeholder="{{ __('Old Password')}}"
-                                           name="old_password" class="form-control">
+                                    <input type="password" value="" placeholder="{{ __('Old Password')}}" name="old_password" class="form-control" >
                                 </div>
                             @endif
                             <div class="form-group">
                                 <label>{{ __('New password')}}</label>
-                                <input type="password" value="" placeholder="{{ __('Password')}}" name="password"
-                                       class="form-control">
+                                <input type="password" value="" placeholder="{{ __('Password')}}" name="password" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label>{{ __('Re-Password')}}</label>
-                                <input type="password" value="" placeholder="{{ __('Re-Password')}}"
-                                       name="password_confirmation" class="form-control">
+                                <input type="password" value="" placeholder="{{ __('Re-Password')}}" name="password_confirmation" class="form-control">
                             </div>
                             <button type="submit" class="btn btn-primary"> {{ __('Change Password')}} </button>
                         </div>

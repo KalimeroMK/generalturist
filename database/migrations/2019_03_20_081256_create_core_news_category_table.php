@@ -13,21 +13,23 @@ class CreateCoreNewsCategoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('core_news_category', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name',255)->nullable();
-            $table->text('content')->nullable();
-            $table->string('slug',255)->nullable();
-            $table->string('status',50)->nullable();
+        if(!Schema::hasTable('core_news_category')) {
+            Schema::create('core_news_category', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->string('name', 255)->nullable();
+                $table->text('content')->nullable();
+                $table->string('slug', 255)->nullable();
+                $table->string('status', 50)->nullable();
 
-            $table->nestedSet();
-            
-            $table->integer('create_user')->nullable();
-            $table->integer('update_user')->nullable();
-            $table->softDeletes();
+                $table->nestedSet();
 
-            $table->timestamps();
-        });
+                $table->integer('create_user')->nullable();
+                $table->integer('update_user')->nullable();
+                $table->softDeletes();
+
+                $table->timestamps();
+            });
+        }
     }
 
     /**

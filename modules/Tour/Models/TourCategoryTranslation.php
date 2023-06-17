@@ -1,17 +1,16 @@
 <?php
+namespace Modules\Tour\Models;
 
-    namespace Modules\Tour\Models;
+use App\BaseModel;
 
-    use App\BaseModel;
-
-    class TourCategoryTranslation extends BaseModel
-    {
-        protected $table = 'bravo_tour_category_translations';
-        protected $fillable = [
-            'name',
-            'content',
-        ];
-        protected $cleanFields = [
-            'content',
-        ];
-    }
+class TourCategoryTranslation extends BaseModel
+{
+    protected $table = 'bravo_tour_category_translations';
+    protected $fillable = [
+        'name',
+        'content',
+    ];
+    protected $cleanFields = [
+        'content'
+    ];
+}

@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -14,10 +14,11 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('name');
             $table->string('first_name',255)->nullable();
             $table->string('last_name',255)->nullable();
+            $table->string('business_name',255)->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
@@ -37,6 +38,9 @@ class CreateUsersTable extends Migration
             $table->integer('update_user')->nullable();
             $table->integer('vendor_commission_amount')->nullable();
             $table->string('vendor_commission_type',30)->nullable();
+            $table->tinyInteger('need_update_pw')->nullable()->default(0);
+            $table->bigInteger('role_id')->nullable();
+
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
@@ -52,4 +56,4 @@ class CreateUsersTable extends Migration
     {
         Schema::dropIfExists('users');
     }
-}
+};

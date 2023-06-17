@@ -21,7 +21,7 @@
             if($mustVerify==1){
                 if (auth()->check() and ($request->user() instanceof MustVerifyEmail &&
                         ! $request->user()->hasVerifiedEmail())) {
-                    if(!$request->user()->hasPermissionTo('dashboard_access')){
+                    if(!$request->user()->hasPermission('dashboard_access')){
                     return $request->expectsJson()
                         ? abort(403, 'Your email address is not verified.')
                         : Redirect::route('verification.notice');

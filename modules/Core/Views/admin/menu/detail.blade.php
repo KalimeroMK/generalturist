@@ -60,74 +60,72 @@
                 @include('Language::admin.navigation')
                 <div class="lang-content-box">
                     <div class="panel">
-                        <div class="panel-title">{{__('Menu items')}}</div>
-                        <div class="panel-body">
-                            <div class="menu-items-zone">
-                                <Draggable-Tree :value="items" draggable cross-tree :triggerClass="triggerClass">
-                                    <div slot-scope="{node,index, path, tree}" class="nestable-item-content">
-                                        <div class="menu-title drag-trigger">@{{node.name}}
-                                            <span class="menu-right">
+                    <div class="panel-title">{{__('Menu items')}}</div>
+                    <div class="panel-body">
+                        <div class="menu-items-zone">
+                            <Draggable-Tree :value="items" draggable cross-tree :triggerClass="triggerClass">
+                                <div slot-scope="{node,index, path, tree}" class="nestable-item-content" >
+                                    <div class="menu-title drag-trigger">@{{node.name}}
+                                        <span class="menu-right">
                                         <span class="model-name">@{{node.model_name}}</span>
                                         <i class="icon ion-md-arrow-dropdown" @click="toogleItem(node)"></i>
                                         </span>
+                                    </div>
+                                    <div class="menu-info" v-show="node._open">
+                                        <div class="form-group">
+                                            <label>{{__('Label')}}</label>
+                                            <input type="text" v-model="node.name" class="form-control input-sm">
                                         </div>
-                                        <div class="menu-info" v-show="node._open">
-                                            <div class="form-group">
-                                                <label>{{__('Label')}}</label>
-                                                <input type="text" v-model="node.name" class="form-control input-sm">
-                                            </div>
-                                            <div class="form-group" v-show="node.item_model=='custom'">
-                                                <label>{{__('URL')}}</label>
-                                                <input type="text" v-model="node.url" class="form-control input-sm">
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>{{__('Class')}}</label>
-                                                        <input type="text" v-model="node.class"
-                                                               class="form-control input-sm">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>{{__('Target')}}</label>
-                                                        <select v-model="node.target" class="input-sm form-control">
-                                                            <option value="">{{__('Normal')}}</option>
-                                                            <option value="_blank">{{__('Open new tab')}}</option>
-                                                        </select>
-                                                    </div>
+                                        <div class="form-group" v-show="node.item_model=='custom'">
+                                            <label>{{__('URL')}}</label>
+                                            <input type="text" v-model="node.url" class="form-control input-sm">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>{{__('Class')}}</label>
+                                                    <input type="text" v-model="node.class"
+                                                           class="form-control input-sm">
                                                 </div>
                                             </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>{{__('Target')}}</label>
+                                                    <select v-model="node.target" class="input-sm form-control">
+                                                        <option value="">{{__('Normal')}}</option>
+                                                        <option value="_blank">{{__('Open new tab')}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                            <div class="d-flex justify-content-between">
-                                                <a href='#' @click="deleteMenuItem($event,node,tree,path)"
-                                                   class="alert-text danger delete-menu-item">{{__('Delete')}}</a>
-                                                <span v-show="node.origin_name">{{__('Origin: ')}} <a
-                                                            :href="node.origin_edit_url" target="_blank">@{{node.origin_name}}</a></span>
-                                            </div>
+                                        <div class="d-flex justify-content-between">
+                                            <a href='#' @click="deleteMenuItem($event,node,tree,path)"
+                                               class="alert-text danger delete-menu-item">{{__('Delete')}}</a>
+                                            <span v-show="node.origin_name">{{__('Origin: ')}} <a
+                                                        :href="node.origin_edit_url" target="_blank">@{{node.origin_name}}</a></span>
                                         </div>
                                     </div>
-                                </Draggable-Tree>
-                            </div>
-                            <br>
-                            <br>
-                            <h3 class="panel-body-title">{{__('Menu Configs')}}</h3>
-                            <div class="menu-locations">
-                                @foreach($locations as $location=>$name)
-                                    <div>
-                                        <label><input type="checkbox" v-model="locations"
-                                                      value="{{$location}}">{{$name}}
-                                        </label>
-                                    </div>
-                                @endforeach
-                            </div>
+                                </div>
+                            </Draggable-Tree>
                         </div>
-                        <div class="panel-footer text-right">
-                            <span class="alert-text" v-show="message.content"
-                                  :class="message.type ? 'success' : 'danger'">@{{message.content}} &nbsp;</span>
-                            <span class="btn btn-success" @click="saveMenu">{{__("Save Menu")}}</span>
+                        <br>
+                        <br>
+                        <h3 class="panel-body-title">{{__('Menu Configs')}}</h3>
+                        <div class="menu-locations">
+                            @foreach($locations as $location=>$name)
+                                <div>
+                                    <label><input type="checkbox" v-model="locations" value="{{$location}}">{{$name}}
+                                    </label>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
+                    <div class="panel-footer text-right">
+                        <span class="alert-text" v-show="message.content" :class="message.type ? 'success' : 'danger'">@{{message.content}} &nbsp;</span>
+                        <span class="btn btn-success" @click="saveMenu">{{__("Save Menu")}}</span>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>

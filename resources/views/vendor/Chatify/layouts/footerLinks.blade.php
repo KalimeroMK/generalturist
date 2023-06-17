@@ -13,9 +13,6 @@
         }
     }
   });
+  window.tmp_user_id = '{{request('user_id')}}'
 </script>
 <script src="{{ asset('js/chatify/code.js') }}"></script>
-<script>
-  // Messenger global variable - 0 by default
-  messenger = "{{ @$id }}";
-</script>

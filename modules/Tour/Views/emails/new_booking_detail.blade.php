@@ -1,7 +1,6 @@
 <?php
-
-    $translation = $service->translateOrOrigin(app()->getLocale());
-    $lang_local = app()->getLocale();
+$translation = $service->translate();
+$lang_local = app()->getLocale();
 ?>
 <div class="b-panel-title">{{__('Tour information')}}</div>
 <div class="b-table-wrap">
@@ -85,8 +84,7 @@
                     @if(!empty($person_types))
                         @foreach($person_types as $type)
                             <tr>
-                                <td class="label">{{$type['name']}}: {{$type['number']}}
-                                    * {{format_money($type['price'])}}</td>
+                                <td class="label">{{$type['name']}}: {{$type['number']}} * {{format_money($type['price'])}}</td>
                                 <td class="val no-r-padding">
                                     <strong>{{format_money($type['price'] * $type['number'])}}</strong>
                                 </td>
@@ -94,8 +92,7 @@
                         @endforeach
                     @else
                         <tr>
-                            <td class="label">{{__("Guests")}}
-                                : {{$booking->total_guests}} {{format_money($booking->getMeta('base_price'))}}</td>
+                            <td class="label">{{__("Guests")}}: {{$booking->total_guests}} {{format_money($booking->getMeta('base_price'))}}</td>
                             <td class="val no-r-padding">
                                 <strong>{{format_money($booking->getMeta('base_price') * $booking->total_guests)}}</strong>
                             </td>
@@ -111,14 +108,14 @@
                         <tr class="">
                             <td colspan="2" class="no-r-padding no-b-border">
                                 <table width="100%">
-                                    @foreach($extra_price as $type)
-                                        <tr>
-                                            <td class="label">{{$type['name']}}:</td>
-                                            <td class="val no-r-padding">
-                                                <strong>{{format_money($type['total'] ?? 0)}}</strong>
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                @foreach($extra_price as $type)
+                                    <tr>
+                                        <td class="label">{{$type['name']}}:</td>
+                                        <td class="val no-r-padding">
+                                            <strong>{{format_money($type['total'] ?? 0)}}</strong>
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </table>
                             </td>
                         </tr>
@@ -134,21 +131,21 @@
                         <tr class="">
                             <td colspan="2" class="no-r-padding no-b-border">
                                 <table width="100%">
-                                    @foreach($discount_by_people as $type)
-                                        <tr>
-                                            <td class="label">
-                                                @if(!$type['to'])
-                                                    {{__('from :from guests',['from'=>$type['from']])}}
-                                                @else
-                                                    {{__(':from - :to guests',['from'=>$type['from'],'to'=>$type['to']])}}
-                                                @endif
-                                                :
-                                            </td>
-                                            <td class="val no-r-padding">
-                                                <strong>- {{format_money($type['total'] ?? 0)}}</strong>
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                @foreach($discount_by_people as $type)
+                                    <tr>
+                                        <td class="label">
+                                            @if(!$type['to'])
+                                                {{__('from :from guests',['from'=>$type['from']])}}
+                                            @else
+                                                {{__(':from - :to guests',['from'=>$type['from'],'to'=>$type['to']])}}
+                                            @endif
+                                            :
+                                        </td>
+                                        <td class="val no-r-padding">
+                                            <strong>- {{format_money($type['total'] ?? 0)}}</strong>
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </table>
                             </td>
                         </tr>
@@ -175,8 +172,7 @@
                             <tr>
                                 <td class="label">
                                     {{$item['name_'.$lang_local] ?? $item['name']}}
-                                    <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top"
-                                       title="{{ $item['desc_'.$lang_local] ?? $item['desc'] }}"></i>
+                                    <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top" title="{{ $item['desc_'.$lang_local] ?? $item['desc'] }}"></i>
                                     @if(!empty($item['per_person']) and $item['per_person'] == "on")
                                         : {{$booking->total_guests}} * {{format_money( $fee_price )}}
                                     @endif
@@ -190,6 +186,16 @@
                                 </td>
                             </tr>
                         @endforeach
+                    @endif
+                    @if(!empty($booking->coupon_amount) and $booking->coupon_amount > 0)
+                        <tr>
+                            <td class="label">
+                                {{__("Coupon")}}
+                            </td>
+                            <td class="val">
+                                -{{ format_money($booking->coupon_amount) }}
+                            </td>
+                        </tr>
                     @endif
                 </table>
             </td>
@@ -205,13 +211,11 @@
         @if($booking->total > $booking->paid)
             <tr>
                 <td class="label fsz21">{{__('Remain')}}</td>
-                <td class="val fsz21"><strong
-                            style="color: #FA5636">{{format_money($booking->total - $booking->paid)}}</strong></td>
+                <td class="val fsz21"><strong style="color: #FA5636">{{format_money($booking->total - $booking->paid)}}</strong></td>
             </tr>
         @endif
     </table>
 </div>
 <div class="text-center mt20">
-    <a href="{{ route("user.booking_history") }}" target="_blank"
-       class="btn btn-primary manage-booking-btn">{{__('Manage Bookings')}}</a>
+    <a href="{{ route("user.booking_history") }}" target="_blank" class="btn btn-primary manage-booking-btn">{{__('Manage Bookings')}}</a>
 </div>

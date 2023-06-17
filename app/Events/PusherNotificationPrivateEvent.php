@@ -20,10 +20,11 @@ class PusherNotificationPrivateEvent implements ShouldBroadcast
 
     public function __construct($idNotification, $data, $user)
     {
+
         if($user->avatar_url){
             $avatar = '<img class="image-responsive" src="'.$user->avatar_url.'" alt="'.$user->getDisplayName().'">';
         }else{
-            $avatar = '<span class="avatar-text">'.ucfirst($user->getDisplayName()[0]).'</span>';
+            $avatar = '<span class="avatar-text">'.$user->getFirstCharacterDisplayName().'</span>';
         }
         $this->avatar  = $avatar;
         $this->link  = @$data['link'];

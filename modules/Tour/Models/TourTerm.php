@@ -1,14 +1,13 @@
 <?php
+namespace Modules\Tour\Models;
 
-    namespace Modules\Tour\Models;
+use App\BaseModel;
 
-    use App\BaseModel;
-
-    class TourTerm extends BaseModel
-    {
-        protected $table = 'bravo_tour_term';
-        protected $fillable = [
-            'term_id',
-            'tour_id',
-        ];
-    }
+class TourTerm extends BaseModel
+{
+    protected $table = 'bravo_tour_term';
+    protected $fillable = [
+        'term_id',
+        'tour_id'
+    ];
+}

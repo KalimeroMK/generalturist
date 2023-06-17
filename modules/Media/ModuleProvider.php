@@ -1,35 +1,36 @@
 <?php
+namespace Modules\Media;
 
-    namespace Modules\Media;
+use Modules\ModuleServiceProvider;
 
-    use Modules\ModuleServiceProvider;
-
-    class ModuleProvider extends ModuleServiceProvider
+class ModuleProvider extends ModuleServiceProvider
+{
+    public function boot()
     {
-        public static function getAdminMenu()
-        {
-            return [
-                'media' => [
-                    'position' => 50,
-                    'title'    => __("Media"),
-                    'icon'     => "fa fa-picture-o",
-                    "url"      => route('media.admin.index'),
-                ],
-            ];
-        }
-
-        public function boot()
-        {
-            $this->loadMigrationsFrom(__DIR__.'/Migrations');
-        }
-
-        /**
-         * Register bindings in the container.
-         *
-         * @return void
-         */
-        public function register()
-        {
-            $this->app->register(RouterServiceProvider::class);
-        }
+        $this->loadMigrationsFrom(__DIR__ . '/Database/Migrations');
     }
+
+    /**
+     * Register bindings in the container.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->app->register(RouterServiceProvider::class);
+    }
+
+    public static function getAdminMenu()
+    {
+        return [
+            'media'=>[
+                'position'=>56,
+                'title'=>__("Media"),
+                'icon'=>"fa fa-picture-o",
+                "url"=>route('media.admin.index'),
+                'permission' => 'media_upload',
+                "group"=>"content"
+            ]
+        ];
+    }
+}

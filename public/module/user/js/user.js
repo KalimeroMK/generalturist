@@ -13,7 +13,7 @@ jQuery(function ($) {
             });
             formData.append('type', "image");
             $.ajax({
-                url: '/admin/module/media/store',
+                url: bookingCore.admin_url+'/module/media/store',
                 type: 'POST',
                 data: formData,
                 enctype: 'multipart/form-data',
@@ -75,16 +75,69 @@ jQuery(function ($) {
         $(this).closest(".form-group-item").find(".g-items").append(extra_html);
     });
 
+    $(document).on('click', '.dungdt-upload-box-normal .edit-img, .dungdt-upload-multiple .edit-img, .show_avatar .edit-img', function (e) {
+        e.preventDefault();
+        let $this = $(this);
+        let image_path = $this.attr('data-file');
+        let edit_type = ($this.hasClass('edit-multiple')) ? 'multiple' : 'single';
+        let p = (edit_type === 'multiple') ? $this.closest('.dungdt-upload-multiple') : $this.closest('.dungdt-upload-box');
+        let image_id = (edit_type === 'multiple') ? $this.attr('data-id') : p.attr('data-val');
+        let config = {
+            language: image_editer.language,
+            translations: image_editer.translations,
+            reduceBeforeEdit : {
+                mode: 'manual',
+                widthLimit: 2500,
+                heightLimit: 2500
+            }
+        };
+
+        let callback = {
+            onOpen: () => {
+
+            },
+            onBeforeComplete: (props) => {
+                return false;
+            },
+            onComplete: function (url){
+                var canvas = url.canvas.toDataURL('image/jpeg');
+
+                if (edit_type === 'multiple'){
+                    $this.closest('.image-item').find('.image-preview').attr('src',canvas);
+                } else {
+                    p.find('.attach-demo').html('<img src="' + canvas + '" alt="image-responsive" style="max-width: 150px">');
+                }
+
+                $.ajax({
+                    url: bookingCore.url + '/media/edit_image',
+                    method: 'POST',
+                    dataType: 'JSON',
+                    data:{
+                        image: canvas,
+                        image_id: image_id,
+                    },
+                    success:function (result) {
+                        console.log(result);
+                    }
+                });
+            }
+        };
+        let ImageEditor = new FilerobotImageEditor(config, callback);
+        ImageEditor.open(image_path);
+    });
+
     $(document).on('click','.dungdt-upload-box-normal .btn-field-upload,.dungdt-upload-box-normal .attach-demo',function () {
         let p = $(this).closest('.dungdt-upload-box');
-
         uploaderModal.show({
             multiple: false,
             file_type: 'image',
             onSelect: function (files) {
+                let path = (files[0].edit_path !== undefined) ? files[0].edit_path : files[0].max_large_size;
                 p.addClass('active');
                 p.find('.attach-demo').html('<img src="' + files[0].thumb_size + '"/>');
+                p.attr('data-val',files[0].id);
                 p.find('input').val(files[0].id);
+                p.find('.edit-img').attr('data-file', path);
             },
         });
 
@@ -101,24 +154,29 @@ jQuery(function ($) {
             multiple: true,
             file_type: 'image',
             onSelect: function (files) {
-                console.log(files);
                 if (typeof files != 'undefined' && files.length) {
                     var ids = [];
                     var html = '';
                     p.addClass('active');
-
                     for (var i = 0; i < files.length; i++) {
+                        let path = (files[i].edit_path !== undefined) ? files[i].edit_path : files[i].max_large_size;
                         ids.push(files[i].id);
-                        html += '<div class="image-item"><div class="inner"><span class="delete btn btn-sm btn-danger"><i class="fa fa-trash"></i></span><img src="' + files[i].thumb_size + '"/></div></div>'
+                        html += '<div class="image-item">' +
+                            '<div class="inner">';
+                        html += '<a class="edit-img btn btn-sm btn-primary edit-multiple" data-id="'+files[i].id+'" data-file="'+path+'"><i class="fa fa-edit"></i></a>'
+                        html += '<span class="delete btn btn-sm btn-danger"><i class="fa fa-trash"></i></span><div class="img-preview"><img class="image-responsive image-preview w-100" src="' + files[i].thumb_size + '"/></div>' +
+                            '</div>' +
+                            '</div>'
                     }
                     p.find('.attach-demo').append(html);
                     var old = p.find('input').val().split(',');
                     p.find('input').val(ids.concat(old).join(','));
                 }
-
             },
         });
     });
+
+
     $('.dungdt-upload-multiple').on('click', '.image-item .delete', function () {
         var i = $(this).closest('.image-item').index();
         let p = $(this).closest('.dungdt-upload-multiple');
@@ -127,6 +185,7 @@ jQuery(function ($) {
         p.find('input').val(ids.join(','));
         $(this).closest('.image-item').remove();
     });
+
     $(".bravo_user_profile .sidebar-menu .caret").click(function () {
         $(this).closest("li").toggleClass("active_child");
     });
@@ -279,6 +338,78 @@ jQuery(function ($) {
         var configs = $(this).data('options');
         $(this).select2(configs);
     })
+
+
+    $('.tag-input').keypress(function (e) {
+        // console.log(e);
+
+        if(e.keyCode == 13){
+            var val = $(this).val();
+
+            if(val){
+                var html = '<span class="tag_item">' + val +
+                    '       <span data-role="remove"></span>\n' +
+                    '                                                    <input type="hidden" name="tag_name[]" value="'+val+'">\n' +
+                    '                                                </span>';
+
+                $(this).parent().find('.show_tags').append(html);
+                $(this).val('');
+            }
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    $(document).on('click','[data-role=remove]',function () {
+        $(this).closest('.tag_item').remove();
+    });
+
+    $('.dungdt-apply-form-btn').click(function (e) {
+        var $this = $(this);
+        var action = $this.closest('form').find('[name=action]').val();
+        var apply_action = function () {
+            let ids = '';
+            $(".bravo-form-item .check-item").each(function () {
+                if($(this).is(":checked")){
+                    ids += '<input type="hidden" name="ids[]" value="'+$(this).val()+'">';
+                }
+            });
+            $this.closest('form').append(ids).submit();
+        }
+        if(action === 'delete' ||  action === 'permanently_delete')
+        {
+            bookingCoreApp.showConfirm({
+                message: i18n.confirm_delete,
+                callback: function(result){
+                    if(result){
+                        apply_action();
+                    }
+                }
+            })
+        }else if(action === 'recovery')
+        {
+            bookingCoreApp.showConfirm({
+                message: i18n.confirm_recovery,
+                callback: function(result){
+                    if(result){
+                        apply_action();
+                    }
+                }
+            })
+        }else{
+            apply_action();
+        }
+    });
+
+    $('table .check-all').change(function () {
+        if($(this).is(':checked'))
+        {
+            $(this).closest('table').find('tbody .check-item').prop('checked',true);
+        }else{
+            $(this).closest('table').find('tbody .check-item').prop('checked',false);
+
+        }
+    });
 });
 
 var vendorPayout = {

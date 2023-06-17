@@ -24,8 +24,7 @@
                 <div class="filter-div d-flex justify-content-between ">
                     <div class="col-left">
                         @if(!empty($rows))
-                            <form method="post" action="{{url('admin/module/language/bulkEdit')}}"
-                                  class="filter-form filter-form-left d-flex justify-content-start">
+                            <form method="post" action="{{route('language.admin.bulkEdit')}}" class="filter-form filter-form-left d-flex justify-content-start">
                                 {{csrf_field()}}
 
                                 <select name="action" class="form-control">
@@ -34,19 +33,14 @@
                                     <option value="draft">{{__(" Move to Draft ")}}</option>
                                     <option value="delete">{{__(" Delete ")}}</option>
                                 </select>
-                                <button data-confirm="{{__("Do you want to delete?")}}"
-                                        class="btn-info btn btn-icon dungdt-apply-form-btn"
-                                        type="button">{{__('Apply')}}</button>
+                                <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
                             </form>
                         @endif
                     </div>
                     <div class="col-left">
-                        <form method="get" action="{{url('/admin/module/language')}}"
-                              class="filter-form filter-form-right d-flex justify-content-end" role="search">
-                            <input type="text" name="s" value="{{ Request()->s }}" class="form-control"
-                                   placeholder="{{__("Search by name")}}">
-                            <button class="btn-info btn btn-icon btn_search" id="search-submit"
-                                    type="submit">{{__('Search')}}</button>
+                        <form method="get" action="{{route('language.admin.index')}}" class="filter-form filter-form-right d-flex justify-content-end" role="search">
+                            <input type="text" name="s" value="{{ Request()->s }}" class="form-control" placeholder="{{__("Search by name")}}">
+                            <button class="btn-info btn btn-icon btn_search" id="search-submit" type="submit">{{__('Search')}}</button>
                         </form>
                     </div>
                 </div>
@@ -69,11 +63,10 @@
                                     @if(count($rows) > 0)
                                         @foreach($rows as $row)
                                             <tr>
-                                                <td><input type="checkbox" class="check-item" name="ids[]"
-                                                           value="{{$row->id}}">
+                                                <td><input type="checkbox" class="check-item" name="ids[]" value="{{$row->id}}">
                                                 </td>
                                                 <td class="title">
-                                                    <a href="{{url('/admin/module/language/edit/'.$row->id)}}">
+                                                    <a href="{{route('language.admin.edit',['id'=>$row->id])}}">
                                                         @if($row->flag)
                                                             <span class="flag-icon flag-icon-{{$row->flag}}"></span>
                                                         @endif
@@ -81,9 +74,7 @@
                                                     </a>
                                                 </td>
                                                 <td>{{$row->locale}}</td>
-                                                <td>
-                                                    <span class="badge badge-{{ $row->status }}">{{ $row->status }}</span>
-                                                </td>
+                                                <td><span class="badge badge-{{ $row->status }}">{{ $row->status }}</span></td>
                                                 <td>{{ display_date($row->updated_at)}}</td>
                                             </tr>
                                         @endforeach
@@ -96,7 +87,7 @@
                                 </table>
                             </div>
                         </form>
-                        {{$rows->appends(request()->query())->links('vendor.pagination.bootstrap-4')}}
+                        {{$rows->appends(request()->query())->links()}}
                     </div>
                 </div>
             </div>

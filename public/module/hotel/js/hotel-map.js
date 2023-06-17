@@ -20,10 +20,11 @@ jQuery(function ($) {
 	});
 
 	var mapEngine = new BravoMapEngine('bravo_results_map',{
-		fitBounds:true,
-		center:[51.505, -0.09],
-		zoom:6,
+		fitBounds:bookingCore.map_options.map_fit_bounds,
+		center:[bravo_map_data.map_lat_default, bravo_map_data.map_lng_default ],
+		zoom:bravo_map_data.map_zoom_default,
 		disableScripts:true,
+		markerClustering:bookingCore.map_options.map_clustering,
 		ready: function (engineMap) {
 			if(bravo_map_data.markers){
 				engineMap.addMarkers2(bravo_map_data.markers);
@@ -35,7 +36,9 @@ jQuery(function ($) {
 		reloadForm();
 	});
     $('.bravo_form_search_map .g-map-place input[name=map_place]').change(function () {
-        reloadForm();
+        setTimeout(function () {
+            reloadForm()
+        },500)
     });
 	$('.bravo_form_search_map .input-filter').change(function () {
 		reloadForm();
@@ -98,9 +101,16 @@ jQuery(function ($) {
 
                     $('.bravo-list-item').replaceWith(json.html);
 
-                    $('.listing_items').animate({
-                        scrollTop:0
-                    },'fast');
+					setTimeout(function () {
+						$('.listing_items').animate({
+							scrollTop:0
+						},'fast');
+						if($(document).width() < 991){
+							$('html,body').animate({
+								scrollTop: $(".listing_items").offset().top - 50
+							},'fast');
+						}
+					},500);
 
                     if(window.lazyLoadInstance){
                         window.lazyLoadInstance.update();

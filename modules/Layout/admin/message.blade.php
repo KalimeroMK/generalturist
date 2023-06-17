@@ -41,7 +41,7 @@
     <div class="alert alert-danger">
         <button type="button" class="close" data-dismiss="alert">×</button>
         {{__("Please check the form below for errors")}}
-        <ul>
+        <ul style="padding-left: 20px">
             @foreach ($errors->all() as $error)
                 <li>{!! clean($error) !!}</li>
             @endforeach

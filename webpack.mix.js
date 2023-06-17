@@ -1,16 +1,15 @@
-/*
- |--------------------------------------------------------------------------
- | Mix Asset Management
- |--------------------------------------------------------------------------
- |
- | Mix provides a clean, fluent API for defining some Webpack build steps
- | for your Laravel application. By default, we are compiling the Sass
- | file for the application as well as bundling up all the JS files.
- |
- */
-if (process.env.section) {
-    require(`${__dirname}/webpack.${process.env.section}.mix.js`);
-}else{
-    require(`${__dirname}/webpack.admin.mix.js`);
+const mix = require('laravel-mix');
 
-}
+// Admin
+// mix.webpackConfig({
+//     output: {
+//         path:__dirname+'/public/dist/admin',
+//     }
+// });
+mix.setPublicPath('public/dist/admin');
+//mix.setResourceRoot('../');
+
+mix.sass('resources/admin/scss/vendors.scss', 'css')
+    .sass('resources/admin/scss/app.scss', 'css')
+    .sass('public/module/page/admin/scss/builder.scss', 'module/page/css');
+mix.js('resources/admin/js/app.js','js').extract(['vue']).vue({ version: 2 });

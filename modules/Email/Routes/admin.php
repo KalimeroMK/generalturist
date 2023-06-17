@@ -1,5 +1,4 @@
 <?php
-
     use Illuminate\Support\Facades\Route;
 
-    Route::get('/testEmail', 'EmailController@testEmail')->name('email.admin.testEmail');
+    Route::get('/testEmail','EmailController@testEmail')->name('email.admin.testEmail');

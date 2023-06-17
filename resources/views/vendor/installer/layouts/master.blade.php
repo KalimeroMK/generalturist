@@ -16,6 +16,11 @@
                 'csrfToken' => csrf_token(),
             ]); ?>
         </script>
+        <style type="text/css">
+            h4{
+                font-size: 18px;
+            }
+        </style>
     </head>
     <body>
         <div class="master">

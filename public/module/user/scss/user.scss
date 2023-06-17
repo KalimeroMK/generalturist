@@ -1115,6 +1115,14 @@
                     }
                 }
             }
+
+
+            ul li.active a,
+            ul li.active span {
+                background: transparent!important;
+                background-color: transparent !important;
+                color: #5191fa!important;
+            }
         }
 
         .bravo-user-dashboard{
@@ -1388,8 +1396,19 @@
                     color:white;
                 }
             }
+            .edit-img{
+                position: absolute;
+                color: white;
+                top: 15px;
+                right: 48px;
+                display: none;
+                cursor: pointer;
+                &:active{
+                    background: #1a2b47;
+                }
+            }
             &:hover{
-                .delete{
+                .delete, .edit-img{
                     display: block;
                 }
             }
@@ -1413,8 +1432,19 @@
                         right: 15px;
                         cursor: pointer;
                     }
+                    .edit-img{
+                        position: absolute;
+                        color: white;
+                        top: 15px;
+                        right: 48px;
+                        display: none;
+                        cursor: pointer;
+                        &:active{
+                            background: #1a2b47;
+                        }
+                    }
                     &:hover{
-                        .delete{
+                        .delete, .edit-img{
                             display: block;
                         }
                     }
@@ -1691,5 +1721,35 @@
         right: 0px;
         bottom: 0px;
         opacity: 0;
+    }
+}
+
+.show_tags{
+    .tag_item{
+        background: #4fa6f3;
+        display: inline-block;
+        padding: 6px 8px;
+        font-size: 86%;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        vertical-align: baseline;
+        border-radius: 0.25em;
+        margin-right: 5px;
+        padding-right: 0px;
+        margin-bottom: 6px;
+    }
+    .tag_item [data-role="remove"] {
+        margin-left: 8px;
+        padding-left: 3px;
+        cursor: pointer;
+        padding-right: 6px;
+        display: inline-block;
+        border-left: 1px solid white;
+    }
+    .tag_item [data-role="remove"]:after {
+        content: "x";
+        padding: 0px 2px;
     }
 }

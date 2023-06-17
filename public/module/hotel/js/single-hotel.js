@@ -78,8 +78,9 @@
                     var duration_in_day = moment(endDate).diff(moment(startDate), 'days');
                     for (var ix in me.extra_price) {
                         var item = me.extra_price[ix];
+                        if(!item.price) continue;
                         var type_total = 0;
-                        if (item.enable === true) {
+                        if (item.enable == 1) {
                             switch (item.type) {
                                 case "one_time":
                                     type_total += parseFloat(item.price);
@@ -99,6 +100,8 @@
                     var total_fee = 0;
                     for (var ix in me.buyer_fees) {
                         var item = me.buyer_fees[ix];
+
+                        if(!item.price) continue;
 
                         //for Fixed
                         var fee_price = parseFloat(item.price);
@@ -236,6 +239,20 @@
                         }
                     }
                     return false;
+                },
+                addClassCustom:function (date) {
+                    for(var k = 0 ; k < me.allEvents.length ; k++){
+                        var item = me.allEvents[k];
+                        if(item.start == date.format('YYYY-MM-DD') && item.classNames !== undefined){
+                            var class_names = "";
+                            for(var i = 0 ; i < item.classNames.length ; i++){
+                                var classItem = item.classNames[i];
+                                class_names += " "+classItem;
+                            }
+                            return class_names;
+                        }
+                    }
+                    return "";
                 }
             };
 

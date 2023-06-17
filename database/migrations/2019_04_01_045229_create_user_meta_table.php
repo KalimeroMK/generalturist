@@ -13,17 +13,19 @@ class CreateUserMetaTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_meta', function (Blueprint $table) {
-            $table->bigIncrements('id'); 
-            $table->integer('user_id')->nullable();
-            $table->string('name',255)->nullable();
-            $table->text('val')->nullable(); 
-            $table->integer('create_user')->nullable();
-            $table->integer('update_user')->nullable();
-            $table->softDeletes();
+        if(!Schema::hasTable('user_meta')) {
+            Schema::create('user_meta', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->integer('user_id')->nullable();
+                $table->string('name', 255)->nullable();
+                $table->text('val')->nullable();
+                $table->integer('create_user')->nullable();
+                $table->integer('update_user')->nullable();
+                $table->softDeletes();
 
-            $table->timestamps();
-        });
+                $table->timestamps();
+            });
+        }
     }
 
     /**

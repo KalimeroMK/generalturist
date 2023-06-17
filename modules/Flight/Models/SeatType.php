@@ -10,8 +10,7 @@
     class SeatType extends BaseModel
     {
         use SoftDeletes;
-
         protected $table = 'bravo_seat_type';
-        protected $fillable = ['name', 'code'];
+        protected $fillable  = ['name','code'];
 
     }

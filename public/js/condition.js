@@ -1,4 +1,5 @@
 jQuery(function($){
+    'use strict';
     $(document).ready(function () {
         var condition_object='select, input[type="radio"]:checked, input[type="text"], input[type="hidden"], input.ot-numeric-slider-hidden-input,input[type="checkbox"]';
         // condition function to show and hide sections

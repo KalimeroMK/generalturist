@@ -110,8 +110,9 @@
 
                     for (var ix in me.extra_price) {
                         var item = me.extra_price[ix];
+                        if(!item.price) continue;
                         var type_total = 0;
-                        if (item.enable === true) {
+                        if (item.enable == 1) {
                             switch (item.type) {
                                 case "one_time":
                                     type_total += parseFloat(item.price);
@@ -134,6 +135,7 @@
                     var total_fee = 0;
                     for (var ix in me.buyer_fees) {
                         var item = me.buyer_fees[ix];
+                        if(!item.price) continue;
 
                         //for Fixed
                         var fee_price = parseFloat(item.price);
@@ -141,11 +143,13 @@
                         //for Percent
                         if (typeof item.unit !== "undefined" && item.unit === "percent" ) {
                             fee_price = ( total / 100 ) * fee_price;
+                        }else{
+                            //for Fixed and per_ticket
+                            if (typeof item.per_ticket !== "undefined" ) {
+                                fee_price = fee_price * total_tickets;
+                            }
                         }
 
-                        if (typeof item.per_ticket !== "undefined") {
-                            fee_price = fee_price * total_tickets;
-                        }
                         total_fee += fee_price;
                     }
                     total += total_fee;
@@ -242,6 +246,20 @@
                         }
                     }
                     return false;
+                },
+                addClassCustom:function (date) {
+                    for(var k = 0 ; k < me.allEvents.length ; k++){
+                        var item = me.allEvents[k];
+                        if(item.start == date.format('YYYY-MM-DD') && item.classNames !== undefined){
+                            var class_names = "";
+                            for(var i = 0 ; i < item.classNames.length ; i++){
+                                var classItem = item.classNames[i];
+                                class_names += " "+classItem;
+                            }
+                            return class_names;
+                        }
+                    }
+                    return "";
                 }
             };
 

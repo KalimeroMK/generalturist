@@ -1,5 +1,4 @@
 <?php
-
-    return [
-        'page_route_prefix' => 'page',
-    ];
+return [
+    'page_route_prefix'=>'page'
+];

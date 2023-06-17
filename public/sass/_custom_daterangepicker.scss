@@ -38,19 +38,22 @@ body .daterangepicker {
             content: "";
         }
         &:after {
-            content: "\f013";
+            content: "\f110";
             display: block !important;
             font: normal normal normal 14px/1 FontAwesome;
-            right: 0;
             position: absolute;
-            left: 0;
-            top: 145px;
+            left: 50%;
+            top: 50%;
             z-index: 15;
             text-align: center;
-            width: 100%;
-            height: 100%;
+            width: 42px;
+            height: 42px;
             color: #5191fa;
             font-size: 42px;
+            -webkit-animation: fa-spin 2s infinite linear;
+            animation: fa-spin 2s infinite linear;
+            margin-left: -21px;
+            margin-top: -21px;
         }
     }
     .drp-calendar{
@@ -352,6 +355,61 @@ body .daterangepicker {
         }
         .tooltip-inner{
             white-space: nowrap;
+        }
+    }
+
+    .is-half-end{
+        overflow: hidden;
+        &:before{
+            content: "";
+            background: #ededed;
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            bottom: -27px;
+            right: -27px;
+            transform: rotate(45deg);
+            opacity: 0.5;
+        }
+        &.start-date,&.end-date,&.in-range,&:hover{
+            overflow: visible;
+            &:before{
+                display: none;
+            }
+        }
+    }
+    .is-half-start{
+        overflow: hidden;
+        &:before{
+            content: "";
+            background: #ededed;
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            top: -27px;
+            left: -27px;
+            transform: rotate(-45deg);
+            opacity: 0.5;
+        }
+        &.start-date,&.end-date,&.in-range,&:hover{
+            overflow: visible;
+            &:before{
+                display: none;
+            }
+        }
+    }
+    .full-book-event{
+        overflow: hidden;
+        color: #1A2B48 !important;
+        &:before{
+            content: "";
+            background: #ededed;
+            position: absolute;
+            opacity: 0.5;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
         }
     }
 }

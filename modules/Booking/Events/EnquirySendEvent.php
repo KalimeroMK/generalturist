@@ -1,21 +1,21 @@
 <?php
+namespace Modules\Booking\Events;
 
-    namespace Modules\Booking\Events;
+use Modules\Booking\Models\Booking;
+use Illuminate\Queue\SerializesModels;
+use Modules\Booking\Models\Enquiry;
 
-    use Illuminate\Queue\SerializesModels;
-    use Modules\Booking\Models\Enquiry;
+class EnquirySendEvent
+{
+    use SerializesModels;
+    /**
+     * @var Enquiry
+     */
+    public $enquiry;
 
-    class EnquirySendEvent
+    public function __construct(Enquiry $enquiry)
     {
-        use SerializesModels;
 
-        /**
-         * @var Enquiry
-         */
-        public Enquiry $enquiry;
-
-        public function __construct(Enquiry $enquiry)
-        {
-            $this->enquiry = $enquiry;
-        }
+        $this->enquiry = $enquiry;
     }
+}

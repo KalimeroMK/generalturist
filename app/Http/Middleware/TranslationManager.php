@@ -16,7 +16,7 @@ class TranslationManager
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if (!Auth::user()->hasPermissionTo('translations_manage')) {
+        if (!Auth::user()->hasPermission('translations_manage')) {
             return redirect('/');
         }
         return $next($request);

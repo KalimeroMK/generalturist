@@ -1,7 +1,6 @@
 @extends('admin.layouts.app')
 @section('content')
-    <form action="{{route('event.admin.attribute.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}"
-          method="post">
+    <form action="{{route('event.admin.attribute.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}" method="post">
         @csrf
         <input type="hidden" name="id" value="{{$row->id}}">
         <div class="container">
@@ -36,6 +35,4 @@
             </div>
         </div>
     </form>
-@endsection
-@section ('script.body')
 @endsection

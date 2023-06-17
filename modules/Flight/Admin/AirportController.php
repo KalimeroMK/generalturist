@@ -4,14 +4,15 @@
     namespace Modules\Flight\Admin;
 
 
-    use Auth;
     use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Auth;
     use Illuminate\Support\Facades\Validator;
     use Illuminate\Validation\Rule;
+    use Maatwebsite\Excel\Facades\Excel;
     use Modules\AdminController;
+    use Modules\Flight\Imports\AirportImportIATA;
     use Modules\Flight\Models\Airport;
     use Modules\Flight\Models\Flight;
-    use Modules\Flight\Models\SeatType;
     use Modules\Location\Models\Location;
 
     class AirportController extends AdminController
@@ -31,7 +32,6 @@
 
         public function __construct()
         {
-            parent::__construct();
             $this->setActiveMenu(route('flight.admin.index'));
             $this->location = Location::class;
             $this->airport = Airport::class;
@@ -51,32 +51,36 @@
             $query = $this->airport::query();
             $query->orderBy('id', 'desc');
 
-            if (!empty($flight_name = $request->input('s'))) {
-                $query->where('name', 'LIKE', '%'.$flight_name.'%');
+            if ($s = $request->input('s')) {
+                $query->where(function($query) use($s){
+                    $query->where('name', 'LIKE', '%'.$s.'%');
+                    $query->orWhere('address', 'LIKE', '%'.$s.'%');
+                    $query->orWhere('code', $s);
+                });
             }
             if ($this->hasPermission('flight_manage_others')) {
                 if (!empty($author = $request->input('vendor_id'))) {
-                    $query->where('create_user', $author);
+                    $query->where('author_id', $author);
                 }
             } else {
-                $query->where('create_user', Auth::id());
+                $query->where('author_id', Auth::id());
             }
             $data = [
-                'rows'                 => $query->with(['author'])->paginate(20),
+                'rows'                 => $query->with(['author'])->paginate(50),
                 'row'                  => new $this->airport,
-                'locations'            => $this->location::get()->toTree(),
+                'locations'   => $this->location::get()->toTree(),
                 'flight_manage_others' => $this->hasPermission('flight_manage_others'),
                 'breadcrumbs'          => [
                     [
                         'name' => __('Airport'),
-                        'url'  => route('flight.admin.airport.index'),
+                        'url'  => route('flight.admin.airport.index')
                     ],
                     [
                         'name'  => __('All'),
-                        'class' => 'active',
+                        'class' => 'active'
                     ],
                 ],
-                'page_title'           => __("Airport Management"),
+                'page_title'           => __("Airport Management")
             ];
             return view('Flight::admin.airport.index', $data);
         }
@@ -89,7 +93,7 @@
                 return redirect(route('flight.admin.airport.index'));
             }
             if (!$this->hasPermission('flight_manage_others')) {
-                if ($row->create_user != Auth::id()) {
+                if ($row->author_id != Auth::id()) {
                     return redirect(route('flight.admin.index'));
                 }
             }
@@ -99,14 +103,14 @@
                 'breadcrumbs' => [
                     [
                         'name' => __('Airport'),
-                        'url'  => route('flight.admin.airport.index'),
+                        'url'  => route('flight.admin.airport.index')
                     ],
                     [
                         'name'  => __('Edit airport'),
-                        'class' => 'active',
+                        'class' => 'active'
                     ],
                 ],
-                'page_title'  => __("Edit: :name", ['name' => $row->code]),
+                'page_title'  => __("Edit: :name", ['name' => $row->code])
             ];
             return view('Flight::admin.airport.detail', $data);
         }
@@ -114,13 +118,20 @@
         public function store(Request $request, $id)
         {
             if ($id > 0) {
+                $request->validate([
+                    'name'=>'required',
+                    'code'=>[
+                        'required',
+                        Rule::unique(Airport::getTableName())
+                    ]
+                ]);
                 $this->checkPermission('flight_update');
                 $row = $this->airport::find($id);
                 if (empty($row)) {
                     return redirect(route('flight.admin.airport.index'));
                 }
 
-                if ($row->create_user != Auth::id() and !$this->hasPermission('flight_manage_others')) {
+                if ($row->author_id != Auth::id() and !$this->hasPermission('flight_manage_others')) {
                     return redirect(route('flight.admin.airport.index'));
                 }
             } else {
@@ -128,11 +139,11 @@
                 $row = new $this->airport();
             }
             $validator = Validator::make($request->all(), [
-                'name' => 'required',
-                'code' => [
+                'name'=>'required',
+                'code'=>[
                     'required',
-                    Rule::unique(SeatType::getTableName())->ignore($row),
-                ],
+                    Rule::unique(Airport::getTableName())->ignore($row),
+                ]
             ]);
             if ($validator->fails()) {
                 return redirect()->back()->with(['errors' => $validator->errors()]);
@@ -141,14 +152,11 @@
                 'name',
                 'code',
                 'location_id',
-                'description',
                 'address',
-                'map_lat',
-                'map_lng',
-                'map_zoom',
+                'status'
             ];
             if ($this->hasPermission('flight_manage_others')) {
-                $dataKeys[] = 'create_user';
+                $dataKeys[] = 'author_id';
             }
             $row->fillByAttr($dataKeys, $request->input());
             $res = $row->save();
@@ -158,8 +166,15 @@
         }
 
 
+        public function importIATA(){
+            $file = base_path('/modules/Flight/Resources/airports.xlsx');
+            Excel::queueImport(new AirportImportIATA, $file);
+            return back()->with("success",__("Import Queued"));
+        }
+
         public function bulkEdit(Request $request)
         {
+
             $ids = $request->input('ids');
             $action = $request->input('action');
             if (empty($ids) or !is_array($ids)) {
@@ -220,33 +235,34 @@
                     return redirect()->back()->with('success', __('Update success!'));
                     break;
             }
-        }
 
+
+        }
         public function getForSelect2(Request $request)
         {
             $pre_selected = $request->query('pre_selected');
             $selected = $request->query('selected');
 
-            if ($pre_selected && $selected) {
+            if($pre_selected && $selected){
                 $item = $this->airport::find($selected);
-                if (empty($item)) {
+                if(empty($item)){
                     return response()->json([
-                        'text' => '',
+                        'text'=>''
                     ]);
-                } else {
+                }else{
                     return response()->json([
-                        'text' => $item->name,
+                        'text'=>$item->name
                     ]);
                 }
             }
             $q = $request->query('q');
             $query = $this->airport::select('id', 'name as text');
             if ($q) {
-                $query->where('name', 'like', '%'.$q.'%');
+                $query->where('name', 'like', '%' . $q . '%');
             }
             $res = $query->orderBy('id', 'desc')->limit(20)->get();
             return response()->json([
-                'results' => $res,
+                'results' => $res
             ]);
         }
 

@@ -1,28 +1,23 @@
 <?php
+namespace Modules;
 
-    namespace Modules;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
-    use App\Http\Controllers\Controller;
-    use Illuminate\Support\Facades\Auth;
+class AdminController extends Controller
+{
 
-    class AdminController extends Controller
+    public function checkPermission($permission = false)
     {
-        public function __construct()
-        {
-            $this->middleware('auth');
-        }
-
-        public function checkPermission($permission = false)
-        {
-            if ($permission) {
-                if (!Auth::id() or !Auth::user()->hasPermissionTo($permission)) {
-                    abort(403);
-                }
+        if ($permission) {
+            if (!Auth::check() or !Auth::user()->hasPermission($permission)) {
+                abort(403);
             }
         }
-
-        public function hasPermission($permission): bool
-        {
-            return Auth::user()->hasPermissionTo($permission);
-        }
     }
+
+    public function hasPermission($permission)
+    {
+        return Auth::user()->hasPermission($permission);
+    }
+}

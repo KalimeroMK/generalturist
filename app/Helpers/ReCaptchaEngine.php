@@ -15,6 +15,10 @@ class ReCaptchaEngine
     {
         if (!self::isEnable() OR empty(static::$actions))
             return false;
+
+        if(self::$version=='v3'){
+            return  self::scriptsV3();
+        }
         ?>
         <script src="https://www.google.com/recaptcha/api.js?render=<?php e(self::$api_key) ?>&onload=BravoReCaptchaCallBack" async defer></script>
         <script>
@@ -52,13 +56,68 @@ class ReCaptchaEngine
         <?php
     }
 
+
     public static function captcha($action = 'default')
     {
         if (!self::isEnable())
             return false;
+
         static::$actions[$action] = $action . '_' . uniqid();
-        return new HtmlString('<div class="bravo-recaptcha" id="'.e(static::$actions[$action]).'"></div><!--End Captcha-->');
+
+        if(self::$version=='v3'){
+            return new HtmlString('<input type="hidden" name="g-recaptcha-response" class="bravo-recaptcha" id="'.e(static::$actions[$action]).'"><!--End Captcha-->');
+        }else{
+            return new HtmlString('<div class="bravo-recaptcha" id="'.e(static::$actions[$action]).'"></div><!--End Captcha-->');
+        }
     }
+
+    public static function scriptsV3()
+    {
+        if (!self::isEnable() OR empty(static::$actions))
+            return false;
+
+
+        ?>
+
+        <script src="https://www.google.com/recaptcha/api.js?render=<?php echo e(self::$api_key) ?>&onload=BravoReCaptchaCallBack" async defer></script>
+        <script>
+
+            window.BravoReCaptcha = {
+                is_loaded : false,
+                actions: <?php echo json_encode(static::$actions) ?>,
+                widgetIds : {},
+                sitekey:'<?php echo e(self::$api_key) ?>',
+                callback: function () {
+                    this.is_loaded = true;
+                    for (var k in this.actions) {
+                        var v = this.actions[k]
+                        this.getToken(k,v)
+                        this.widgetIds[k] = v;
+                    }
+                },
+                reset(action) {
+                    console.log(action,this.widgetIds[action],this.widgetIds)
+                    this.getToken(action,this.widgetIds[action])
+                },
+                getToken(action,id) {
+                    grecaptcha.ready(function () {
+                        grecaptcha.execute('<?php echo e(self::$api_key) ?>', {action: action}).then(function(token) {
+                            $('#'+id).val(token);
+                        })
+                    });
+                },
+                validateCallback(){
+                }
+            }
+
+            function BravoReCaptchaCallBack(){
+                BravoReCaptcha.callback();
+            }
+        </script>
+        <?php
+    }
+
+
 
     public static function isEnable()
     {
@@ -76,6 +135,7 @@ class ReCaptchaEngine
         self::$api_secret = setting_item('recaptcha_api_secret');
         self::$is_enable = setting_item('recaptcha_enable');
         self::$is_init = true;
+        self::$version = setting_item('recaptcha_version','v2');
     }
 
     public static function verify($response)

@@ -12,11 +12,13 @@
                             {{ __('A fresh verification link has been sent to your email address.') }}
                         </div>
                     @endif
-                    {{ __('Before proceeding, please check your email for a verification link.') }}
-                    {{ __('If you did not receive the email') }}, <a onclick="event.preventDefault(); document.getElementById('email-form').submit(); " href="{{ route('verification.resend') }}">{{ __('click here to request another') }}</a>.
-                        
-                        <form id="email-form" action="{{ route('verification.resend') }}" method="POST" style="display: none;">
+                    <p>
+                        {{ __('Before proceeding, please check your email for a verification link.') }}
+                        {{ __('If you did not receive the email') }},
+                    </p>
+                        <form action="{{ route('verification.send') }}" method="post">
                             @csrf
+                            <button class="btn btn-primary" type="submit">{{ __('click here to request another') }}.</button>
                         </form>
                 </div>
             </div>

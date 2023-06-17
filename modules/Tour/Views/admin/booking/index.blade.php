@@ -8,22 +8,19 @@
         </div>
         @include('admin.message')
         <div class="panel">
-            {{--            <div class="panel-title"><strong>{{__("Tour Filters")}}</strong></div>--}}
+{{--            <div class="panel-title"><strong>{{__("Tour Filters")}}</strong></div>--}}
             <div class="panel-body">
                 <div class="filter-div d-flex justify-content-between ">
                     <div class="col-left">
-                        <form method="get" action="" class="filter-form filter-form-left d-flex flex-column flex-sm-row"
-                              role="search">
-                            <input type="text" name="s" value="{{ Request()->s }}"
-                                   placeholder="{{__('Search by name')}}" class="form-control">
+                        <form method="get" action="" class="filter-form filter-form-left d-flex flex-column flex-sm-row" role="search">
+                            <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by name')}}" class="form-control">
                             <select name="cat_id" class="form-control">
                                 <option value="">{{ __('--All Category --')}} </option>
                                 <?php
                                 foreach ($tour_categories as $category) {
                                     $selected = '';
-                                    if ($request->query('cat_id') == $category->id) $selected = 'selected';
-                                    printf("<option value='%s' %s>%s</option>", $category->id, $selected,
-                                        $category->name);
+                                    if($request->query('cat_id') == $category->id) $selected = 'selected';
+                                    printf("<option value='%s' %s>%s</option>", $category->id,$selected, $category->name);
                                 }
                                 ?>
                             </select>
@@ -33,18 +30,14 @@
                 </div>
             </div>
         </div>
-        <div class="booking-calendar vec-wrap panel" id="booking-calendar">
+        <div class="booking-calendar vec-wrap panel" id="booking-calendar" >
             <div class="panel-body">
                 <div class="vec-header-toolbar d-flex justify-content-between align-items-center">
-                    <div class=""><i><span
-                                    class="count-string">{{ __("Showing :from - :to of :total Tour(s)",["from"=>$rows->firstItem(),"to"=>$rows->lastItem(),"total"=>$rows->total()]) }}</span></i>
-                    </div>
+                    <div class=""><i><span class="count-string">{{ __("Showing :from - :to of :total Tour(s)",["from"=>$rows->firstItem(),"to"=>$rows->lastItem(),"total"=>$rows->total()]) }}</span></i></div>
                     <div class="current-month">{{date('M-Y',$current_month)}}</div>
                     <div class="btn-group" role="group">
-                        <a href="{{$prev_url}}" type="button" class="btn btn-secondary"><i
-                                    class="icon ion-ios-arrow-back"></i></a>
-                        <a href="{{$next_url}}" type="button" class="btn btn-secondary"><i
-                                    class="icon ion-ios-arrow-forward"></i></a>
+                        <a href="{{$prev_url}}" type="button" class="btn btn-secondary"><i class="icon ion-ios-arrow-back"></i></a>
+                        <a href="{{$next_url}}" type="button" class="btn btn-secondary"><i class="icon ion-ios-arrow-forward"></i></a>
                     </div>
                 </div>
                 <table class="vec-view-container" width="100%" cellpadding="0" cellspacing="0">
@@ -79,8 +72,7 @@
                         <td class="vec-events" width="300px">
                             @foreach($rows as $row)
                                 <div class="vec-event-{{$row->id}} vec-event-name">
-                                    <a href="{{$row->getEditUrl()}}" target="_blank"
-                                       title="#{{$row->id}} - {{$row->title}}">#{{$row->id}} - {{$row->title}}</a>
+                                        <a href="{{$row->getEditUrl()}}" target="_blank" title="#{{$row->id}} - {{$row->title}}">#{{$row->id}} - {{$row->title}}</a>
                                 </div>
                             @endforeach
                         </td>
@@ -102,12 +94,7 @@
                                                                     $services[] = $service;
                                                                 }
                                                                 @endphp
-                                                                <div title="#{{$booking->id}} - {{$booking->email}}"
-                                                                     data-from="{{date('d',strtotime($booking->start_date))}}"
-                                                                     data-to="{{date('d',strtotime($booking->end_date))}}"
-                                                                     class="vec-event-item d-none status-{{$booking->status}}"
-                                                                     data-toggle="modal"
-                                                                     data-target="#modal-booking-{{$booking->id}}">
+                                                                <div title="#{{$booking->id}} - {{$booking->email}}" data-from="{{date('d',strtotime($booking->start_date))}}" data-to="{{date('d',strtotime($booking->end_date))}}" class="vec-event-item d-none status-{{$booking->status}}" data-toggle="modal" data-target="#modal-booking-{{$booking->id}}">
                                                                     #{{$booking->id}} - {{$booking->email}}
                                                                 </div>
                                                             @endforeach
@@ -121,7 +108,7 @@
                                         <table class="" cellpadding="0" cellspacing="0" width="100%">
                                             <tr class="vec-event-time-row">
                                                 @for($i = 1 ; $i <= date('t',$current_month) ; $i++)
-                                                    <td class="vec-event-time-td">
+                                                    <td class="vec-event-time-td" >
                                                         <div>&nbsp;</div>
                                                     </td>
                                                 @endfor
@@ -141,78 +128,79 @@
         </div>
 
         <div class="d-flex justify-content-center">
-            {{$rows->appends($request->query())->links('vendor.pagination.bootstrap-4')}}
+            {{$rows->appends($request->query())->links()}}
         </div>
     </div>
 @endsection
 
-@section('script.head')
+@push('css')
     <link rel="stylesheet" href="{{asset('libs/vertical-calendar/css/vertical-calendar.css')}}">
-@endsection
+@endpush
 
-@section('script.body')
-    <script src="{{asset('libs/vertical-calendar/vertical-calendar.js?_ver='.config('app.version'))}}"></script>
-    <script>
-        new VerticalEventCalendar({
-            el: '#booking-calendar',
-            eventHeaderName: '{{__('Tours')}}'
+@push('js')
+<script src="{{asset('libs/vertical-calendar/vertical-calendar.js?_ver='.config('app.asset_version'))}}"></script>
+<script>
+	new VerticalEventCalendar({
+        el:'#booking-calendar',
+		eventHeaderName:'{{__('Tours')}}'
+    });
+    var baseColumnWidth = ($('.vec-header-toolbar').width() - $('.vec-event-header').width() - 5 ) / {{date('t',$current_month)}};
+
+
+
+    baseColumnWidth = parseInt(baseColumnWidth);
+    var baseEventHeight = 25;
+
+    (function ($) {
+        $('.vec-view-container .vc-time-area').each(function () {
+            $(this).find('table').attr('width','auto');
+            $(this).find(".vec-time-text").css("width",baseColumnWidth).css("max-width",baseColumnWidth);
         });
-        var baseColumnWidth = ($('.vec-header-toolbar').width() - $('.vec-event-header').width() - 5) / {{date('t',$current_month)}};
+        $('.vec-view-container .vec-events-bg').each(function () {
+            $(this).find('table').attr('width','auto');
+            $(this).find(".vec-event-time-td").css("width",baseColumnWidth).css("max-width",baseColumnWidth);
+        });
 
+        $('.vec-event-containers').each(function () {
+            var me = this;
+            var maxT = 0;
+            var items = $(this).find('.vec-event-item');
+            if(!items.length){
+                return;
+            }
+            var id = $(this).data('id');
+            items.each(function (i,v) {
+            	var t = 0;
+            	items.each(function (i2,v2) {
 
-        baseColumnWidth = parseInt(baseColumnWidth);
-        var baseEventHeight = 25;
-
-        (function ($) {
-            $('.vec-view-container .vc-time-area').each(function () {
-                $(this).find('table').attr('width', 'auto');
-                $(this).find(".vec-time-text").css("width", baseColumnWidth).css("max-width", baseColumnWidth);
-            });
-            $('.vec-view-container .vec-events-bg').each(function () {
-                $(this).find('table').attr('width', 'auto');
-                $(this).find(".vec-event-time-td").css("width", baseColumnWidth).css("max-width", baseColumnWidth);
-            });
-
-            $('.vec-event-containers').each(function () {
-                var me = this;
-                var maxT = 0;
-                var items = $(this).find('.vec-event-item');
-                if (!items.length) {
-                    return;
-                }
-                var id = $(this).data('id');
-                items.each(function (i, v) {
-                    var t = 0;
-                    items.each(function (i2, v2) {
-
-                        if (i2 !== i && i2 < i) {
-                            if ($(v).data('from') <= $(v2).data('to') && $(v).data('to') >= $(v2).data('from')) {
-                                t++;
-                            }
+            		if(i2 !== i && i2 < i){
+						if($(v).data('from')  <= $(v2).data('to') && $(v).data('to') >= $(v2).data('from') ){
+							t++;
                         }
-                    });
-
-                    $(this).css({
-                        left: baseColumnWidth * (parseInt($(this).data('from')) - 1),
-                        width: baseColumnWidth * (parseInt($(this).data('to') - parseInt($(this).data('from')) + 1)),
-                        top: baseEventHeight * t + (t * 2) + 1
-                    });
-                    $(this).removeClass('d-none');
-
-                    if (t > maxT) maxT = t;
-                });
+                    }
+				});
 
                 $(this).css({
-                    height: (baseEventHeight + 1) * (maxT + 1) + 2
+                    left:baseColumnWidth * (parseInt($(this).data('from')) - 1),
+                    width:baseColumnWidth * (parseInt($(this).data('to') - parseInt($(this).data('from')) + 1)),
+                    top:baseEventHeight * t + (t * 2) + 1
                 });
+                $(this).removeClass('d-none');
 
-                $('.vec-events .vec-event-' + id).css({
-                    height: (baseEventHeight + 1) * (maxT + 1) + 2
-                });
+                if(t > maxT) maxT = t;
+            });
 
-            })
+            $(this).css({
+                height:(baseEventHeight + 1) * (maxT+1) + 2
+            });
 
-        })(jQuery);
+            $('.vec-events .vec-event-'+id).css({
+                height:(baseEventHeight + 1) * (maxT+1) + 2
+            });
 
-    </script>
-@endsection
+        })
+
+    })(jQuery);
+
+</script>
+@endpush

@@ -247,3 +247,33 @@
         margin-top: -20px;
     }
 }
+
+.folder-item{
+    .btn-edit{
+        display: none;
+        right: 0px;
+    }
+    &:hover{
+        .btn-edit{
+            display: inline-block;
+        }
+    }
+}
+.hover\:bg-f5f5f5:hover,.bg-f5f5f5{
+    background: #f5f5f5;
+}
+.bg-007bff{
+    background: #007bff;
+}
+.file-list-item {
+    .item-preview img{
+        width: 20px;
+        height: auto;
+    }
+    .active{
+        background: #75aeeb;
+    }
+}
+.cursor-pointer{
+    cursor: pointer;
+}

@@ -1,7 +1,6 @@
 @extends('admin.layouts.app')
 @section('content')
-    <form action="{{route('flight.admin.flight.seat.store',['flight_id'=>$currentFlight->id,'id'=>$row->id??-1])}}"
-          method="post">
+    <form action="{{route('flight.admin.flight.seat.store',['flight_id'=>$currentFlight->id,'id'=>$row->id??-1])}}" method="post">
         @csrf
         <input type="hidden" name="id" value="{{$row->id}}">
         <div class="container">
@@ -33,6 +32,4 @@
             </div>
         </div>
     </form>
-@endsection
-@section ('script.body')
 @endsection

@@ -179,7 +179,7 @@
 .blog-breadcrumb {
     padding: 20px 0;
     border-bottom: 1px solid #EAEEF3;
-    ul {
+    ul,ol,.ul {
         list-style: none;
         display: block;
         width: 100%;
@@ -335,4 +335,8 @@
 }
 .text-white{
     color: #fff;
+}
+.bc_popup .modal-body img{
+    max-width: 100%;
+    height: auto;
 }

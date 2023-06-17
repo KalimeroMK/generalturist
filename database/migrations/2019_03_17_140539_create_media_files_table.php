@@ -20,6 +20,7 @@ class CreateMediaFilesTable extends Migration
             $table->string('file_size',255)->nullable();
             $table->string('file_type',255)->nullable();
             $table->string('file_extension',255)->nullable();
+            $table->string('driver',255)->nullable();
             $table->integer('create_user')->nullable();
             $table->integer('update_user')->nullable();
             $table->softDeletes();

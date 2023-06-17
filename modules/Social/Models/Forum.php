@@ -1,31 +1,28 @@
 <?php
+namespace Modules\Social\Models;
+use App\BaseModel;
 
-    namespace Modules\Social\Models;
+class Forum extends BaseModel
+{
+    protected $table = 'social_forums';
+    protected $slugFromField = 'name';
+    protected $slugField = 'slug';
 
-    use App\BaseModel;
+    protected $fillable = [
+        'name',
+        'icon'
+    ];
 
-    class Forum extends BaseModel
+    public function getDetailUrl()
     {
-        protected $table = 'social_forums';
-        protected $slugFromField = 'name';
-        protected $slugField = 'slug';
+        return route('social.forum',['slug'=>$this->slug]);
+    }
 
-        protected $fillable = [
-            'name',
-            'icon',
-        ];
-
-        public function getDetailUrl()
-        {
-            return route('social.forum', ['slug' => $this->slug]);
-        }
-
-        public function getIconHtmlAttribute()
-        {
-            if ($this->icon_image) {
-                return sprintf("<img src='%s' class='bravo-icon-img' alt='%s'>", get_image_tag($this->icon_image, 'thumb'), e($this->name));
-            } else {
-                return sprintf("<i class='%s bravo-icon'></i>", $this->icon);
-            }
+    public function getIconHtmlAttribute(){
+        if($this->icon_image){
+            return sprintf("<img src='%s' class='bravo-icon-img' alt='%s'>",get_image_tag($this->icon_image,'thumb'),e($this->name));
+        }else{
+            return sprintf("<i class='%s bravo-icon'></i>",$this->icon);
         }
     }
+}

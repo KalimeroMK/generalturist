@@ -334,6 +334,9 @@
                 #module-event{
                     @import "../../event/scss/loop";
                 }
+                #module-boat{
+                    @import "../../boat/scss/loop";
+                }
             }
 
             .g-thumbnail {
@@ -344,4 +347,7 @@
 
         }
     }
+}
+.bravo_wrap .bravo-list-hotel.layout_normal {
+    margin: 0;
 }

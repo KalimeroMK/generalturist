@@ -36,13 +36,10 @@
                                         @if(!empty($permissions))
                                             @foreach($permissions as $permission)
                                                 <tr>
-                                                    <td>{{$permission->name}}</td>
+                                                    <td>{{$permission}}</td>
                                                     @foreach($roles as $role)
                                                         <td>
-                                                            <input type="checkbox"
-                                                                   @if(in_array($permission->id,$selectedIds[$role->id])) checked
-                                                                   @endif name="matrix[{{$role->id}}][]"
-                                                                   value="{{$permission->id}}">
+                                                            <input type="checkbox" @if(in_array($permission,$selectedIds[$role->id])) checked @endif name="matrix[{{$role->id}}][]" value="{{$permission}}">
                                                         </td>
                                                     @endforeach
                                                 </tr>
@@ -63,6 +60,4 @@
             </div>
         </div>
     </form>
-@endsection
-@section ('script.body')
 @endsection

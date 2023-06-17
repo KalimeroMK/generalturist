@@ -7,15 +7,14 @@
         <span class="invalid-feedback error error-email"></span>
     </div>
     <div class="form-group">
-        <input type="password" class="form-control" name="password" autocomplete="off" placeholder="{{__('Password')}}">
+        <input type="password" class="form-control" name="password" autocomplete="off"  placeholder="{{__('Password')}}">
         <i class="input-icon icofont-ui-password"></i>
         <span class="invalid-feedback error error-password"></span>
     </div>
     <div class="form-group">
         <div class="d-flex justify-content-between">
             <label for="remember-me" class="mb0">
-                <input type="checkbox" name="remember" id="remember-me" value="1"> {{__('Remember me')}} <span
-                        class="checkmark fcheckbox"></span>
+                <input type="checkbox" name="remember" id="remember-me" value="1"> {{__('Remember me')}} <span class="checkmark fcheckbox"></span>
             </label>
             <a href="{{ route("password.request") }}">{{__('Forgot Password?')}}</a>
         </div>
@@ -38,8 +37,7 @@
             <div class="row">
                 @if(setting_item('facebook_enable'))
                     <div class="col-xs-12 col-sm-4">
-                        <a href="{{url('/social-login/facebook')}}" class="btn btn_login_fb_link"
-                           data-channel="facebook">
+                        <a href="{{url('/social-login/facebook')}}"class="btn btn_login_fb_link" data-channel="facebook">
                             <i class="input-icon fa fa-facebook"></i>
                             {{__('Facebook')}}
                         </a>
@@ -64,8 +62,7 @@
             </div>
         </div>
     @endif
-    <div class="c-grey font-medium f14 text-center"> {{__('Do not have an account?')}} <a href=""
-                                                                                          data-target="#register"
-                                                                                          data-toggle="modal">{{__('Sign Up')}}</a>
-    </div>
+    @if(is_enable_registration())
+        <div class="c-grey font-medium f14 text-center"> {{__('Do not have an account?')}} <a href="" data-target="#register" data-toggle="modal">{{__('Sign Up')}}</a></div>
+    @endif
 </form>

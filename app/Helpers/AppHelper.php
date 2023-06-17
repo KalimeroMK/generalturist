@@ -108,12 +108,12 @@ function generate_menu($location = '',$options = [])
         foreach($setting as $l=>$menuId){
             if($l == $location and $menuId){
                 $menu = (new \Modules\Core\Models\Menu())->findById($menuId);
-                $translation = $menu->translateOrOrigin(app()->getLocale());
+                $translation = $menu->translate();
 
                 $walker = new $options['walker']($translation);
 
                 if(!empty($translation)){
-                    $walker->generate();
+                    $walker->generate($options);
                 }
             }
         }
@@ -154,10 +154,9 @@ function get_file_url($file_id,$size="thumb",$resize = true){
 }
 
 function get_image_tag($image_id,$size = 'thumb',$options = []){
-    $options = array_merge($options,[
+    $options = array_merge([
        'lazy'=>true
-    ]);
-
+    ],$options);
     $url = get_file_url($image_id,$size);
 
     if($url){
@@ -170,7 +169,7 @@ function get_image_tag($image_id,$size = 'thumb',$options = []){
         }else{
             $attr.=" src='".e($url)."' ";
         }
-        return sprintf("<img class='%s' %s alt='%s'>",e($class),e($attr),e($alt));
+        return sprintf("<img class='%s' %s alt='%s'>",e($class),$attr,e($alt));
     }
 }
 function get_date_format(){
@@ -718,11 +717,12 @@ function translate_or_origin($key,$settings = [],$locale = '')
 function get_bookable_services(){
 
     $all = [];
+
     // Modules
-    $custom_modules = \Modules\ServiceProvider::getModules();
+    $custom_modules = \Modules\ServiceProvider::getActivatedModules();
     if(!empty($custom_modules)){
-        foreach($custom_modules as $module){
-            $moduleClass = "\\Modules\\".ucfirst($module)."\\ModuleProvider";
+        foreach($custom_modules as $moduleData){
+            $moduleClass = $moduleData['class'];
             if(class_exists($moduleClass))
             {
                 $services = call_user_func([$moduleClass,'getBookableServices']);
@@ -745,23 +745,57 @@ function get_bookable_services(){
             }
         }
     }
+    foreach ($all as $id=>$class){
+        $all[$id] = get_class(app()->make($class));
+    }
+    return $all;
+}
+function get_payable_services(){
+    $all = get_bookable_services();
 
-    // Custom Menu
-    $custom_modules = \Custom\ServiceProvider::getModules();
+    // Modules
+    $custom_modules = \Modules\ServiceProvider::getActivatedModules();
     if(!empty($custom_modules)){
-        foreach($custom_modules as $module){
-            $moduleClass = "\\Custom\\".ucfirst($module)."\\ModuleProvider";
+        foreach($custom_modules as $moduleData){
+            $moduleClass = $moduleData['class'];
             if(class_exists($moduleClass))
             {
-                $services = call_user_func([$moduleClass,'getBookableServices']);
+                $services = call_user_func([$moduleClass,'getPayableServices']);
                 $all = array_merge($all,$services);
             }
+
         }
+    }
+
+    foreach ($all as $id=>$class){
+        $all[$id] = get_class(app()->make($class));
     }
 
     return $all;
 }
+function get_reviewable_services(){
 
+    $all = get_bookable_services();
+    // Modules
+    $custom_modules = \Modules\ServiceProvider::getActivatedModules();
+    if(!empty($custom_modules)){
+        foreach($custom_modules as $moduleData){
+            $moduleClass = $moduleData['class'];
+            if(class_exists($moduleClass))
+            {
+                $services = call_user_func([$moduleClass,'getReviewableServices']);
+                $all = array_merge($all,$services);
+            }
+
+        }
+    }
+
+    foreach ($all as $id=>$class){
+        $all[$id] = get_class(app()->make($class));
+    }
+
+    return $all;
+}
 function get_bookable_service_by_id($id){
 
     $all = get_bookable_services();
@@ -802,8 +836,7 @@ function size_unit_format($number=''){
 }
 
 function get_payment_gateways(){
-    //getBlocks
-    $gateways = config('booking.payment_gateways');
+    $gateways = config('payment.gateways');
     // Modules
     $custom_modules = \Modules\ServiceProvider::getModules();
     if(!empty($custom_modules)){
@@ -833,19 +866,8 @@ function get_payment_gateways(){
         }
     }
 
-    //Custom
-    $custom_modules = \Custom\ServiceProvider::getModules();
-    if(!empty($custom_modules)){
-        foreach($custom_modules as $module){
-            $moduleClass = "\\Custom\\".ucfirst($module)."\\ModuleProvider";
-            if(class_exists($moduleClass))
-            {
-                $gateway = call_user_func([$moduleClass,'getPaymentGateway']);
-                if(!empty($gateway)){
-                    $gateways = array_merge($gateways,$gateway);
-                }
-            }
-        }
+    foreach ($gateways as $id=>$class){
+        $gateways[$id] = get_class(app()->make($class));
     }
     return $gateways;
 }
@@ -926,24 +948,16 @@ function get_all_verify_fields(){
 }
 /*Hook Functions*/
 function add_action($hook, $callback, $priority = 20, $arguments = 1){
-    $args = func_get_args();
-    $m = \Modules\Core\Helpers\HookManager::inst();
-    $m->addAction($hook, $callback, $priority, $arguments);
+    return \Modules\Core\Facades\Hook::addAction($hook, $callback, $priority, $arguments);
 }
 function add_filter($hook, $callback, $priority = 20, $arguments = 1){
-    $args = func_get_args();
-    $m = \Modules\Core\Helpers\HookManager::inst();
-    $m->addFilter($hook, $callback, $priority, $arguments);
+    return \Modules\Core\Facades\Hook::addFilter($hook, $callback, $priority, $arguments);
 }
 function do_action(){
-    $args = func_get_args();
-    $m = \Modules\Core\Helpers\HookManager::inst();
-    return call_user_func_array([$m,'action'],$args);
+    return \Modules\Core\Facades\Hook::action(...func_get_args());
 }
 function apply_filters(){
-    $args = func_get_args();
-    $m = \Modules\Core\Helpers\HookManager::inst();
-    return call_user_func_array([$m,'filter'],$args);
+    return \Modules\Core\Facades\Hook::filter(...func_get_args());
 }
 function is_installed(){
     return file_exists(storage_path('installed'));
@@ -993,11 +1007,14 @@ function is_enable_guest_checkout(){
     return setting_item('booking_guest_checkout');
 }
 
-function handleVideoUrl($string)
+function handleVideoUrl($string,$video_id = false)
 {
+    if($video_id && !empty($string)){
+        parse_str( parse_url( $string, PHP_URL_QUERY ), $values );
+        return $values['v'];
+    }
     if (strpos($string, 'youtu') !== false) {
         preg_match("#(?<=v=)[a-zA-Z0-9-]+(?=&)|(?<=v\/)[^&\n]+|(?<=v=)[^&\n]+|(?<=youtu.be/)[^&\n]+#", $string, $matches);
-
         if (!empty($matches[0])) return "https://www.youtube.com/embed/" . e($matches[0]);
     }
     return $string;
@@ -1055,16 +1072,9 @@ function clean_by_key($object, $keyIndex, $children = 'children'){
 function periodDate($startDate,$endDate,$day = true,$interval='1 day'){
     $begin = new \DateTime($startDate);
     $end = new \DateTime($endDate);
-
-//    if($begin==$end){
-//        $end = $end->modify('+1 day');
-//    }
-
     if($day){
         $end = $end->modify('+1 day');
     }
-
-
     $interval = \DateInterval::createFromDateString($interval);
     $period = new \DatePeriod($begin, $interval, $end);
     return $period;
@@ -1077,12 +1087,12 @@ function _fixTextScanTranslations(){
 
 function is_admin(){
     if(!auth()->check()) return false;
-    if(auth()->user()->hasPermissionTo('dashboard_access')) return true;
+    if(auth()->user()->hasPermission('dashboard_access')) return true;
     return false;
 }
 function is_vendor(){
     if(!auth()->check()) return false;
-    if(auth()->user()->hasPermissionTo('dashboard_vendor_access')) return true;
+    if(auth()->user()->hasPermission('dashboard_vendor_access')) return true;
     return false;
     }
 
@@ -1125,3 +1135,84 @@ function format_interval($d1, $d2 = ''){
 
     return $result;
 }
+function generate_timezone_list()
+    {
+        static $regions = array(
+            DateTimeZone::AFRICA,
+            DateTimeZone::AMERICA,
+            DateTimeZone::ANTARCTICA,
+            DateTimeZone::ASIA,
+            DateTimeZone::ATLANTIC,
+            DateTimeZone::AUSTRALIA,
+            DateTimeZone::EUROPE,
+            DateTimeZone::INDIAN,
+            DateTimeZone::PACIFIC,
+        );
+
+        $timezones = array();
+        foreach( $regions as $region )
+        {
+            $timezones = array_merge( $timezones, DateTimeZone::listIdentifiers( $region ) );
+        }
+
+        $timezone_offsets = array();
+        foreach( $timezones as $timezone )
+        {
+            $tz = new DateTimeZone($timezone);
+            $timezone_offsets[$timezone] = $tz->getOffset(new DateTime);
+        }
+
+        // sort timezone by offset
+        asort($timezone_offsets);
+
+        $timezone_list = array();
+        foreach( $timezone_offsets as $timezone => $offset )
+        {
+            $offset_prefix = $offset < 0 ? '-' : '+';
+            $offset_formatted = gmdate( 'H:i', abs($offset) );
+
+            $pretty_offset = "UTC${offset_prefix}${offset_formatted}";
+
+            $timezone_list[$timezone] = "$timezone (${pretty_offset})";
+        }
+
+        return $timezone_list;
+    }
+
+    function is_string_match($string,$wildcard){
+        $pattern = preg_quote($wildcard,'/');
+        $pattern = str_replace( '\*' , '.*', $pattern);
+        return preg_match( '/^' . $pattern . '$/i' , $string );
+    }
+    function getNotify()
+    {
+        $checkNotify = \Modules\Core\Models\NotificationPush::query();
+        if(is_admin()){
+            $checkNotify->where(function($query){
+                $query->where('for_admin',1);
+                $query->orWhere('notifiable_id', Auth::id());
+            });
+        }else{
+            $checkNotify->where('for_admin',0);
+            $checkNotify->where('notifiable_id', Auth::id());
+        }
+        $notifications = $checkNotify->orderBy('created_at', 'desc')->limit(5)->get();
+        $countUnread = $checkNotify->where('read_at', null)->count();
+        return [$notifications,$countUnread];
+    }
+
+    function is_enable_registration(){
+        return !setting_item('user_disable_register');
+    }
+    function is_enable_vendor_team(){
+        return false;
+        return setting_item('vendor_team_enable');
+    }
+
+    function is_enable_plan(){
+        return setting_item('user_plans_enable') == true;
+    }
+
+    function get_main_lang(){
+        return setting_item('site_locale');
+    }

@@ -14,8 +14,8 @@
         use HasFactory;
         use SoftDeletes;
 
-        protected $table = 'bravo_airline';
-        protected $fillable = ['name', 'image_id'];
+        protected $table ='bravo_airline';
+        protected $fillable = ['name','image_id'];
 
         protected static function newFactory()
         {

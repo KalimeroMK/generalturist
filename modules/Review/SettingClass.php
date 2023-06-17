@@ -1,23 +1,24 @@
 <?php
 
-    namespace Modules\Review;
+namespace  Modules\Review;
 
-    use Modules\Core\Abstracts\BaseSettingsClass;
+use Modules\Core\Abstracts\BaseSettingsClass;
+use Modules\Core\Models\Settings;
 
-    class SettingClass extends BaseSettingsClass
+class SettingClass extends BaseSettingsClass
+{
+    public static function getSettingPages()
     {
-        public static function getSettingPages()
-        {
-            return [
-                [
-                    'id'       => 'review',
-                    'title'    => __("Review Advance Settings"),
-                    'position' => 140,
-                    'view'     => "Review::admin.settings.review",
-                    "keys"     => [
-                        'review_upload_picture',
-                    ],
+        return [
+            [
+                'id'   => 'review',
+                'title' => __("Review Advanced Settings"),
+                'position'=>140,
+                'view'=>"Review::admin.settings.review",
+                "keys"=>[
+                    'review_upload_picture',
                 ],
-            ];
-        }
+            ]
+        ];
     }
+}

@@ -10,8 +10,7 @@
                 <div class="panel">
                     <div class="panel-title">{{__("Add Category")}}</div>
                     <div class="panel-body">
-                        <form action="{{route('tour.admin.category.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}"
-                              method="post">
+                        <form action="{{route('tour.admin.category.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}" method="post">
                             @csrf
                             @include('Tour::admin/category/form',['parents'=>$rows])
                             <div class="">
@@ -25,8 +24,7 @@
                 <div class="filter-div d-flex justify-content-between ">
                     <div class="col-left">
                         @if(!empty($rows))
-                            <form method="post" action="{{url('admin/module/tour/category/bulkEdit')}}"
-                                  class="filter-form filter-form-left d-flex justify-content-start">
+                            <form method="post" action="{{route('tour.admin.category.bulkEdit')}}" class="filter-form filter-form-left d-flex justify-content-start">
                                 {{csrf_field()}}
                                 <select name="action" class="form-control">
                                     <option value="">{{__(" Bulk Action ")}}</option>
@@ -34,19 +32,14 @@
                                     <option value="draft">{{__(" Move to Draft ")}}</option>
                                     <option value="delete">{{__(" Delete ")}}</option>
                                 </select>
-                                <button data-confirm="{{__("Do you want to delete?")}}"
-                                        class="btn-info btn btn-icon dungdt-apply-form-btn"
-                                        type="button">{{__('Apply')}}</button>
+                                <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
                             </form>
                         @endif
                     </div>
                     <div class="col-left">
-                        <form method="get" action="{{url('/admin/module/tour/category')}} "
-                              class="filter-form filter-form-right d-flex justify-content-end" role="search">
-                            <input type="text" name="s" value="{{ Request()->s }}" class="form-control"
-                                   placeholder="{{__("Search by name")}}">
-                            <button class="btn-info btn btn-icon btn_search" id="search-submit"
-                                    type="submit">{{__('Search')}}</button>
+                        <form method="get" action="{{route('tour.admin.category.index')}} " class="filter-form filter-form-right d-flex justify-content-end" role="search">
+                            <input type="text" name="s" value="{{ Request()->s }}" class="form-control" placeholder="{{__("Search by name")}}">
+                            <button class="btn-info btn btn-icon btn_search" id="search-submit" type="submit">{{__('Search')}}</button>
                         </form>
                     </div>
                 </div>
@@ -72,14 +65,14 @@
                                     <tr>
                                         <td><input type="checkbox" name="ids[]" value="{{$row->id}}" class="check-item">
                                         <td class="title">
-                                            <a href="{{url('admin/module/tour/category/edit/'.$row->id)}}">{{$prefix.' '.$row->name}}</a>
+                                            <a href="{{route('tour.admin.category.edit',['id'=>$row->id])}}">{{$prefix.' '.$row->name}}</a>
                                         </td>
                                         <td class="d-none d-md-block">{{$row->slug}}</td>
                                         <td><span class="badge badge-{{ $row->status }}">{{ $row->status }}</span></td>
                                         <td class="d-none d-md-block">{{ display_date($row->updated_at)}}</td>
                                     </tr>
                                     <?php
-                                    $traverse($row->children, $prefix.'-');
+                                    $traverse($row->children, $prefix . '-');
                                     }
                                     };
                                     $traverse($rows);

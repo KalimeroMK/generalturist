@@ -29,7 +29,7 @@ return [
             'AutoFormat.AutoParagraph' => false,
             'AutoFormat.RemoveEmpty'   => false,
             'Attr.EnableID' => true,
-            'HTML.AllowedAttributes'=>'title,src,data-src,class,id,href,alt,style,data-target,data-toggle,data-tab,data-product,data-id,data-type,onclick'
+            'HTML.AllowedAttributes'=>'title,src,data-src,class,id,href,alt,style,data-target,data-toggle,data-tab,data-product,data-id,data-type,onclick,target'
         ],
         "youtube" => [
             "HTML.SafeIframe"      => 'true',

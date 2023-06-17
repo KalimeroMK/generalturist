@@ -1,7 +1,6 @@
 @extends('admin.layouts.app')
 @section('content')
-    <form action="{{route('flight.admin.airport.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}"
-          method="post">
+    <form action="{{route('flight.admin.airport.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}" method="post">
         @csrf
         <input type="hidden" name="id" value="{{$row->id}}">
         <div class="container">
@@ -34,16 +33,16 @@
         </div>
     </form>
 @endsection
-@section ('script.body')
+@push('js')
     {!! \App\Helpers\MapEngine::scripts() !!}
     <script>
         jQuery(function ($) {
             "use strict"
             new BravoMapEngine('map_content', {
-                disableScripts: true,
+                disableScripts:true,
                 fitBounds: true,
-                center: [{{$row->map_lat ?? "51.505"}}, {{$row->map_lng ?? "-0.09"}}],
-                zoom: {{$row->map_zoom ?? "8"}},
+                center: [{{$row->map_lat ?? setting_item('map_lat_default',51.505 ) }}, {{$row->map_lng ?? setting_item('map_lng_default',-0.09 ) }}],
+                zoom:{{$row->map_zoom ?? "8"}},
                 ready: function (engineMap) {
                     @if($row->map_lat && $row->map_lng)
                     engineMap.addMarker([{{$row->map_lat}}, {{$row->map_lng}}], {
@@ -65,5 +64,5 @@
             });
         })
     </script>
-@endsection
+@endpush
 

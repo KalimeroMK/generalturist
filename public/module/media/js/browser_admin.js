@@ -80,7 +80,7 @@
                         if(result){
                             me.isLoading = true;
                             $.ajax({
-                                url:bookingCore.url+'/admin/module/media/removeFiles',
+                                url:bookingCore.admin_url+'/module/media/removeFiles',
                                 type:'POST',
                                 data:{
                                     file_ids : me.selected
@@ -122,7 +122,7 @@
                 $("#cdn-browser .icon-loading").addClass("active");
                 me.isLoading = true;
                 $.ajax({
-                    url:bookingCore.url+'/admin/module/media/getLists',
+                    url:bookingCore.admin_url+'/module/media/getLists',
                     type:'POST',
                     data:{
                         file_type:this.uploadConfigs.file_type,
@@ -149,7 +149,7 @@
                     d.append('type',this.uploadConfigs.file_type);
                     me.isLoading = true;
                     $.ajax({
-                        url:bookingCore.url+'/admin/module/media/store',
+                        url:bookingCore.admin_url+'/module/media/store',
                         data:d,
                         dataType:'json',
                         type:'post',

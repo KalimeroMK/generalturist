@@ -3,6 +3,10 @@
     namespace Modules\Vendor\Listeners;
 
     use Illuminate\Support\Facades\Mail;
+    use Modules\User\Emails\RegisteredEmail;
+    use Modules\User\Emails\VendorRegisteredEmail;
+    use Modules\User\Events\NewVendorRegistered;
+    use Modules\User\Events\SendMailUserRegistered;
     use Modules\User\Models\User;
     use Modules\Vendor\Emails\PayoutRequestChangedEmail;
     use Modules\Vendor\Emails\PayoutRequestCreatedEmail;
@@ -27,13 +31,14 @@
         /**
          * Handle the event.
          *
-         * @param  PayoutRequestEvent  $event
+         * @param PayoutRequestEvent $event
          *
          * @return void
          */
         public function handle(PayoutRequestEvent $event)
         {
-            switch ($event->action) {
+
+            switch ($event->action){
                 case "insert":
                     $this->sendEmailCreate($event);
                     break;
@@ -47,81 +52,81 @@
                     $this->sendEmailDelete($event);
                     break;
             }
+
         }
 
-        protected function sendEmailCreate($event)
-        {
-            if ($event->user->locale) {
+        protected function sendEmailCreate($event){
+
+            if($event->user->locale){
                 $old = app()->getLocale();
                 app()->setLocale($event->user->locale);
             }
 
-            Mail::to($event->user->email)->send(new PayoutRequestCreatedEmail($event->user, $event->payout_request, 'vendor'));
+            Mail::to($event->user->email)->send(new PayoutRequestCreatedEmail($event->user,$event->payout_request,'vendor'));
 
-            if (!empty($old)) {
+            if(!empty($old)){
                 app()->setLocale($old);
             }
 
 
             if (!empty(setting_item('admin_email'))) {
-                Mail::to(setting_item('admin_email'))->send(new PayoutRequestCreatedEmail($event->user, $event->payout_request, 'admin'));
+                Mail::to(setting_item('admin_email'))->send(new PayoutRequestCreatedEmail($event->user,$event->payout_request, 'admin'));
             }
         }
 
-        protected function sendEmailUpdate($event)
-        {
-            if ($event->user->locale) {
+        protected function sendEmailUpdate($event){
+
+            if($event->user->locale){
                 $old = app()->getLocale();
                 app()->setLocale($event->user->locale);
             }
 
-            Mail::to($event->user->email)->send(new PayoutRequestChangedEmail($event->user, $event->payout_request, 'vendor'));
+            Mail::to($event->user->email)->send(new PayoutRequestChangedEmail($event->user,$event->payout_request,'vendor'));
 
-            if (!empty($old)) {
+            if(!empty($old)){
                 app()->setLocale($old);
             }
 
 
             if (!empty(setting_item('admin_email'))) {
-                Mail::to(setting_item('admin_email'))->send(new PayoutRequestChangedEmail($event->user, $event->payout_request, 'admin'));
+                Mail::to(setting_item('admin_email'))->send(new PayoutRequestChangedEmail($event->user,$event->payout_request, 'admin'));
             }
         }
 
-        protected function sendEmailReject($event)
-        {
-            if ($event->user->locale) {
+        protected function sendEmailReject($event){
+
+            if($event->user->locale){
                 $old = app()->getLocale();
                 app()->setLocale($event->user->locale);
             }
 
-            Mail::to($event->user->email)->send(new PayoutRequestRejectedEmail($event->user, $event->payout_request, 'vendor'));
+            Mail::to($event->user->email)->send(new PayoutRequestRejectedEmail($event->user,$event->payout_request,'vendor'));
 
-            if (!empty($old)) {
+            if(!empty($old)){
                 app()->setLocale($old);
             }
 
 
             if (!empty(setting_item('admin_email'))) {
-                Mail::to(setting_item('admin_email'))->send(new PayoutRequestRejectedEmail($event->user, $event->payout_request, 'admin'));
+                Mail::to(setting_item('admin_email'))->send(new PayoutRequestRejectedEmail($event->user,$event->payout_request, 'admin'));
             }
         }
+        protected function sendEmailDelete($event){
 
-        protected function sendEmailDelete($event)
-        {
-            if ($event->user->locale) {
+            if($event->user->locale){
                 $old = app()->getLocale();
                 app()->setLocale($event->user->locale);
             }
 
-            Mail::to($event->user->email)->send(new PayoutRequestDeletedEmail($event->user, $event->payout_request, 'vendor'));
+            Mail::to($event->user->email)->send(new PayoutRequestDeletedEmail($event->user,$event->payout_request,'vendor'));
 
-            if (!empty($old)) {
+            if(!empty($old)){
                 app()->setLocale($old);
             }
 
 
             if (!empty(setting_item('admin_email'))) {
-                Mail::to(setting_item('admin_email'))->send(new PayoutRequestDeletedEmail($event->user, $event->payout_request, 'admin'));
+                Mail::to(setting_item('admin_email'))->send(new PayoutRequestDeletedEmail($event->user,$event->payout_request, 'admin'));
             }
         }
 
