@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Location\Models;
 
 use App\BaseModel;
@@ -6,12 +7,12 @@ use App\BaseModel;
 class LocationTranslation extends BaseModel
 {
     protected $table = 'bravo_location_translations';
-    protected $fillable = ['name', 'content','trip_ideas'];
+    protected $fillable = ['name', 'content', 'trip_ideas'];
     protected $seo_type = 'location_translation';
     protected $cleanFields = [
         'content'
     ];
     protected $casts = [
-        'trip_ideas'  => 'array',
+        'trip_ideas' => 'array',
     ];
 }

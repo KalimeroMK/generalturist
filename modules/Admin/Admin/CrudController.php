@@ -10,36 +10,43 @@ use Modules\AdminController;
 class CrudController extends AdminController
 {
 
-    public function index($module = ''){
-        if(empty($module)) abort(404);
+    public function index($module = '')
+    {
+        if (empty($module)) {
+            abort(404);
+        }
 
         $crudModule = Crud::module($module);
 
         $configs = $crudModule->index();
 
-        if(!empty($configs['permission'])){
+        if (!empty($configs['permission'])) {
             $this->checkPermission($configs['permission']);
         }
 
         return view("Admin::admin.crud.index");
     }
-    public function create($module = ''){
-        if(empty($module)) abort(404);
+
+    public function create($module = '')
+    {
+        if (empty($module)) {
+            abort(404);
+        }
 
         $crudModule = Crud::module($module);
 
         $configs = $crudModule->create();
 
-        if(!empty($configs['permission'])){
+        if (!empty($configs['permission'])) {
             $this->checkPermission($configs['permission']);
         }
         $data = [
-            'row'=>new $crudModule->model,
-            'crudModule'=>$crudModule,
-            'module'=>$module,
-            'layouts'=>$configs['layouts'] ?? []
+            'row' => new $crudModule->model,
+            'crudModule' => $crudModule,
+            'module' => $module,
+            'layouts' => $configs['layouts'] ?? []
         ];
 
-        return view("Admin::admin.crud.detail",$data);
+        return view("Admin::admin.crud.detail", $data);
     }
 }

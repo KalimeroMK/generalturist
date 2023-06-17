@@ -1,8 +1,6 @@
 <?php
-namespace Modules\Template\Blocks;
 
-use Modules\Media\Helpers\FileHelper;
-use Modules\Template\Blocks\BaseBlock;
+namespace Modules\Template\Blocks;
 
 class ClientFeedBack extends BaseBlock
 {
@@ -17,51 +15,52 @@ class ClientFeedBack extends BaseBlock
         return [
             'settings' => [
                 [
-                    'id'    => 'image_id',
-                    'type'  => 'uploader',
+                    'id' => 'image_id',
+                    'type' => 'uploader',
                     'label' => __('Featured Image')
                 ],
                 [
-                    'id'          => 'list_item',
-                    'type'        => 'listItem',
-                    'label'       => __('List Item(s)'),
+                    'id' => 'list_item',
+                    'type' => 'listItem',
+                    'label' => __('List Item(s)'),
                     'title_field' => 'title',
-                    'settings'    => [
+                    'settings' => [
                         [
-                            'id'        => 'title',
-                            'type'      => 'input',
+                            'id' => 'title',
+                            'type' => 'input',
                             'inputType' => 'text',
-                            'label'     => __('Title')
+                            'label' => __('Title')
                         ],
                         [
-                            'id'        => 'sub_title',
-                            'type'      => 'input',
+                            'id' => 'sub_title',
+                            'type' => 'input',
                             'inputType' => 'text',
-                            'label'     => __('Sub Title')
+                            'label' => __('Sub Title')
                         ],
                         [
-                            'id'    => 'desc',
-                            'type'  => 'textArea',
+                            'id' => 'desc',
+                            'type' => 'textArea',
                             'label' => __('Desc')
                         ],
                     ]
                 ],
             ],
-            'category'=>__("Other Block")
+            'category' => __("Other Block")
         ];
     }
 
     public function content($model = [])
     {
-        if(!empty($model['image_id'])){
-            $model['image_url'] = get_file_url($model['image_id'] , 'full');
+        if (!empty($model['image_id'])) {
+            $model['image_url'] = get_file_url($model['image_id'], 'full');
         }
         return $this->view('Template::frontend.blocks.client-feedback.index', $model);
     }
 
-    public function contentAPI($model = []){
-        if(!empty($model['image_id'])){
-            $model['image_url'] = get_file_url($model['image_id'] , 'full');
+    public function contentAPI($model = [])
+    {
+        if (!empty($model['image_id'])) {
+            $model['image_url'] = get_file_url($model['image_id'], 'full');
         }
         return $model;
     }

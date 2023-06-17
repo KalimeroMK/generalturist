@@ -2,7 +2,7 @@
 @push('css')
     <link rel="stylesheet" href="https://unpkg.com/vue-select@3.0.0/dist/vue-select.css">
 @endpush
-    @section('content')
+@section('content')
     <div class="container-fluid" id="booking-core-template-detail" v-cloak="">
         <div class="d-flex justify-content-between mb20">
             <div class="">
@@ -15,8 +15,11 @@
                 </h1>
             </div>
         </div>
-        <div class="alert" v-show="message.content" :class="message.type ? 'alert-success' : 'alert-danger'">@{{message.content}}</div>
-        <input type="text" class="form-control" value="{{$row->title ?? ''}}" v-model="title" placeholder="{{__('Template Name')}}">
+        <div class="alert" v-show="message.content" :class="message.type ? 'alert-success' : 'alert-danger'">
+            @{{message.content}}
+        </div>
+        <input type="text" class="form-control" value="{{$row->title ?? ''}}" v-model="title"
+               placeholder="{{__('Template Name')}}">
         <br>
         <br>
         <div class="row">
@@ -31,7 +34,8 @@
                                 <div class="block-title">
                                     @{{item.name}}
                                     <div class="title-right">
-                                        <span class="menu-add"><i @click="addBlock(item)" class="icon ion-ios-add-circle-outline"></i></span>
+                                        <span class="menu-add"><i @click="addBlock(item)"
+                                                                  class="icon ion-ios-add-circle-outline"></i></span>
                                     </div>
                                 </div>
                             </div>
@@ -48,12 +52,15 @@
                         <div class="panel-body">
                             <div class="templates-items-zone">
                                 <draggable v-model="items">
-                                    <component v-on:delete="deleteBlock" :block="searchBlockById(item.type)" :is="item.component" :item="item" v-for="(item,index) in items" :index=index :key="index"></component>
+                                    <component v-on:delete="deleteBlock" :block="searchBlockById(item.type)"
+                                               :is="item.component" :item="item" v-for="(item,index) in items"
+                                               :index=index :key="index"></component>
                                 </draggable>
                             </div>
                         </div>
                         <div class="panel-footer text-right">
-                            <span class="alert-text" v-show="message.content" :class="message.type ? 'success' : 'danger'">@{{message.content}}</span>
+                            <span class="alert-text" v-show="message.content"
+                                  :class="message.type ? 'success' : 'danger'">@{{message.content}}</span>
                             @if(empty($row->id) and app()->getLocale() != setting_item('site_locale'))
                                 {{__('You need to create the template at the Main-language tab first!')}}
                             @else
@@ -77,11 +84,15 @@
                     </button>
                 </div>
                 <div class="modal-body" v-if="show">
-                    <vue-form-generator :key="block._key_id" :schema="{fields:block.settings}" :model="model" :options="options"></vue-form-generator>
+                    <vue-form-generator :key="block._key_id" :schema="{fields:block.settings}" :model="model"
+                                        :options="options"></vue-form-generator>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @click="hideModal" data-dismiss="modal">@{{template_i18n.cancel}}</button>
-                    <button type="button" class="btn btn-primary" @click="saveModal">@{{template_i18n.save_changes}}</button>
+                    <button type="button" class="btn btn-secondary" @click="hideModal" data-dismiss="modal">
+                        @{{template_i18n.cancel}}
+                    </button>
+                    <button type="button" class="btn btn-primary" @click="saveModal">@{{template_i18n.save_changes}}
+                    </button>
                 </div>
             </div>
         </div>
@@ -91,7 +102,7 @@
         var current_template_items = {!! json_encode($translation->content_json) !!};
         var current_template_title = '{{$translation->title ?? ''}}';
         var template_id = {{$row->id ?? 0}};
-		var current_menu_lang = '{{request()->query('lang',app()->getLocale())}}';
+        var current_menu_lang = '{{request()->query('lang',app()->getLocale())}}';
     </script>
 @endsection
 @push('css')

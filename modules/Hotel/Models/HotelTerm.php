@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Hotel\Models;
 
 use App\BaseModel;

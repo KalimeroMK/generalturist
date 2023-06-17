@@ -5,7 +5,6 @@ namespace Modules\Vendor\Emails;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Modules\User\Events\VendorApproved;
 
 class PayoutRequestRejectedEmail extends Mailable
 {
@@ -16,7 +15,7 @@ class PayoutRequestRejectedEmail extends Mailable
     public $payout_request;
     public $email_to;
 
-    public function __construct($user,$payout_request,$to =  'vendor')
+    public function __construct($user, $payout_request, $to = 'vendor')
     {
         $this->user = $user;
         $this->payout_request = $payout_request;
@@ -26,8 +25,7 @@ class PayoutRequestRejectedEmail extends Mailable
     public function build()
     {
         $subject = '';
-        switch ($this->email_to)
-        {
+        switch ($this->email_to) {
             case "admin":
                 $subject = __('A payout request has been rejected');
                 break;
@@ -36,7 +34,10 @@ class PayoutRequestRejectedEmail extends Mailable
                 break;
         }
 
-        return $this->subject($subject)->view('Vendor::emails.payout-request-email',['user'=>$this->user,'payout_request'=>$this->payout_request,'to'=>$this->email_to,'action'=>'reject']);
+        return $this->subject($subject)->view('Vendor::emails.payout-request-email', [
+            'user' => $this->user, 'payout_request' => $this->payout_request, 'to' => $this->email_to,
+            'action' => 'reject'
+        ]);
     }
 
 

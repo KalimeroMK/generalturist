@@ -1,14 +1,14 @@
 <?php
+
 namespace Modules\Vendor\Models;
 
 use App\BaseModel;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Modules\Core\Models\SEO;
 
 class VendorPlan extends BaseModel
 {
     use SoftDeletes;
+
     protected $table = 'core_vendor_plans';
     protected $fillable = [
         'name',
@@ -30,13 +30,14 @@ class VendorPlan extends BaseModel
     {
         $query = static::select('id', 'name');
         if (strlen($q)) {
-
-            $query->where('name', 'like', "%" . $q . "%");
+            $query->where('name', 'like', "%".$q."%");
         }
         $a = $query->orderBy('id', 'desc')->limit(10)->get();
         return $a;
     }
-    public function meta(){
+
+    public function meta()
+    {
         return $this->hasMany(VendorPlanMeta::class);
     }
 

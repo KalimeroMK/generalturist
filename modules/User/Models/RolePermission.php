@@ -4,7 +4,6 @@
 namespace Modules\User\Models;
 
 
-
 use App\BaseModel;
 
 class RolePermission extends BaseModel

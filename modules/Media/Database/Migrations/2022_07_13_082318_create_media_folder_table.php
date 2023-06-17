@@ -4,13 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMediaFolderTable extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+return new class extends Migration {
     public function up()
     {
         Schema::create('media_folders', function (Blueprint $table) {
@@ -22,7 +16,7 @@ class CreateMediaFolderTable extends Migration
             $table->integer('create_user')->nullable();
             $table->integer('update_user')->nullable();
 
-            $table->unique(['parent_id','name']);
+            $table->unique(['parent_id', 'name']);
 
             $table->timestamps();
         });
@@ -32,7 +26,7 @@ class CreateMediaFolderTable extends Migration
                 $table->bigInteger('folder_id')->nullable()->default(0);
             }
             if (!Schema::hasColumn('media_files', 'driver')) {
-                $table->string('driver',255)->nullable();
+                $table->string('driver', 255)->nullable();
             }
         });
     }
@@ -46,4 +40,4 @@ class CreateMediaFolderTable extends Migration
     {
         Schema::dropIfExists('media_folders');
     }
-}
+};

@@ -3,6 +3,7 @@
 namespace Modules\Sms\Core\Facade;
 
 use Illuminate\Support\Facades\Facade;
+use RuntimeException;
 
 class Sms extends Facade
 {
@@ -11,7 +12,7 @@ class Sms extends Facade
      *
      * @return string
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     protected static function getFacadeAccessor()
     {

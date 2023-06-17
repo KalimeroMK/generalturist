@@ -1,3 +1,4 @@
+@php use App\Helpers\AdminForm; @endphp
 @extends ('admin.layouts.app')
 @push('css')
     <style type="text/css">
@@ -34,18 +35,18 @@
                                 <div class="group-icon">
                                     <?php
                                     $user = !empty(Request()->user_id) ? App\User::find(Request()->user_id) : false;
-                                    \App\Helpers\AdminForm::select2('user_id', [
+                                    AdminForm::select2('user_id', [
                                         'configs' => [
-                                            'ajax'        => [
+                                            'ajax' => [
                                                 'url' => route('user.admin.getForSelect2'),
                                                 'dataType' => 'json'
                                             ],
-                                            'allowClear'  => true,
+                                            'allowClear' => true,
                                             'placeholder' => __('-- Select User --')
                                         ]
                                     ], !empty($user->id) ? [
                                         $user->id,
-                                        $user->getDisplayName() . ' (#' . $user->id . ')'
+                                        $user->getDisplayName().' (#'.$user->id.')'
                                     ] : false)
                                     ?>
                                 </div>

@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\User;
 
 
@@ -47,7 +48,7 @@ class EventServiceProvider extends ServiceProvider
         UserSubscriberSubmit::class => [
             UserSubscriberSubmitListeners::class
         ],
-        PasswordReset::class=>[
+        PasswordReset::class => [
             ClearUserTokens::class
         ],
         CreatePlanRequest::class => [
@@ -66,7 +67,6 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-
         //
     }
 }

@@ -1,7 +1,7 @@
 <?php
+
 namespace Modules\Email;
 
-use Illuminate\Support\ServiceProvider;
 use Modules\ModuleServiceProvider;
 
 class ModuleProvider extends ModuleServiceProvider

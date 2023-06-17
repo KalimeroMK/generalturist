@@ -1,9 +1,8 @@
 <?php
 
-namespace  Modules\Event;
+namespace Modules\Event;
 
 use Modules\Core\Abstracts\BaseSettingsClass;
-use Modules\Core\Models\Settings;
 
 class SettingClass extends BaseSettingsClass
 {
@@ -11,11 +10,11 @@ class SettingClass extends BaseSettingsClass
     {
         return [
             [
-                'id'   => 'event',
+                'id' => 'event',
                 'title' => __("Event Settings"),
-                'position'=>20,
-                'view'=>"Event::admin.settings.event",
-                "keys"=>[
+                'position' => 20,
+                'view' => "Event::admin.settings.event",
+                "keys" => [
                     'event_disable',
                     'event_page_search_title',
                     'event_page_search_banner',
@@ -60,7 +59,7 @@ class SettingClass extends BaseSettingsClass
                     'event_location_search_value',
                     'event_location_search_style',
                 ],
-                'html_keys'=>[
+                'html_keys' => [
 
                 ]
             ]

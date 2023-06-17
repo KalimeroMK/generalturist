@@ -24,21 +24,27 @@
                 <div class="filter-div d-flex justify-content-between ">
                     <div class="col-left">
                         @if(!empty($rows))
-                            <form method="post" action="{{route('news.admin.tag.bulkEdit')}}" class="filter-form filter-form-left d-flex justify-content-start">
+                            <form method="post" action="{{route('news.admin.tag.bulkEdit')}}"
+                                  class="filter-form filter-form-left d-flex justify-content-start">
                                 {{csrf_field()}}
                                 <select name="action" class="form-control">
                                     <option value="">{{__(" Bulk Action ")}}</option>
                                     <option value="delete">{{__(" Delete ")}}</option>
                                 </select>
-                                <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
+                                <button data-confirm="{{__("Do you want to delete?")}}"
+                                        class="btn-info btn btn-icon dungdt-apply-form-btn"
+                                        type="button">{{__('Apply')}}</button>
                             </form>
                         @endif
                     </div>
                     <div class="col-left">
-                        <form method="get" action="{{route('news.admin.tag.index')}} " class="filter-form filter-form-right d-flex justify-content-end" role="search">
+                        <form method="get" action="{{route('news.admin.tag.index')}} "
+                              class="filter-form filter-form-right d-flex justify-content-end" role="search">
                             @csrf
-                            <input placeholder="{{__("Search keyword ...")}}" type="text" name="s" value="{{ Request()->s }}" class="form-control">
-                            <button class="btn-info btn btn-icon btn_search" id="search-submit" type="submit">{{__('Search Tag')}}</button>
+                            <input placeholder="{{__("Search keyword ...")}}" type="text" name="s"
+                                   value="{{ Request()->s }}" class="form-control">
+                            <button class="btn-info btn btn-icon btn_search" id="search-submit"
+                                    type="submit">{{__('Search Tag')}}</button>
                         </form>
                     </div>
                 </div>
@@ -62,7 +68,8 @@
                                     @foreach ($rows as $row)
                                         <tr>
                                             <td>
-                                                <input type="checkbox" class="check-item" name="ids[]" value="{{$row->id}}">
+                                                <input type="checkbox" class="check-item" name="ids[]"
+                                                       value="{{$row->id}}">
                                             </td>
                                             <td class="title">
                                                 <a href="{{route('news.admin.tag.edit',['id'=>$row->id])}}">{{ $row->name}}</a>

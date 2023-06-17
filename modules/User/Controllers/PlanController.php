@@ -5,6 +5,7 @@ namespace Modules\User\Controllers;
 
 
 use App\Helpers\ReCaptchaEngine;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Modules\FrontendController;
@@ -18,14 +19,13 @@ class PlanController extends FrontendController
 {
     public function index()
     {
-
         if (!is_enable_plan()) {
             return redirect('/');
         }
         if (!auth()->check()) {
             return redirect(route('login'));
         }
-        $plans = Plan::query()->where('role_id',auth()->user()->role_id)->whereStatus('publish')->get();
+        $plans = Plan::query()->where('role_id', auth()->user()->role_id)->whereStatus('publish')->get();
         $data = ['page_title' => __('Pricing Packages'), 'plans' => $plans, 'user' => auth()->user(),];
         return view("User::frontend.plan.index", $data);
     }
@@ -40,11 +40,11 @@ class PlanController extends FrontendController
         }
         $data = [
             'user' => auth()->user(),
-            'page_title'       => __("My Plan"),
+            'page_title' => __("My Plan"),
             'menu_active' => 'my_plan',
-            'breadcrumbs'      => [
+            'breadcrumbs' => [
                 [
-                    'name'  => __('My plans'),
+                    'name' => __('My plans'),
                     'class' => 'active'
                 ]
             ]
@@ -58,7 +58,9 @@ class PlanController extends FrontendController
             return redirect('/');
         }
         $plan = Plan::find($id);
-        if (!$plan) return;
+        if (!$plan) {
+            return;
+        }
 
         $user = auth()->user();
 
@@ -75,14 +77,14 @@ class PlanController extends FrontendController
         }
 
         return view('User::frontend.plan.checkout', ['plan' => $plan, 'user' => $user, 'gateways' => $gateways]);
-
     }
 
     public function buyProcess(Request $request, $id)
     {
-
         $plan = Plan::find($id);
-        if (!$plan) return;
+        if (!$plan) {
+            return;
+        }
         $user = auth()->user();
         $rules = [];
         $message = [];
@@ -128,7 +130,7 @@ class PlanController extends FrontendController
             if (is_array($validator->errors()->messages())) {
                 $msg = '';
                 foreach ($validator->errors()->messages() as $oneMessage) {
-                    $msg .= implode('<br/>', $oneMessage) . '<br/>';
+                    $msg .= implode('<br/>', $oneMessage).'<br/>';
                 }
                 return redirect()->back()->with('error', $msg);
             }
@@ -145,17 +147,16 @@ class PlanController extends FrontendController
             $new_user_plan->plan_id = $id;
             $new_user_plan->price = $plan->price;
             $new_user_plan->start_date = date('Y-m-d H:i:s');
-            $new_user_plan->end_date = date('Y-m-d H:i:s', strtotime('+ ' . $plan->duration . ' ' . $plan->duration_type));
+            $new_user_plan->end_date = date('Y-m-d H:i:s', strtotime('+ '.$plan->duration.' '.$plan->duration_type));
             $new_user_plan->max_service = $plan->max_service;
             $new_user_plan->plan_data = $plan;
-            $new_user_plan->user_id = \Auth::id();
+            $new_user_plan->user_id = Auth::id();
             $new_user_plan->save();
 
             event(new UpdatePlanRequest($user));
 
             return redirect()->route('user.plan')->with('success', __("Purchased user package successfully"));
-        }
-        else {
+        } else {
             $is_annual = !empty($request->input('annual')) ? true : false;
 
             $payment = new PlanPayment();
@@ -171,7 +172,7 @@ class PlanController extends FrontendController
             $payment->addMeta('user_request', $user->id);
             $payment->addMeta('annual', $is_annual);
 
-            $user->applyPlan($plan,$payment->amount,$is_annual,false);
+            $user->applyPlan($plan, $payment->amount, $is_annual, false);
 
             $res = $gatewayObj->processNormal($payment);
 
@@ -185,19 +186,18 @@ class PlanController extends FrontendController
                 if (empty($redirect_url) and $payment->status == 'completed') {
                     return redirect()->route('user.plan')->with($success ? "success" : "error", $message);
                 }
-                if ($payment->status == 'completed') $redirect_url = route('user.plan');
+                if ($payment->status == 'completed') {
+                    $redirect_url = route('user.plan');
+                }
 
                 if ($redirect_url) {
                     return redirect()->to($redirect_url)->with('success', $message);
                 }
                 return redirect()->route('user.plan.thank-you')->with("success", $message);
-
-            }
-            else {
+            } else {
                 return redirect()->back()->with("error", $message);
             }
         }
-
     }
 
     public function thankYou(Request $request)

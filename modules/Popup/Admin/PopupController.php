@@ -5,18 +5,14 @@
  * Date: 7/30/2019
  * Time: 1:56 PM
  */
+
 namespace Modules\Popup\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Modules\AdminController;
 use Modules\Popup\Models\Popup;
 use Modules\Popup\Models\PopupTerm;
 use Modules\Popup\Models\PopupTranslation;
-use Modules\Core\Events\CreatedServicesEvent;
-use Modules\Core\Events\UpdatedServiceEvent;
-use Modules\Core\Models\Attributes;
-use Modules\Location\Models\Location;
 
 class PopupController extends AdminController
 {
@@ -36,22 +32,22 @@ class PopupController extends AdminController
         $query = $this->popup::query();
         $query->orderBy('id', 'desc');
         if (!empty($s = $request->input('s'))) {
-            $query->where('title', 'LIKE', '%' . $s . '%');
+            $query->where('title', 'LIKE', '%'.$s.'%');
             $query->orderBy('title', 'asc');
         }
         $data = [
-            'rows'              => $query->paginate(20),
-            'breadcrumbs'       => [
+            'rows' => $query->paginate(20),
+            'breadcrumbs' => [
                 [
                     'name' => __('Popups'),
-                    'url'  => route('popup.admin.index')
+                    'url' => route('popup.admin.index')
                 ],
                 [
-                    'name'  => __('All'),
+                    'name' => __('All'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'        => __("Popup Management")
+            'page_title' => __("Popup Management")
         ];
         return view('Popup::admin.index', $data);
     }
@@ -62,24 +58,24 @@ class PopupController extends AdminController
         $query = $this->popup::onlyTrashed();
         $query->orderBy('id', 'desc');
         if (!empty($s = $request->input('s'))) {
-            $query->where('title', 'LIKE', '%' . $s . '%');
+            $query->where('title', 'LIKE', '%'.$s.'%');
             $query->orderBy('title', 'asc');
         }
 
         $data = [
-            'rows'              => $query->with(['author'])->paginate(20),
-            'recovery'          => 1,
-            'breadcrumbs'       => [
+            'rows' => $query->with(['author'])->paginate(20),
+            'recovery' => 1,
+            'breadcrumbs' => [
                 [
                     'name' => __('Popups'),
-                    'url'  => route('popup.admin.index')
+                    'url' => route('popup.admin.index')
                 ],
                 [
-                    'name'  => __('Recovery'),
+                    'name' => __('Recovery'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'        => __("Recovery Popup Management")
+            'page_title' => __("Recovery Popup Management")
         ];
         return view('Popup::admin.index', $data);
     }
@@ -92,19 +88,19 @@ class PopupController extends AdminController
             'status' => 'publish'
         ]);
         $data = [
-            'row'          => $row,
-            'translation'  => new $this->popup_translation(),
-            'breadcrumbs'  => [
+            'row' => $row,
+            'translation' => new $this->popup_translation(),
+            'breadcrumbs' => [
                 [
                     'name' => __('Popups'),
-                    'url'  => route('popup.admin.index')
+                    'url' => route('popup.admin.index')
                 ],
                 [
-                    'name'  => __('Add Popup'),
+                    'name' => __('Add Popup'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'   => __("Add new Popup")
+            'page_title' => __("Add new Popup")
         ];
         return view('Popup::admin.detail', $data);
     }
@@ -116,31 +112,30 @@ class PopupController extends AdminController
         if (empty($row)) {
             return redirect(route('popup.admin.index'));
         }
-        $translation = $row->translate($request->query('lang',get_main_lang()));
+        $translation = $row->translate($request->query('lang', get_main_lang()));
         $data = [
-            'row'               => $row,
-            'translation'       => $translation,
+            'row' => $row,
+            'translation' => $translation,
             'enable_multi_lang' => true,
-            'breadcrumbs'       => [
+            'breadcrumbs' => [
                 [
                     'name' => __('Popups'),
-                    'url'  => route('popup.admin.index')
+                    'url' => route('popup.admin.index')
                 ],
                 [
-                    'name'  => __('Edit Popup'),
+                    'name' => __('Edit Popup'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'        => __("Edit: :name", ['name' => $row->title])
+            'page_title' => __("Edit: :name", ['name' => $row->title])
         ];
         return view('Popup::admin.detail', $data);
     }
 
     public function store(Request $request, $id)
     {
-
-        if(is_demo_mode()){
-            return back()->with("error","DEMO MODE: You are not allowed to change data");
+        if (is_demo_mode()) {
+            return back()->with("error", "DEMO MODE: You are not allowed to change data");
         }
 
         if ($id > 0) {
@@ -166,7 +161,6 @@ class PopupController extends AdminController
         $row->fillByAttr($dataKeys, $request->input());
         $res = $row->saveOriginOrTranslation($request->input('lang'), true);
         if ($res) {
-
             if ($id > 0) {
                 return back()->with('success', __('Popup updated'));
             } else {
@@ -177,7 +171,6 @@ class PopupController extends AdminController
 
     public function bulkEdit(Request $request)
     {
-
         $ids = $request->input('ids');
         $action = $request->input('action');
         if (empty($ids) or !is_array($ids)) {

@@ -1,13 +1,27 @@
 <?php
+
 namespace Modules\Review;
 
 use Modules\ModuleServiceProvider;
 
 class ModuleProvider extends ModuleServiceProvider
 {
+    public static function getAdminMenu()
+    {
+        return [
+            'review' => [
+                "position" => 55,
+                'url' => route('review.admin.index'),
+                'title' => __("Reviews"),
+                'icon' => 'icon ion-ios-text',
+                'permission' => 'review_manage_others',
+            ],
+        ];
+    }
+
     public function boot()
     {
-        $this->loadMigrationsFrom(__DIR__ . '/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/Migrations');
     }
 
     /**
@@ -18,18 +32,5 @@ class ModuleProvider extends ModuleServiceProvider
     public function register()
     {
         $this->app->register(RouterServiceProvider::class);
-    }
-
-    public static function getAdminMenu()
-    {
-        return [
-            'review'=>[
-                "position"=>55,
-                'url'   => route('review.admin.index'),
-                'title' => __("Reviews"),
-                'icon'  => 'icon ion-ios-text',
-                'permission' => 'review_manage_others',
-            ],
-        ];
     }
 }

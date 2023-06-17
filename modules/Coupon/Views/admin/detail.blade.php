@@ -1,7 +1,10 @@
+@php use Modules\Media\Helpers\FileHelper; @endphp
 @extends('admin.layouts.app')
 
 @section('content')
-    <form class="needs-validation" action="{{route('coupon.admin.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}" method="post">
+    <form class="needs-validation"
+          action="{{route('coupon.admin.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}"
+          method="post">
         @csrf
         <div class="container-fluid">
             <div class="d-flex justify-content-between mb20">
@@ -24,14 +27,17 @@
                             <div class="panel-body">
                                 @if(is_default_lang())
                                     <div>
-                                        <label><input @if($row->status=='publish') checked @endif type="radio" name="status" value="publish"> {{__("Publish")}}
+                                        <label><input @if($row->status=='publish') checked @endif type="radio"
+                                                      name="status" value="publish"> {{__("Publish")}}
                                         </label></div>
                                     <div>
-                                        <label><input @if($row->status=='draft' or empty($row->status)) checked @endif type="radio" name="status" value="draft"> {{__("Draft")}}
+                                        <label><input @if($row->status=='draft' or empty($row->status)) checked
+                                                      @endif type="radio" name="status" value="draft"> {{__("Draft")}}
                                         </label></div>
                                 @endif
                                 <div class="text-right">
-                                    <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> {{__('Save Changes')}}</button>
+                                    <button class="btn btn-primary" type="submit"><i
+                                                class="fa fa-save"></i> {{__('Save Changes')}}</button>
                                 </div>
                             </div>
                         </div>
@@ -39,7 +45,7 @@
                             <div class="panel-title"><strong>{{__('Feature Image')}}</strong></div>
                             <div class="panel-body">
                                 <div class="form-group">
-                                    {!! \Modules\Media\Helpers\FileHelper::fieldUpload('image_id',$row->image_id) !!}
+                                    {!! FileHelper::fieldUpload('image_id',$row->image_id) !!}
                                 </div>
                             </div>
                         </div>
@@ -58,16 +64,16 @@
                 showCalendar: false,
                 autoUpdateInput: false, //disable default date
                 sameDate: true,
-                autoApply           : true,
-                disabledPast        : true,
-                enableLoading       : true,
-                showEventTooltip    : true,
-                classNotAvailable   : ['disabled', 'off'],
+                autoApply: true,
+                disabledPast: true,
+                enableLoading: true,
+                showEventTooltip: true,
+                classNotAvailable: ['disabled', 'off'],
                 disableHightLight: true,
                 timePicker24Hour: true,
 
-                locale:{
-                    format:'YYYY-MM-DD HH:mm:ss'
+                locale: {
+                    format: 'YYYY-MM-DD HH:mm:ss'
                 }
             }).on('apply.daterangepicker', function (ev, picker) {
                 $(this).val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));

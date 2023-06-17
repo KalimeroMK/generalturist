@@ -1,7 +1,6 @@
 <?php
-namespace Modules\Template\Blocks;
 
-use Modules\Template\Blocks\BaseBlock;
+namespace Modules\Template\Blocks;
 
 class FaqList extends BaseBlock
 {
@@ -16,33 +15,33 @@ class FaqList extends BaseBlock
         return [
             'settings' => [
                 [
-                    'id'        => 'title',
-                    'type'      => 'input',
+                    'id' => 'title',
+                    'type' => 'input',
                     'inputType' => 'text',
-                    'label'     => __('Title')
+                    'label' => __('Title')
                 ],
                 [
-                    'id'          => 'list_item',
-                    'type'        => 'listItem',
-                    'label'       => __('List Item(s)'),
+                    'id' => 'list_item',
+                    'type' => 'listItem',
+                    'label' => __('List Item(s)'),
                     'title_field' => 'title',
-                    'settings'    => [
+                    'settings' => [
                         [
-                            'id'        => 'title',
-                            'type'      => 'input',
+                            'id' => 'title',
+                            'type' => 'input',
                             'inputType' => 'text',
-                            'label'     => __('Question')
+                            'label' => __('Question')
                         ],
                         [
-                            'id'        => 'sub_title',
-                            'type'      => 'editor',
+                            'id' => 'sub_title',
+                            'type' => 'editor',
                             'inputType' => 'textArea',
-                            'label'     => __('Answer')
+                            'label' => __('Answer')
                         ],
                     ]
                 ],
             ],
-            'category'=>__("Other Block")
+            'category' => __("Other Block")
         ];
     }
 

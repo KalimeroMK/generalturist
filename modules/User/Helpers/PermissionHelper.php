@@ -15,39 +15,43 @@ class PermissionHelper
 
     protected static $is_initial = false;
 
-    public static function add($permission){
-        if(!static::$is_initial){
+    public static function add($permission)
+    {
+        if (!static::$is_initial) {
             static::load();
         }
         $permissions = $permission;
-        if(!is_array($permission)) $permissions = [$permission];
+        if (!is_array($permission)) {
+            $permissions = [$permission];
+        }
 
-        foreach ($permissions as $p){
-            if(!in_array($p,static::$all)){
+        foreach ($permissions as $p) {
+            if (!in_array($p, static::$all)) {
                 static::$all[] = $p;
             }
         }
     }
 
-    public static function all(){
+    protected static function load()
+    {
+        static::$all = config('permissions');
+        static::$is_initial = true;
+    }
 
-        if(!static::$is_initial){
+    public static function all()
+    {
+        if (!static::$is_initial) {
             static::load();
         }
         return static::$all;
     }
 
-    public static function find($permission){
-
-        if(!static::$is_initial){
+    public static function find($permission)
+    {
+        if (!static::$is_initial) {
             static::load();
         }
 
-        return in_array($permission,static::$all);
-    }
-
-    protected static function load(){
-        static::$all = config('permissions');
-        static::$is_initial = true;
+        return in_array($permission, static::$all);
     }
 }

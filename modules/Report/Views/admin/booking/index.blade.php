@@ -1,3 +1,4 @@
+@php use App\Helpers\AdminForm; @endphp
 @extends ('admin.layouts.app')
 @section ('content')
     <div class="container-fluid">
@@ -8,7 +9,8 @@
         <div class="filter-div d-flex justify-content-between">
             <div class="col-left">
                 @if(!empty($booking_update))
-                    <form method="post" action="{{route('report.admin.booking.bulkEdit')}}" class="filter-form filter-form-left d-flex justify-content-start">
+                    <form method="post" action="{{route('report.admin.booking.bulkEdit')}}"
+                          class="filter-form filter-form-left d-flex justify-content-start">
                         @csrf
                         <select name="action" class="form-control">
                             <option value="">{{__("-- Bulk Actions --")}}</option>
@@ -19,7 +21,9 @@
                             @endif
                             <option value="delete">{{__("DELETE booking")}}</option>
                         </select>
-                        <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
+                        <button data-confirm="{{__("Do you want to delete?")}}"
+                                class="btn-info btn btn-icon dungdt-apply-form-btn"
+                                type="button">{{__('Apply')}}</button>
                     </form>
                 @endif
             </div>
@@ -27,24 +31,25 @@
                 <form method="get" action="" class="filter-form filter-form-right d-flex justify-content-end">
                     @csrf
                     @if(!empty($booking_manage_others))
-                        <?php
-                        $user = !empty(Request()->vendor_id) ? App\User::find(Request()->vendor_id) : false;
-                        \App\Helpers\AdminForm::select2('vendor_id', [
-                            'configs' => [
-                                'ajax'        => [
-                                    'url'      => route('user.admin.getForSelect2'),
-                                    'dataType' => 'json'
-                                ],
-                                'allowClear'  => true,
-                                'placeholder' => __('-- Vendor --')
-                            ]
-                        ], !empty($user->id) ? [
-                            $user->id,
-                            $user->name_or_email . ' (#' . $user->id . ')'
-                        ] : false)
-                        ?>
+                            <?php
+                            $user = !empty(Request()->vendor_id) ? App\User::find(Request()->vendor_id) : false;
+                            AdminForm::select2('vendor_id', [
+                                'configs' => [
+                                    'ajax' => [
+                                        'url' => route('user.admin.getForSelect2'),
+                                        'dataType' => 'json'
+                                    ],
+                                    'allowClear' => true,
+                                    'placeholder' => __('-- Vendor --')
+                                ]
+                            ], !empty($user->id) ? [
+                                $user->id,
+                                $user->name_or_email.' (#'.$user->id.')'
+                            ] : false)
+                            ?>
                     @endif
-                    <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by name or ID')}}" class="form-control">
+                    <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by name or ID')}}"
+                           class="form-control">
                     <button class="btn-info btn btn-icon" type="submit">{{__('Filter')}}</button>
                 </form>
             </div>
@@ -64,7 +69,7 @@
                             <th>{{__('Customer')}}</th>
 
                             <th>{{__('Payment Information')}}</th>
-                            <th  width="80px" >{{__('Commission')}}</th>
+                            <th width="80px">{{__('Commission')}}</th>
                             <th width="80px">{{__('Status')}}</th>
                             <th width="150px">{{__('Payment Method')}}</th>
                             <th width="120px">{{__('Created At')}}</th>
@@ -79,7 +84,8 @@
                                     #{{$row->id}}</td>
                                 <td>
                                     @if($service = $row->service)
-                                        <a href="{{$service->getDetailUrl()}}" target="_blank">{{$service->title ?? ''}}</a>
+                                        <a href="{{$service->getDetailUrl()}}"
+                                           target="_blank">{{$service->title ?? ''}}</a>
                                         @if($row->vendor)
                                             <br>
                                             <span>{{__('by')}}</span>
@@ -116,12 +122,20 @@
                                 <td>
                                     @if($service = $row->service)
                                         <div class="dropdown">
-                                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{__('Actions')}}
+                                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                                    data-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false">{{__('Actions')}}
                                             </button>
-                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item" href="#modal_booking_detail" data-ajax="{{route('booking.modal',['booking'=>$booking])}}" data-toggle="modal" data-id="{{$booking->id}}" data-target="#modal_booking_detail">{{__('Detail')}}</a>
-                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modal-paid-{{$row->id}}">{{__('Set Paid')}}</a>
-                                                <a class="dropdown-item" href="{{route('report.admin.booking.email_preview',['id'=>$row->id])}}">{{__('Email Preview')}}</a>
+                                            <div class="dropdown-menu dropdown-menu-right"
+                                                 aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item" href="#modal_booking_detail"
+                                                   data-ajax="{{route('booking.modal',['booking'=>$booking])}}"
+                                                   data-toggle="modal" data-id="{{$booking->id}}"
+                                                   data-target="#modal_booking_detail">{{__('Detail')}}</a>
+                                                <a class="dropdown-item" href="#" data-toggle="modal"
+                                                   data-target="#modal-paid-{{$row->id}}">{{__('Set Paid')}}</a>
+                                                <a class="dropdown-item"
+                                                   href="{{route('report.admin.booking.email_preview',['id'=>$row->id])}}">{{__('Email Preview')}}</a>
                                             </div>
                                         </div>
                                         @include ($service->set_paid_modal_file ?? '')
@@ -146,7 +160,8 @@
                                 <div class="d-flex justify-content-center">{{__("Loading...")}}</div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Close')}}</button>
+                                <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">{{__('Close')}}</button>
                             </div>
                         </div>
                     </div>
@@ -163,25 +178,25 @@
         $(document).on('click', '#set_paid_btn', function (e) {
             var id = $(this).data('id');
             $.ajax({
-                url:bookingCore.url+'/booking/setPaidAmount',
-                data:{
+                url: bookingCore.url + '/booking/setPaidAmount',
+                data: {
                     id: id,
-                    remain: $('#modal-paid-'+id+' #set_paid_input').val(),
+                    remain: $('#modal-paid-' + id + ' #set_paid_input').val(),
                 },
-                dataType:'json',
-                type:'post',
-                success:function(res){
+                dataType: 'json',
+                type: 'post',
+                success: function (res) {
                     alert(res.message);
                     window.location.reload();
                 }
             });
         });
-        $('#modal_booking_detail').on('show.bs.modal',function (e){
+        $('#modal_booking_detail').on('show.bs.modal', function (e) {
             var btn = $(e.relatedTarget);
             $(this).find('.user_id').html(btn.data('id'));
             $(this).find('.modal-body').html('<div class="d-flex justify-content-center">{{__("Loading...")}}</div>');
             var modal = $(this);
-            $.get(btn.data('ajax'), function (html){
+            $.get(btn.data('ajax'), function (html) {
                     modal.find('.modal-body').html(html);
                 }
             )

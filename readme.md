@@ -26,8 +26,3 @@ Booking Core is a Booking System based on Laravel, designed for a travel website
 
 6. Razorpay
 
-### Get Support: [Click here](https://bookingcore.org)
-
-### Join our Discord: [https://discord.gg/FBP3TuFXCe](https://discord.gg/FBP3TuFX)
-
-### Author: [BookingCore Team](https://codecanyon.net/user/bookingcore)

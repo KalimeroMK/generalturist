@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Boat\Admin;
 
 use Modules\Boat\Models\Boat;

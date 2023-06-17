@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Vendor\Blocks;
 
 use Modules\Media\Helpers\FileHelper;
@@ -11,30 +12,30 @@ class VendorRegisterForm extends BaseBlock
         return ([
             'settings' => [
                 [
-                    'id'        => 'title',
-                    'type'      => 'input',
+                    'id' => 'title',
+                    'type' => 'input',
                     'inputType' => 'text',
-                    'label'     => __('Title')
+                    'label' => __('Title')
                 ],
                 [
-                    'id'        => 'desc',
-                    'type'      => 'input',
+                    'id' => 'desc',
+                    'type' => 'input',
                     'inputType' => 'text',
-                    'label'     => __('Desc')
+                    'label' => __('Desc')
                 ],
                 [
-                    'id'        => 'youtube',
-                    'type'      => 'input',
+                    'id' => 'youtube',
+                    'type' => 'input',
                     'inputType' => 'text',
-                    'label'     => __('Youtube link')
+                    'label' => __('Youtube link')
                 ],
                 [
-                    'id'    => 'bg_image',
-                    'type'  => 'uploader',
+                    'id' => 'bg_image',
+                    'type' => 'uploader',
                     'label' => __('Background Image Uploader')
                 ],
             ],
-            'category'=>__("Other Block")
+            'category' => __("Other Block")
         ]);
     }
 
@@ -48,7 +49,8 @@ class VendorRegisterForm extends BaseBlock
         return view('Vendor::frontend.blocks.form-register.index', $model);
     }
 
-    public function contentAPI($model = []){
+    public function contentAPI($model = [])
+    {
         if (!empty($model['bg_image'])) {
             $model['bg_image_url'] = FileHelper::url($model['bg_image'], 'full');
         }

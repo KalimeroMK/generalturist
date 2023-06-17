@@ -1,11 +1,13 @@
+@php use Modules\Language\Models\Language; @endphp
+@php use Modules\Core\Models\Attributes; @endphp
 @if(is_default_lang())
-    @php $languages = \Modules\Language\Models\Language::getActive(); @endphp
+    @php $languages = Language::getActive(); @endphp
     <hr>
     <div class="panel">
         <div class="panel-title"><strong>{{__("Form Search Fields")}}</strong></div>
         <div class="panel-body">
-            <div class="form-group" >
-                <label class="" >{{__("Search Criteria")}}</label>
+            <div class="form-group">
+                <label class="">{{__("Search Criteria")}}</label>
                 <div class="form-controls">
                     <div class="form-group-item">
                         <div class="g-items-header">
@@ -17,16 +19,16 @@
                         </div>
                         <div class="g-items">
                             @php
-                            $tour_search_fields = setting_item_array('tour_search_fields');
-                            $types = [
-                                'service_name'=>__("Service name"),
-                                'location'=>__("Location"),
-                                //'category'=>__("Category"),
-                                'attr'=>__("Attribute"),
-                                'date'=>__("Date"),
-                                'price'=>__("Price"),
-                            ];
-                             $attrs = \Modules\Core\Models\Attributes::where('service', 'tour')->get();
+                                $tour_search_fields = setting_item_array('tour_search_fields');
+                                $types = [
+                                    'service_name'=>__("Service name"),
+                                    'location'=>__("Location"),
+                                    //'category'=>__("Category"),
+                                    'attr'=>__("Attribute"),
+                                    'date'=>__("Date"),
+                                    'price'=>__("Price"),
+                                ];
+                                 $attrs = Attributes::where('service', 'tour')->get();
                             @endphp
                             @foreach($tour_search_fields as $key=>$item)
                                 <div class="item" data-number="{{$key}}">
@@ -34,49 +36,66 @@
                                         <div class="col-md-7">
                                             @if(!empty($languages) && setting_item('site_enable_multi_lang') && setting_item('site_locale'))
                                                 @foreach($languages as $language)
-                                                    <?php $key_lang = setting_item('site_locale') != $language->locale ? "_".$language->locale : ""   ?>
+                                                        <?php
+                                                        $key_lang = setting_item('site_locale') != $language->locale ? "_".$language->locale : "" ?>
                                                     <div class="g-lang">
                                                         <div class="title-lang">{{$language->name}}</div>
-                                                        <input type="text" name="tour_search_fields[{{$key}}][title{{$key_lang}}]" value="{{$item['title'.$key_lang] ?? ''}}" class="form-control">
+                                                        <input type="text"
+                                                               name="tour_search_fields[{{$key}}][title{{$key_lang}}]"
+                                                               value="{{$item['title'.$key_lang] ?? ''}}"
+                                                               class="form-control">
                                                     </div>
                                                 @endforeach
                                             @else
-                                                <input type="text" name="tour_search_fields[{{$key}}][title]" value="{{$item['title']}}" class="form-control">
+                                                <input type="text" name="tour_search_fields[{{$key}}][title]"
+                                                       value="{{$item['title']}}" class="form-control">
                                             @endif
                                             <select name="tour_search_fields[{{$key}}][field]" class="custom-select">
                                                 <option value="">{{__("-- Select field type --")}}</option>
                                                 @foreach($types as $type=>$name)
-                                                    <option @if($item['field'] == $type) selected @endif value="{{$type}}">{{$name}}</option>
+                                                    <option @if($item['field'] == $type) selected
+                                                            @endif value="{{$type}}">{{$name}}</option>
                                                 @endforeach
                                             </select>
                                             <br>
-                                            <select name="tour_search_fields[{{$key}}][attr]" class="mt-2 custom-select">
+                                            <select name="tour_search_fields[{{$key}}][attr]"
+                                                    class="mt-2 custom-select">
                                                 <option value="">{{__("-- Select Attribute --")}}</option>
                                                 @foreach($attrs as $attr)
-                                                    <option @if($item['attr'] ?? "" == $attr->id) selected @endif value="{{$attr->id}}">{{$attr->name}}</option>
+                                                    <option @if($item['attr'] ?? "" == $attr->id) selected
+                                                            @endif value="{{$attr->id}}">{{$attr->name}}</option>
                                                 @endforeach
                                             </select>
                                             <br>
-                                            <select name="tour_search_fields[{{$key}}][size]" class="mt-2 custom-select">
-                                                <option @if($item['size'] == 6) selected @endif value="6">{{ __("Size Column 6") }}</option>
-                                                <option @if($item['size'] == 4) selected @endif value="4">{{ __("Size Column 4") }}</option>
-                                                <option @if($item['size'] == 3) selected @endif value="3">{{ __("Size Column 3") }}</option>
-                                                <option @if($item['size'] == 2) selected @endif value="2">{{ __("Size Column 2") }}</option>
-                                                <option @if($item['size'] == 1) selected @endif value="1">{{ __("Size Column 1") }}</option>
+                                            <select name="tour_search_fields[{{$key}}][size]"
+                                                    class="mt-2 custom-select">
+                                                <option @if($item['size'] == 6) selected
+                                                        @endif value="6">{{ __("Size Column 6") }}</option>
+                                                <option @if($item['size'] == 4) selected
+                                                        @endif value="4">{{ __("Size Column 4") }}</option>
+                                                <option @if($item['size'] == 3) selected
+                                                        @endif value="3">{{ __("Size Column 3") }}</option>
+                                                <option @if($item['size'] == 2) selected
+                                                        @endif value="2">{{ __("Size Column 2") }}</option>
+                                                <option @if($item['size'] == 1) selected
+                                                        @endif value="1">{{ __("Size Column 1") }}</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4">
-                                            <input type="number" name="tour_search_fields[{{$key}}][position]" min="0" value="{{$item['position'] ?? 0}}" class="form-control">
+                                            <input type="number" name="tour_search_fields[{{$key}}][position]" min="0"
+                                                   value="{{$item['position'] ?? 0}}" class="form-control">
                                         </div>
                                         <div class="col-md-1">
-                                            <span class="btn btn-danger btn-sm btn-remove-item"><i class="fa fa-trash"></i></span>
+                                            <span class="btn btn-danger btn-sm btn-remove-item"><i
+                                                        class="fa fa-trash"></i></span>
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
                         <div class="text-right">
-                            <span class="btn btn-info btn-sm btn-add-item"><i class="icon ion-ios-add-circle-outline"></i> {{__('Add item')}}</span>
+                            <span class="btn btn-info btn-sm btn-add-item"><i
+                                        class="icon ion-ios-add-circle-outline"></i> {{__('Add item')}}</span>
                         </div>
                         <div class="g-more hide">
                             <div class="item" data-number="__number__">
@@ -84,14 +103,18 @@
                                     <div class="col-md-7">
                                         @if(!empty($languages) && setting_item('site_enable_multi_lang') && setting_item('site_locale'))
                                             @foreach($languages as $language)
-                                                <?php $key_lang = setting_item('site_locale') != $language->locale ? "_".$language->locale : ""   ?>
+                                                    <?php
+                                                    $key_lang = setting_item('site_locale') != $language->locale ? "_".$language->locale : "" ?>
                                                 <div class="g-lang">
                                                     <div class="title-lang">{{$language->name}}</div>
-                                                    <input type="text" __name__="tour_search_fields[__number__][title{{$key_lang}}]" class="form-control">
+                                                    <input type="text"
+                                                           __name__="tour_search_fields[__number__][title{{$key_lang}}]"
+                                                           class="form-control">
                                                 </div>
                                             @endforeach
                                         @else
-                                            <input type="text" __name__="tour_search_fields[__number__][title]"  class="form-control">
+                                            <input type="text" __name__="tour_search_fields[__number__][title]"
+                                                   class="form-control">
                                         @endif
                                         <select __name__="tour_search_fields[__number__][field]" class="custom-select">
                                             <option value="">{{__("-- Select field type --")}}</option>
@@ -100,14 +123,16 @@
                                             @endforeach
                                         </select>
                                         <br>
-                                        <select __name__="tour_search_fields[__number__][attr]" class="mt-2 custom-select">
+                                        <select __name__="tour_search_fields[__number__][attr]"
+                                                class="mt-2 custom-select">
                                             <option value="">{{__("-- Select Attribute --")}}</option>
                                             @foreach($attrs as $attr)
                                                 <option value="{{$attr->id}}">{{$attr->name}}</option>
                                             @endforeach
                                         </select>
                                         <br>
-                                        <select __name__="tour_search_fields[__number__][size]" class="mt-2 custom-select">
+                                        <select __name__="tour_search_fields[__number__][size]"
+                                                class="mt-2 custom-select">
                                             <option value="6">{{ __("Size Column 6") }}</option>
                                             <option value="4">{{ __("Size Column 4") }}</option>
                                             <option value="3">{{ __("Size Column 3") }}</option>
@@ -116,7 +141,8 @@
                                         </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="number" __name__="tour_search_fields[__number__][position]" min="0"  class="form-control">
+                                        <input type="number" __name__="tour_search_fields[__number__][position]" min="0"
+                                               class="form-control">
                                     </div>
                                     <div class="col-md-1">
                                         <span class="btn btn-danger btn-sm btn-remove-item"><i class="fa fa-trash"></i></span>

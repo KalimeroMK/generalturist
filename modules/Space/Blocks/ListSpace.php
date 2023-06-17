@@ -1,13 +1,14 @@
 <?php
+
 namespace Modules\Space\Blocks;
 
-use Modules\Template\Blocks\BaseBlock;
 use Modules\Space\Models\Space;
-use Modules\Location\Models\Location;
+use Modules\Template\Blocks\BaseBlock;
 
 class ListSpace extends BaseBlock
 {
     protected $spaceClass;
+
     public function __construct(Space $spaceClass)
     {
         $this->spaceClass = $spaceClass;
@@ -23,100 +24,100 @@ class ListSpace extends BaseBlock
         return [
             'settings' => [
                 [
-                    'id'        => 'title',
-                    'type'      => 'input',
+                    'id' => 'title',
+                    'type' => 'input',
                     'inputType' => 'text',
-                    'label'     => __('Title')
+                    'label' => __('Title')
                 ],
                 [
-                    'id'        => 'desc',
-                    'type'      => 'input',
+                    'id' => 'desc',
+                    'type' => 'input',
                     'inputType' => 'text',
-                    'label'     => __('Desc')
+                    'label' => __('Desc')
                 ],
                 [
-                    'id'        => 'number',
-                    'type'      => 'input',
+                    'id' => 'number',
+                    'type' => 'input',
                     'inputType' => 'number',
-                    'label'     => __('Number Item')
+                    'label' => __('Number Item')
                 ],
                 [
-                    'id'     => 'style',
-                    'type'   => 'radios',
-                    'label'  => __('Style'),
+                    'id' => 'style',
+                    'type' => 'radios',
+                    'label' => __('Style'),
                     'values' => [
                         [
                             'value' => 'normal',
-                            'name'  => __("Normal")
+                            'name' => __("Normal")
                         ],
                         [
                             'value' => 'carousel',
-                            'name'  => __("Slider Carousel")
+                            'name' => __("Slider Carousel")
                         ]
                     ]
                 ],
                 [
-                    'id'           => 'location_id',
-                    'type'         => 'select2',
-                    'label'        => __('Filter by Location'),
-                    'select2'      => [
-                        'ajax'        => [
-                            'url'      => route('location.admin.getForSelect2'),
+                    'id' => 'location_id',
+                    'type' => 'select2',
+                    'label' => __('Filter by Location'),
+                    'select2' => [
+                        'ajax' => [
+                            'url' => route('location.admin.getForSelect2'),
                             'dataType' => 'json'
                         ],
-                        'width'       => '100%',
-                        'allowClear'  => 'true',
+                        'width' => '100%',
+                        'allowClear' => 'true',
                         'placeholder' => __('-- Select --')
                     ],
-                    'pre_selected' => route('location.admin.getForSelect2',['pre_selected'=>1])
+                    'pre_selected' => route('location.admin.getForSelect2', ['pre_selected' => 1])
                 ],
                 [
-                    'id'     => 'order',
-                    'type'   => 'radios',
-                    'label'  => __('Order'),
+                    'id' => 'order',
+                    'type' => 'radios',
+                    'label' => __('Order'),
                     'values' => [
                         [
                             'value' => 'id',
-                            'name'  => __("Date Create")
+                            'name' => __("Date Create")
                         ],
                         [
                             'value' => 'title',
-                            'name'  => __("Title")
+                            'name' => __("Title")
                         ],
                     ]
                 ],
                 [
-                    'id'     => 'order_by',
-                    'type'   => 'radios',
-                    'label'  => __('Order By'),
+                    'id' => 'order_by',
+                    'type' => 'radios',
+                    'label' => __('Order By'),
                     'values' => [
                         [
                             'value' => 'asc',
-                            'name'  => __("ASC")
+                            'name' => __("ASC")
                         ],
                         [
                             'value' => 'desc',
-                            'name'  => __("DESC")
+                            'name' => __("DESC")
                         ],
                     ]
                 ],
                 [
-                    'type'    => "checkbox",
-                    'label'   => __("Only featured items?"),
-                    'id'      => "is_featured",
+                    'type' => "checkbox",
+                    'label' => __("Only featured items?"),
+                    'id' => "is_featured",
                     'default' => true
                 ],
                 [
-                    'id'           => 'custom_ids',
-                    'type'         => 'select2',
-                    'label'        => __('List by IDs'),
-                    'select2'      => [
-                        'ajax'        => [
-                            'url'      => route('space.admin.getForSelect2'),
+                    'id' => 'custom_ids',
+                    'type' => 'select2',
+                    'label' => __('List by IDs'),
+                    'select2' => [
+                        'ajax' => [
+                            'url' => route('space.admin.getForSelect2'),
                             'dataType' => 'json'
                         ],
-                        'width'       => '100%',
-                        'multiple'    => "true",
+                        'width' => '100%',
+                        'multiple' => "true",
                         'placeholder' => __('-- Select --')
                     ],
                     'pre_selected' => route('space.admin.getForSelect2', [
@@ -132,21 +133,12 @@ class ListSpace extends BaseBlock
     {
         $list = $this->query($model);
         $data = [
-            'rows'       => $list,
+            'rows' => $list,
             'style_list' => $model['style'],
-            'title'      => $model['title'],
-            'desc'       => $model['desc'],
+            'title' => $model['title'],
+            'desc' => $model['desc'],
         ];
         return view('Space::frontend.blocks.list-space.index', $data);
-    }
-
-    public function contentAPI($model = [])
-    {
-        $rows = $this->query($model);
-        $model['data'] = $rows->map(function ($row) {
-            return $row->dataForApi();
-        });
-        return $model;
     }
 
     public function query($model)
@@ -154,7 +146,6 @@ class ListSpace extends BaseBlock
         $listSpace = $this->spaceClass->search($model);
         $limit = $model['number'] ?? 5;
         return $listSpace->paginate($limit);
-
         /*$model_space = Space::select("bravo_spaces.*")->with([
             'location',
             'translation',
@@ -185,5 +176,14 @@ class ListSpace extends BaseBlock
         $model_space->with('location');
         $model_space->groupBy("bravo_spaces.id");
         return $model_space->limit($model['number'])->get();*/
+    }
+
+    public function contentAPI($model = [])
+    {
+        $rows = $this->query($model);
+        $model['data'] = $rows->map(function ($row) {
+            return $row->dataForApi();
+        });
+        return $model;
     }
 }

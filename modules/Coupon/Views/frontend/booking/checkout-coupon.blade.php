@@ -17,15 +17,17 @@
                     <li class="item">
                         <div class="label">
                             {{ $item->coupon_data['code'] }}
-                            <i data-toggle="tooltip" data-placement="top" class="icofont-info-circle" data-original-title="{{ $item->coupon_data['name'] }}"></i>
+                            <i data-toggle="tooltip" data-placement="top" class="icofont-info-circle"
+                               data-original-title="{{ $item->coupon_data['name'] }}"></i>
                         </div>
                         <div class="val">
                             -{{ format_money( $item->coupon_amount ) }}
                             @if(in_array($booking->status , ['draft']))
-                                <a href="#" data-code="{{ $item->coupon_code }}" class="text-danger text-decoration-none bravo_remove_coupon">
-                                {{ __("[Remove]") }}
-                                <i class="fa fa-spin fa-spinner d-none"></i>
-                            </a>
+                                <a href="#" data-code="{{ $item->coupon_code }}"
+                                   class="text-danger text-decoration-none bravo_remove_coupon">
+                                    {{ __("[Remove]") }}
+                                    <i class="fa fa-spin fa-spinner d-none"></i>
+                                </a>
                             @endif
                         </div>
                     </li>

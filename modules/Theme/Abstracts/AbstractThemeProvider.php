@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Theme\Abstracts;
 
 use Illuminate\Support\Facades\Artisan;
@@ -30,42 +31,51 @@ abstract class AbstractThemeProvider extends ServiceProvider
      *
      * @return array
      */
-    static function info(){
-
+    static function info()
+    {
     }
 
-    public static function getTemplateBlocks(){
+    public static function getTemplateBlocks()
+    {
         return [];
     }
 
     public static function getModules()
     {
-        return array_merge(static::$core_modules,static::$modules);
+        return array_merge(static::$core_modules, static::$modules);
     }
 
-    public static function getCoreModules(){
+    public static function getCoreModules()
+    {
         return static::$core_modules;
     }
 
-    public static function getThemeModules(){
+    public static function getThemeModules()
+    {
         return static::$modules;
     }
 
 
-    public static function lastSeederRun(){
+    public static function lastSeederRun()
+    {
         return (int) setting_item('theme_'.static::class.'_seed_run');
     }
-    public static function updateLastSeederRun(){
-        return setting_update_item('theme_'.static::class.'_seed_run',time());
-    }
 
-    public static function runSeeder(){
-        $seeder = static::$seederForReImport ? : static::$seeder;
+    public static function runSeeder()
+    {
+        $seeder = static::$seederForReImport ?: static::$seeder;
 
-        if(!class_exists($seeder)) return;
+        if (!class_exists($seeder)) {
+            return;
+        }
 
-        Artisan::call('db:seed', ['--class' => $seeder,'--force'=>true]);
+        Artisan::call('db:seed', ['--class' => $seeder, '--force' => true]);
 
         static::updateLastSeederRun();
+    }
+
+    public static function updateLastSeederRun()
+    {
+        return setting_update_item('theme_'.static::class.'_seed_run', time());
     }
 }

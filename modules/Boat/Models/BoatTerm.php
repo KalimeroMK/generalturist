@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Boat\Models;
 
 use App\BaseModel;

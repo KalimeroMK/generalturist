@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Car\Admin;
 
 use Modules\Booking\Models\Booking;

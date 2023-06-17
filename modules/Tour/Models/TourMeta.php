@@ -1,12 +1,12 @@
 <?php
+
 namespace Modules\Tour\Models;
 
 use App\BaseModel;
-use Illuminate\Http\Request;
 
 class TourMeta extends BaseModel
 {
-    protected $table    = 'bravo_tour_meta';
+    protected $table = 'bravo_tour_meta';
     protected $fillable = [
         'enable_person_types',
         'person_types',
@@ -22,16 +22,16 @@ class TourMeta extends BaseModel
      * @var array
      */
     protected $casts = [
-        'person_types'       => 'array',
-        'extra_price'        => 'array',
-        'open_hours'         => 'array',
+        'person_types' => 'array',
+        'extra_price' => 'array',
+        'open_hours' => 'array',
         'discount_by_people' => 'array',
     ];
 
     public function fill(array $attributes)
     {
-        if(!empty($attributes)){
-            foreach ( $this->fillable as $item ){
+        if (!empty($attributes)) {
+            foreach ($this->fillable as $item) {
                 $attributes[$item] = $attributes[$item] ?? null;
             }
         }

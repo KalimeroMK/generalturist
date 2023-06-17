@@ -9,18 +9,24 @@
             <div class="col-md-12">
                 <div class="filter-div d-flex justify-content-between">
                     <div class="col-left">
-                        <form method="get" action="" class="filter-form filter-form-left d-flex justify-content-start flex-column flex-sm-row">
+                        <form method="get" action=""
+                              class="filter-form filter-form-left d-flex justify-content-start flex-column flex-sm-row">
                             <select name="type" class="form-control">
                                 <option value="">{{__("All text")}}</option>
-                                <option @if(Request()->type == 'not_translated') selected @endif value="not_translated">{{__("Not translated")}}</option>
-                                <option @if(Request()->type == 'translated') selected @endif value="translated">{{__("Translated")}}</option>
+                                <option @if(Request()->type == 'not_translated') selected
+                                        @endif value="not_translated">{{__("Not translated")}}</option>
+                                <option @if(Request()->type == 'translated') selected
+                                        @endif value="translated">{{__("Translated")}}</option>
                             </select>
                             <select name="search_by" class="form-control">
                                 <option value="">{{__("Search By")}}</option>
-                                <option @if(Request()->search_by == 'original_text') selected @endif value="original_text">{{__("Original Text")}}</option>
-                                <option @if(Request()->search_by == 'translated_text') selected @endif value="translated_text">{{__("Translated Text")}}</option>
+                                <option @if(Request()->search_by == 'original_text') selected
+                                        @endif value="original_text">{{__("Original Text")}}</option>
+                                <option @if(Request()->search_by == 'translated_text') selected
+                                        @endif value="translated_text">{{__("Translated Text")}}</option>
                             </select>
-                            <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by key ...')}}" class="form-control">
+                            <input type="text" name="s" value="{{ Request()->s }}"
+                                   placeholder="{{__('Search by key ...')}}" class="form-control">
                             <button class="btn-info btn btn-icon" type="submit">{{__('Filter')}}</button>
                         </form>
                     </div>
@@ -49,14 +55,16 @@
                                             {{$item->string}}
                                         </td>
                                         <td>
-                                            <textarea name="translate[{{$item->id}}]" class="form-control">{{$item->translate}}</textarea>
+                                            <textarea name="translate[{{$item->id}}]"
+                                                      class="form-control">{{$item->translate}}</textarea>
                                         </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
                             <div class="text-center">
-                                <button class="btn btn-primary"><i class="fa fa-save"></i> {{__('Save changes')}}</button>
+                                <button class="btn btn-primary"><i class="fa fa-save"></i> {{__('Save changes')}}
+                                </button>
                             </div>
                         </form>
                     </div>

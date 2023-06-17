@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Car\Models;
 
 use App\BaseModel;

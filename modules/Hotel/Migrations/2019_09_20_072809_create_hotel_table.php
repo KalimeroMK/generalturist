@@ -1,19 +1,14 @@
 <?php
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 
-class CreateHotelTable extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void
     {
         Schema::create('bravo_hotels', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             //Info
             $table->string('title', 255)->nullable();
             $table->string('slug', 255)->charset('utf8')->index();
@@ -35,17 +30,7 @@ class CreateHotelTable extends Migration
             $table->string('check_in_time', 255)->nullable();
             $table->string('check_out_time', 255)->nullable();
             $table->smallInteger('allow_full_day')->nullable();
-            $table->decimal('sale_price', 12,2)->nullable();
-            //$table->tinyInteger('is_instant')->default(0)->nullable();
-            //$table->tinyInteger('allow_children')->default(0)->nullable();
-            //$table->tinyInteger('allow_infant')->default(0)->nullable();
-            //$table->tinyInteger('max_guests')->default(0)->nullable();
-            //$table->tinyInteger('bed')->default(0)->nullable();
-            //$table->tinyInteger('bathroom')->default(0)->nullable();
-            //$table->tinyInteger('square')->default(0)->nullable();
-            //$table->tinyInteger('enable_extra_price')->nullable();
-            //$table->text('extra_price')->nullable();
-            //$table->text('discount_by_days')->nullable();
+            $table->decimal('sale_price', 12, 2)->nullable();
             //Extra Info
             $table->string('status', 50)->nullable();
             $table->bigInteger('create_user')->nullable();
@@ -130,13 +115,12 @@ class CreateHotelTable extends Migration
         });
 
         Schema::create('bravo_hotel_room_dates', function (Blueprint $table) {
-
             $table->bigIncrements('id');
             $table->bigInteger('target_id')->nullable();
 
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
-            $table->decimal('price',12,2)->nullable();
+            $table->decimal('price', 12, 2)->nullable();
             $table->tinyInteger('max_guests')->nullable();
             $table->tinyInteger('active')->default(0)->nullable();
             $table->text('note_to_customer')->nullable();
@@ -147,10 +131,8 @@ class CreateHotelTable extends Migration
             $table->bigInteger('create_user')->nullable();
             $table->bigInteger('update_user')->nullable();
             $table->timestamps();
-
         });
         Schema::create('bravo_hotel_room_bookings', function (Blueprint $table) {
-
             $table->bigIncrements('id');
             $table->bigInteger('room_id')->nullable();
             $table->bigInteger('parent_id')->nullable();
@@ -159,12 +141,11 @@ class CreateHotelTable extends Migration
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->smallInteger('number')->nullable();
-            $table->decimal('price',12,2)->nullable();
+            $table->decimal('price', 12, 2)->nullable();
 
             $table->bigInteger('create_user')->nullable();
             $table->bigInteger('update_user')->nullable();
             $table->timestamps();
-
         });
     }
 
@@ -184,6 +165,5 @@ class CreateHotelTable extends Migration
         Schema::dropIfExists('bravo_hotel_room_term');
         Schema::dropIfExists('bravo_hotel_room_dates');
         Schema::dropIfExists('bravo_hotel_room_bookings');
-
     }
-}
+};

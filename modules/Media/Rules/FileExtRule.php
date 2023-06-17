@@ -32,7 +32,7 @@ class FileExtRule implements Rule
     public function passes($attribute, $value)
     {
         $ext = $value->getClientOriginalExtension();
-        return in_array($ext,$this->acceptedExt);
+        return in_array($ext, $this->acceptedExt);
     }
 
     /**

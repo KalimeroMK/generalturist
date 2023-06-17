@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Tour\Admin;
 
 use Illuminate\Http\Request;
@@ -7,13 +8,13 @@ use Modules\AdminController;
 use Modules\Core\Events\CreatedServicesEvent;
 use Modules\Core\Events\UpdatedServiceEvent;
 use Modules\Core\Models\Attributes;
+use Modules\Location\Models\Location;
 use Modules\Location\Models\LocationCategory;
 use Modules\Tour\Hook;
-use Modules\Tour\Models\TourTerm;
 use Modules\Tour\Models\Tour;
 use Modules\Tour\Models\TourCategory;
+use Modules\Tour\Models\TourTerm;
 use Modules\Tour\Models\TourTranslation;
-use Modules\Location\Models\Location;
 
 class TourController extends AdminController
 {
@@ -46,7 +47,7 @@ class TourController extends AdminController
         $query = $this->tourClass::query();
         $query->orderBy('id', 'desc');
         if (!empty($tour_name = $request->input('s'))) {
-            $query->where('title', 'LIKE', '%' . $tour_name . '%');
+            $query->where('title', 'LIKE', '%'.$tour_name.'%');
             $query->orderBy('title', 'asc');
         }
         if (!empty($cate = $request->input('cate_id'))) {
@@ -66,20 +67,20 @@ class TourController extends AdminController
             $query->where('author_id', Auth::id());
         }
         $data = [
-            'rows'               => $query->with([
+            'rows' => $query->with([
                 'author',
                 'category_tour'
             ])->paginate(20),
-            'tour_categories'    => $this->tourCategoryClass::where('status', 'publish')->get()->toTree(),
+            'tour_categories' => $this->tourCategoryClass::where('status', 'publish')->get()->toTree(),
             'tour_manage_others' => $this->hasPermission('tour_manage_others'),
-            'page_title'         => __("Tour Management"),
-            'breadcrumbs'        => [
+            'page_title' => __("Tour Management"),
+            'breadcrumbs' => [
                 [
                     'name' => __('Tours'),
-                    'url'  => route('tour.admin.index')
+                    'url' => route('tour.admin.index')
                 ],
                 [
-                    'name'  => __('All'),
+                    'name' => __('All'),
                     'class' => 'active'
                 ],
             ]
@@ -93,7 +94,7 @@ class TourController extends AdminController
         $query = $this->tourClass::onlyTrashed();
         $query->orderBy('id', 'desc');
         if (!empty($tour_name = $request->input('s'))) {
-            $query->where('title', 'LIKE', '%' . $tour_name . '%');
+            $query->where('title', 'LIKE', '%'.$tour_name.'%');
             $query->orderBy('title', 'asc');
         }
         if (!empty($cate = $request->input('cate_id'))) {
@@ -107,21 +108,21 @@ class TourController extends AdminController
             $query->where('author_id', Auth::id());
         }
         $data = [
-            'rows'               => $query->with([
+            'rows' => $query->with([
                 'author',
                 'category_tour'
             ])->paginate(20),
-            'tour_categories'    => $this->tourCategoryClass::where('status', 'publish')->get()->toTree(),
+            'tour_categories' => $this->tourCategoryClass::where('status', 'publish')->get()->toTree(),
             'tour_manage_others' => $this->hasPermission('tour_manage_others'),
-            'page_title'         => __("Recovery Tour Management"),
-            'recovery'           => 1,
-            'breadcrumbs'        => [
+            'page_title' => __("Recovery Tour Management"),
+            'recovery' => 1,
+            'breadcrumbs' => [
                 [
                     'name' => __('Tours'),
-                    'url'  => route('tour.admin.index')
+                    'url' => route('tour.admin.index')
                 ],
                 [
-                    'name'  => __('Recovery'),
+                    'name' => __('Recovery'),
                     'class' => 'active'
                 ],
             ]
@@ -137,19 +138,19 @@ class TourController extends AdminController
             'status' => 'publish'
         ]);
         $data = [
-            'row'               => $row,
-            'attributes'        => $this->attributesClass::where('service', 'tour')->get(),
-            'tour_category'     => $this->tourCategoryClass::where('status', 'publish')->get()->toTree(),
-            'tour_location'     => $this->locationClass::where('status', 'publish')->get()->toTree(),
+            'row' => $row,
+            'attributes' => $this->attributesClass::where('service', 'tour')->get(),
+            'tour_category' => $this->tourCategoryClass::where('status', 'publish')->get()->toTree(),
+            'tour_location' => $this->locationClass::where('status', 'publish')->get()->toTree(),
             'location_category' => $this->locationCategoryClass::where("status", "publish")->get(),
-            'translation'       => new $this->tourTranslationClass(),
-            'breadcrumbs'       => [
+            'translation' => new $this->tourTranslationClass(),
+            'breadcrumbs' => [
                 [
                     'name' => __('Tours'),
-                    'url'  => route('tour.admin.index')
+                    'url' => route('tour.admin.index')
                 ],
                 [
-                    'name'  => __('Add Tour'),
+                    'name' => __('Add Tour'),
                     'class' => 'active'
                 ],
             ]
@@ -164,39 +165,38 @@ class TourController extends AdminController
         if (empty($row)) {
             return redirect(route('tour.admin.index'));
         }
-        $translation = $row->translate($request->query('lang',get_main_lang()));
+        $translation = $row->translate($request->query('lang', get_main_lang()));
         if (!$this->hasPermission('tour_manage_others')) {
             if ($row->author_id != Auth::id()) {
                 return redirect(route('tour.admin.index'));
             }
         }
         $data = [
-            'row'               => $row,
-            'translation'       => $translation,
-            "selected_terms"    => $row->tour_term->pluck('term_id'),
-            'attributes'        => $this->attributesClass::where('service', 'tour')->get(),
-            'tour_category'     => $this->tourCategoryClass::where('status', 'publish')->get()->toTree(),
-            'tour_location'     => $this->locationClass::where('status', 'publish')->get()->toTree(),
+            'row' => $row,
+            'translation' => $translation,
+            "selected_terms" => $row->tour_term->pluck('term_id'),
+            'attributes' => $this->attributesClass::where('service', 'tour')->get(),
+            'tour_category' => $this->tourCategoryClass::where('status', 'publish')->get()->toTree(),
+            'tour_location' => $this->locationClass::where('status', 'publish')->get()->toTree(),
             'location_category' => $this->locationCategoryClass::where("status", "publish")->get(),
             'enable_multi_lang' => true,
-            'breadcrumbs'       => [
+            'breadcrumbs' => [
                 [
                     'name' => __('Tours'),
-                    'url'  => route('tour.admin.index')
+                    'url' => route('tour.admin.index')
                 ],
                 [
-                    'name'  => __('Edit Tour'),
+                    'name' => __('Edit Tour'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'=>__('Edit Tour')
+            'page_title' => __('Edit Tour')
         ];
         return view('Tour::admin.detail', $data);
     }
 
     public function store(Request $request, $id)
     {
-
         if ($id > 0) {
             $this->checkPermission('tour_update');
             $row = $this->tourClass::find($id);
@@ -211,11 +211,11 @@ class TourController extends AdminController
             $row = new $this->tourClass();
             $row->status = "publish";
         }
-        if(!empty($request->input('enable_fixed_date'))){
+        if (!empty($request->input('enable_fixed_date'))) {
             $rules = [
-                'start_date'        =>'required|date',
-                'end_date'         =>'required|date|after_or_equal:start_date',
-                'last_booking_date' =>'required|date|before:start_date|after:'.now(),
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after_or_equal:start_date',
+                'last_booking_date' => 'required|date|before:start_date|after:'.now(),
             ];
             $request->validate($rules);
         }
@@ -237,7 +237,7 @@ class TourController extends AdminController
                 $row->saveMeta($request);
             }
 
-            do_action(Hook::AFTER_SAVING,$row,$request);
+            do_action(Hook::AFTER_SAVING, $row, $request);
 
             if ($id > 0) {
                 event(new UpdatedServiceEvent($row));
@@ -267,7 +267,6 @@ class TourController extends AdminController
 
     public function bulkEdit(Request $request)
     {
-
         $ids = $request->input('ids');
         $action = $request->input('action');
         if (empty($ids) or !is_array($ids)) {
@@ -372,7 +371,7 @@ class TourController extends AdminController
         $q = $request->query('q');
         $query = $this->tourClass::select('id', 'title as text')->where("status", "publish");
         if ($q) {
-            $query->where('title', 'like', '%' . $q . '%');
+            $query->where('title', 'like', '%'.$q.'%');
         }
         $res = $query->orderBy('id', 'desc')->limit(20)->get();
         return $this->sendSuccess([

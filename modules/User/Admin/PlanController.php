@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\User\Admin;
 
 use Illuminate\Http\Request;
@@ -7,11 +8,11 @@ use Modules\Gig\Models\GigCategory;
 use Modules\Gig\Models\GigCategoryTranslation;
 use Modules\User\Models\Plan;
 use Modules\User\Models\PlanTranslation;
-use Modules\User\Models\UserPlan;
 
 class PlanController extends AdminController
 {
     protected $planClass;
+
     public function __construct()
     {
         $this->setActiveMenu(route('user.admin.plan.index'));
@@ -23,20 +24,20 @@ class PlanController extends AdminController
         $this->checkPermission('dashboard_access');
         $rows = $this->planClass::query();
         if (!empty($search = $request->query('s'))) {
-            $rows->where('title', 'LIKE', '%' . $search . '%');
+            $rows->where('title', 'LIKE', '%'.$search.'%');
         }
         $rows->orderBy('id', 'desc');
         $data = [
-            'rows'        => $rows->paginate(20),
-            'row'         => new $this->planClass(),
-            'translation'    => new PlanTranslation(),
+            'rows' => $rows->paginate(20),
+            'row' => new $this->planClass(),
+            'translation' => new PlanTranslation(),
             'breadcrumbs' => [
                 [
-                    'name'  => __('User Plans'),
+                    'name' => __('User Plans'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'=>__("User Plan Management")
+            'page_title' => __("User Plan Management")
         ];
         return view('User::admin.plan.index', $data);
     }
@@ -49,26 +50,26 @@ class PlanController extends AdminController
         if (empty($row)) {
             return redirect(route('user.admin.plan.index'));
         }
-        $translation = $row->translate($request->query('lang',get_main_lang()));
+        $translation = $row->translate($request->query('lang', get_main_lang()));
         $data = [
-            'translation'    => $translation,
-            'enable_multi_lang'=>true,
-            'row'         => $row,
+            'translation' => $translation,
+            'enable_multi_lang' => true,
+            'row' => $row,
             'breadcrumbs' => [
                 [
-                    'name'  => __('User Plans'),
+                    'name' => __('User Plans'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'=>__("Edit user plan")
+            'page_title' => __("Edit user plan")
         ];
         return view('User::admin.plan.detail', $data);
     }
 
-    public function store(Request $request , $id)
+    public function store(Request $request, $id)
     {
-        if(is_demo_mode()){
-            return back()->with('error',"Demo mode: disabled");
+        if (is_demo_mode()) {
+            return back()->with('error', "Demo mode: disabled");
         }
         $this->checkPermission('dashboard_access');
         $this->validate($request, [
@@ -78,12 +79,12 @@ class PlanController extends AdminController
             'duration_type' => 'required',
         ]);
 
-        if($id>0){
+        if ($id > 0) {
             $row = $this->planClass::find($id);
             if (empty($row)) {
                 return redirect(route('user.admin.plan.index'));
             }
-        }else{
+        } else {
             $row = new $this->planClass();
         }
 
@@ -97,19 +98,19 @@ class PlanController extends AdminController
             'status',
             'role_id',
             'annual_price'
-        ],$request->input());
+        ], $request->input());
 
         $res = $row->saveOriginOrTranslation($request->input('lang'));
 
         if ($res) {
-            return back()->with('success',  __('Plan saved') );
+            return back()->with('success', __('Plan saved'));
         }
     }
 
     public function bulkEdit(Request $request)
     {
-        if(is_demo_mode()){
-            return back()->with('error',"Demo mode: disabled");
+        if (is_demo_mode()) {
+            return back()->with('error', "Demo mode: disabled");
         }
         $this->checkPermission('dashboard_access');
         $ids = $request->input('ids');
@@ -123,7 +124,7 @@ class PlanController extends AdminController
         if ($action == "delete") {
             foreach ($ids as $id) {
                 $query = $this->planClass::where("id", $id)->first();
-                if(!empty($query)){
+                if (!empty($query)) {
                     //Del parent category
                     $query->delete();
                 }
@@ -142,22 +143,22 @@ class PlanController extends AdminController
         $pre_selected = $request->query('pre_selected');
         $selected = $request->query('selected');
 
-        if($pre_selected && $selected){
+        if ($pre_selected && $selected) {
             $item = $this->planClass::find($selected);
-            if(empty($item)){
+            if (empty($item)) {
                 return response()->json([
-                    'text'=>''
+                    'text' => ''
                 ]);
-            }else{
+            } else {
                 return response()->json([
-                    'text'=>$item->name
+                    'text' => $item->name
                 ]);
             }
         }
         $q = $request->query('q');
-        $query = $this->planClass::select('id', 'title as text')->where("status","publish");
+        $query = $this->planClass::select('id', 'title as text')->where("status", "publish");
         if ($q) {
-            $query->where('title', 'like', '%' . $q . '%');
+            $query->where('title', 'like', '%'.$q.'%');
         }
         $res = $query->orderBy('id', 'desc')->limit(20)->get();
         return response()->json([

@@ -10,8 +10,8 @@
                 <div class="panel">
                     <form action="{{route('report.admin.enquiry.replyStore',['enquiry'=>$enquiry])}}" method="post">
                         @csrf
-                    <div class="panel-title"><strong>{{__("Add Reply")}}</strong></div>
-                    <div class="panel-body">
+                        <div class="panel-title"><strong>{{__("Add Reply")}}</strong></div>
+                        <div class="panel-body">
                             <div class="form-group">
                                 <label>{{__("Client Message:")}}</label>
                                 <div><strong>{{__("Name:")}}</strong> {{$enquiry->name}}</div>
@@ -24,10 +24,11 @@
                                 <label>{{__("Reply Content")}}</label>
                                 <textarea required name="content" class="form-control" cols="30" rows="10"></textarea>
                             </div>
-                    </div>
-                    <div class="panel-footer">
-                        <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> {{__('Add New')}}</button>
-                    </div>
+                        </div>
+                        <div class="panel-footer">
+                            <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> {{__('Add New')}}
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -37,7 +38,8 @@
                     @foreach($rows as $row)
                         <div class="media text-muted pt-3">
                             <div class="bd-placeholder-img mr-2 rounded">
-                                <img src="{{$row->author->avatar_url}}" class="bd-placeholder-img mr-2 rounded" width="32" height="32" alt="">
+                                <img src="{{$row->author->avatar_url}}" class="bd-placeholder-img mr-2 rounded"
+                                     width="32" height="32" alt="">
                             </div>
                             <div class="d-flex flex-justify-between flex-grow-1">
                                 <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray flex-grow-1">

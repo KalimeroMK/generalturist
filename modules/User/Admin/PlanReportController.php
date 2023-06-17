@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\User\Admin;
 
 use Illuminate\Http\Request;
@@ -6,13 +7,13 @@ use Modules\AdminController;
 use Modules\Gig\Models\GigCategory;
 use Modules\Gig\Models\GigCategoryTranslation;
 use Modules\User\Models\Plan;
-use Modules\User\Models\PlanTranslation;
 use Modules\User\Models\UserPlan;
 
 class PlanReportController extends AdminController
 {
     protected $planClass;
     protected $userPlanClass;
+
     public function __construct()
     {
         $this->setActiveMenu(route('user.admin.plan.index'));
@@ -30,17 +31,17 @@ class PlanReportController extends AdminController
         if (!empty($create_user = $request->query('create_user'))) {
             $rows->where('user_id', $create_user);
         }
-        $rows->with(['user','plan'])->orderBy('id', 'desc');
+        $rows->with(['user', 'plan'])->orderBy('id', 'desc');
         $data = [
-            'rows'        => $rows->paginate(20),
-            'plans' => $this->planClass::where('status','publish')->get(),
+            'rows' => $rows->paginate(20),
+            'plans' => $this->planClass::where('status', 'publish')->get(),
             'breadcrumbs' => [
                 [
-                    'name'  => __('User Plans'),
+                    'name' => __('User Plans'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'=>__("Plan Report")
+            'page_title' => __("Plan Report")
         ];
         return view('User::admin.plan-report.index', $data);
     }
@@ -59,7 +60,7 @@ class PlanReportController extends AdminController
         if ($action == "delete") {
             foreach ($ids as $id) {
                 $query = $this->planClass::where("id", $id)->first();
-                if(!empty($query)){
+                if (!empty($query)) {
                     //Del parent category
                     $query->delete();
                 }

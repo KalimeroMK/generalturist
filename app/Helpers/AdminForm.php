@@ -1,7 +1,8 @@
 <?php
 namespace App\Helpers;
 
-class AdminForm{
+class AdminForm
+{
 
     public static function select($name,$options,$old = '',$class='',$forListItem = false){
         ?>

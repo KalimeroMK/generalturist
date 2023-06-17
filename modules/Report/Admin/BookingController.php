@@ -1,7 +1,7 @@
 <?php
+
 namespace Modules\Report\Admin;
 
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\AdminController;
@@ -21,16 +21,16 @@ class BookingController extends AdminController
         $this->checkPermission('booking_view');
         $query = Booking::where('status', '!=', 'draft');
         if (!empty($request->s)) {
-            if( is_numeric($request->s) ){
+            if (is_numeric($request->s)) {
                 $query->Where('id', '=', $request->s);
-            }else{
+            } else {
                 $query->where(function ($query) use ($request) {
-                    $query->where('first_name', 'like', '%' . $request->s . '%')
-                        ->orWhere('last_name', 'like', '%' . $request->s . '%')
-                        ->orWhere('email', 'like', '%' . $request->s . '%')
-                        ->orWhere('phone', 'like', '%' . $request->s . '%')
-                        ->orWhere('address', 'like', '%' . $request->s . '%')
-                        ->orWhere('address2', 'like', '%' . $request->s . '%');
+                    $query->where('first_name', 'like', '%'.$request->s.'%')
+                        ->orWhere('last_name', 'like', '%'.$request->s.'%')
+                        ->orWhere('email', 'like', '%'.$request->s.'%')
+                        ->orWhere('phone', 'like', '%'.$request->s.'%')
+                        ->orWhere('address', 'like', '%'.$request->s.'%')
+                        ->orWhere('address2', 'like', '%'.$request->s.'%');
                 });
             }
         }
@@ -42,13 +42,13 @@ class BookingController extends AdminController
             $query->where('vendor_id', Auth::id());
         }
         $query->whereIn('object_model', array_keys(get_bookable_services()));
-        $query->orderBy('id','desc');
+        $query->orderBy('id', 'desc');
         $data = [
-            'rows'                  => $query->paginate(20),
-            'page_title'            => __("All Bookings"),
+            'rows' => $query->paginate(20),
+            'page_title' => __("All Bookings"),
             'booking_manage_others' => $this->hasPermission('booking_manage_others'),
-            'booking_update'        => $this->hasPermission('booking_update'),
-            'statues'               => config('booking.statuses')
+            'booking_update' => $this->hasPermission('booking_update'),
+            'statues' => config('booking.statuses')
         ];
         return view('Report::admin.booking.index', $data);
     }
@@ -70,10 +70,9 @@ class BookingController extends AdminController
                     $query->where("vendor_id", Auth::id());
                 }
                 $row = $query->first();
-                if(!empty($row)){
+                if (!empty($row)) {
                     $row->delete();
                     event(new BookingUpdatedEvent($row));
-
                 }
             }
         } else {
@@ -84,11 +83,13 @@ class BookingController extends AdminController
                     $this->checkPermission('booking_update');
                 }
                 $item = $query->first();
-                if(!empty($item)){
+                if (!empty($item)) {
                     $item->status = $action;
                     $item->save();
 
-                    if($action == Booking::CANCELLED) $item->tryRefundToWallet();
+                    if ($action == Booking::CANCELLED) {
+                        $item->tryRefundToWallet();
+                    }
                     event(new BookingUpdatedEvent($item));
                 }
             }

@@ -1,5 +1,7 @@
 <?php
+
 namespace Modules\Booking;
+
 class Hook
 {
     const BOOKING_SETTING_CONFIG = 'core_setting_config';

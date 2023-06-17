@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+@php use Modules\Media\Models\MediaFile; @endphp
+@php use App\Helpers\Assets; @endphp
+        <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -14,16 +16,17 @@
     @endphp
     @if($favicon)
         @php
-            $file = (new \Modules\Media\Models\MediaFile())->findById($favicon);
+            $file = (new MediaFile())->findById($favicon);
         @endphp
         @if(!empty($file))
-            <link rel="icon" type="{{$file['file_type']}}" href="{{asset('uploads/'.$file['file_path'])}}" />
-        @else:
-        <link rel="icon" type="image/png" href="{{url('images/favicon.png')}}" />
+            <link rel="icon" type="{{$file['file_type']}}" href="{{asset('uploads/'.$file['file_path'])}}"/>
+        @else
+            :
+            <link rel="icon" type="image/png" href="{{url('images/favicon.png')}}"/>
         @endif
     @endif
 
-    <meta name="robots" content="noindex, nofollow" />
+    <meta name="robots" content="noindex, nofollow"/>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
 
@@ -34,35 +37,35 @@
     <link href="{{ asset('themes/admin/libs/bootstrap-4.6.2-dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('themes/admin/libs/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
     <link href="{{ asset('dist/admin/css/app.css') }}" rel="stylesheet">
-    {!! \App\Helpers\Assets::css() !!}
-    {!! \App\Helpers\Assets::js() !!}
+    {!! Assets::css() !!}
+    {!! Assets::js() !!}
     <script>
-        var bookingCore  = {
-            url:'{{url('/')}}',
-            admin_url:'{{route('admin.index')}}',
-            map_provider:'{{setting_item('map_provider')}}',
-            map_gmap_key:'{{setting_item('map_gmap_key')}}',
-            csrf:'{{csrf_token()}}',
-            date_format:'{{get_moment_date_format()}}',
-            markAsRead:'{{route('core.admin.notification.markAsRead')}}',
-            markAllAsRead:'{{route('core.admin.notification.markAllAsRead')}}',
-            loadNotify : '{{route('core.admin.notification.loadNotify')}}',
-            pusher_api_key : '{{setting_item("pusher_api_key")}}',
-            pusher_cluster : '{{setting_item("pusher_cluster")}}',
-            isAdmin : {{is_admin() ? 1 : 0}},
+        var bookingCore = {
+            url: '{{url('/')}}',
+            admin_url: '{{route('admin.index')}}',
+            map_provider: '{{setting_item('map_provider')}}',
+            map_gmap_key: '{{setting_item('map_gmap_key')}}',
+            csrf: '{{csrf_token()}}',
+            date_format: '{{get_moment_date_format()}}',
+            markAsRead: '{{route('core.admin.notification.markAsRead')}}',
+            markAllAsRead: '{{route('core.admin.notification.markAllAsRead')}}',
+            loadNotify: '{{route('core.admin.notification.loadNotify')}}',
+            pusher_api_key: '{{setting_item("pusher_api_key")}}',
+            pusher_cluster: '{{setting_item("pusher_cluster")}}',
+            isAdmin: {{is_admin() ? 1 : 0}},
             currentUser: {{(int)Auth::id()}},
-            media:{
-                groups:{!! json_encode(config('bc.media.groups')) !!},
+            media: {
+                groups: {!! json_encode(config('bc.media.groups')) !!},
             },
             language: '{{ app()->getLocale() }}',
         };
         var i18n = {
-            warning:"{{__("Warning")}}",
-            success:"{{__("Success")}}",
-            confirm_delete:"{{__("Do you want to delete?")}}",
-            confirm_recovery:"{{__("Do you want to restore?")}}",
-            confirm:"{{__("Confirm")}}",
-            cancel:"{{__("Cancel")}}",
+            warning: "{{__("Warning")}}",
+            success: "{{__("Success")}}",
+            confirm_delete: "{{__("Do you want to delete?")}}",
+            confirm_recovery: "{{__("Do you want to restore?")}}",
+            confirm: "{{__("Confirm")}}",
+            cancel: "{{__("Cancel")}}",
         };
         var daterangepickerLocale = {
             "applyLabel": "{{__('Apply')}}",
@@ -155,7 +158,7 @@
             }
         };
     </script>
-    <script src="{{ asset('libs/tinymce/js/tinymce/tinymce.min.js') }}" ></script>
+    <script src="{{ asset('libs/tinymce/js/tinymce/tinymce.min.js') }}"></script>
     @stack('css')
 
 </head>
@@ -173,8 +176,9 @@
         <footer class="main-footer">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-6 copy-right" >
-                        {{date('Y')}} &copy; {{__('Booking Core by')}} <a href="{{__('https://www.bookingcore.org')}}" target="_blank">{{__('BookingCore Team')}}</a>
+                    <div class="col-md-6 copy-right">
+                        {{date('Y')}} &copy; {{__('Booking Core by')}} <a href="{{__('https://www.bookingcore.org')}}"
+                                                                          target="_blank">{{__('BookingCore Team')}}</a>
                     </div>
                     <div class="col-md-6">
                         <div class="text-md-right footer-links d-none d-sm-block">
@@ -193,24 +197,24 @@
 @include('Media::browser')
 
 <!-- Scripts -->
-{!! \App\Helpers\Assets::css(true) !!}
+{!! Assets::css(true) !!}
 <script src="{{ asset('libs/pusher.min.js') }}"></script>
-<script src="{{ asset('dist/admin/js/manifest.js?_ver='.config('app.asset_version')) }}" ></script>
-<script src="{{ asset('libs/jquery-3.6.3.min.js?_ver='.config('app.asset_version')) }}" ></script>
-<script src="{{ asset('themes/admin/libs/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js?_ver='.config('app.asset_version')) }}" ></script>
-<script src="{{ asset('dist/admin/js/vendor.js?_ver='.config('app.asset_version')) }}" ></script>
+<script src="{{ asset('dist/admin/js/manifest.js?_ver='.config('app.asset_version')) }}"></script>
+<script src="{{ asset('libs/jquery-3.6.3.min.js?_ver='.config('app.asset_version')) }}"></script>
+<script src="{{ asset('themes/admin/libs/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js?_ver='.config('app.asset_version')) }}"></script>
+<script src="{{ asset('dist/admin/js/vendor.js?_ver='.config('app.asset_version')) }}"></script>
 <script src="{{ asset('libs/filerobot-image-editor/filerobot-image-editor.min.js?_ver='.config('app.asset_version')) }}"></script>
 
-<script src="{{ asset('dist/admin/js/app.js?_ver='.config('app.asset_version')) }}" ></script>
+<script src="{{ asset('dist/admin/js/app.js?_ver='.config('app.asset_version')) }}"></script>
 <script src="{{ asset('libs/vue/vue'.(!env('APP_DEBUG') ? '.min':'').'.js') }}"></script>
 
-<script src="{{ asset('libs/select2/js/select2.min.js') }}" ></script>
+<script src="{{ asset('libs/select2/js/select2.min.js') }}"></script>
 <script src="{{ asset('libs/bootbox/bootbox.min.js') }}"></script>
 
 <script src="{{url('libs/daterange/moment.min.js')}}"></script>
 <script src="{{url('libs/daterange/daterangepicker.min.js?_ver='.config('app.asset_version'))}}"></script>
 
-{!! \App\Helpers\Assets::js(true) !!}
+{!! Assets::js(true) !!}
 
 @stack('js')
 

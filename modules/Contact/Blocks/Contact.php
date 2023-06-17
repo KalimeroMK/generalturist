@@ -1,9 +1,8 @@
 <?php
+
 namespace Modules\Contact\Blocks;
 
 use Modules\Template\Blocks\BaseBlock;
-use Modules\Location\Models\Location;
-use Modules\Media\Helpers\FileHelper;
 
 class Contact extends BaseBlock
 {
@@ -12,13 +11,13 @@ class Contact extends BaseBlock
         return ([
             'settings' => [
                 [
-                    'id'        => 'class',
-                    'type'      => 'input',
+                    'id' => 'class',
+                    'type' => 'input',
                     'inputType' => 'text',
-                    'label'     => __('Class Block')
+                    'label' => __('Class Block')
                 ],
             ],
-            'category'=>__("Other Block")
+            'category' => __("Other Block")
         ]);
     }
 

@@ -11,7 +11,7 @@ class UpdateFrom140To150 extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('bravo_bookings', function (Blueprint $table) {
             if (!Schema::hasColumn('bravo_bookings', 'number')) {
@@ -20,8 +20,7 @@ class UpdateFrom140To150 extends Migration
         });
 
         Schema::create('bravo_cars', function (Blueprint $table) {
-            $table->bigIncrements('id');
-
+            $table->id();
             //Info
             $table->string('title', 255)->nullable();
             $table->string('slug',255)->charset('utf8')->index();

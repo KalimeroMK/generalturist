@@ -1,4 +1,7 @@
 <?php
+
+use Modules\Hotel\Models\HotelRoomBooking;
+
 $translation = $service->translate();
 $lang_local = app()->getLocale();
 ?>
@@ -78,12 +81,13 @@ $lang_local = app()->getLocale();
             <td class="label">{{__('Pricing')}}</td>
             <td class="val">
                 <table class="pricing-list" width="100%">
-                    @php $rooms = \Modules\Hotel\Models\HotelRoomBooking::getByBookingId($booking->id) @endphp
+                    @php $rooms = HotelRoomBooking::getByBookingId($booking->id) @endphp
                     @if(!empty($rooms))
                         @foreach($rooms as $room)
                             <tr>
                                 <td class="label">{{$room->room->title}} * {{$room->number}}
-                                    :</td>
+                                    :
+                                </td>
                                 <td class="val no-r-padding">
                                     <strong>{{format_money($room->price * $room->number)}}</strong>
                                 </td>
@@ -134,7 +138,8 @@ $lang_local = app()->getLocale();
                             <tr>
                                 <td class="label">
                                     {{$item['name_'.$lang_local] ?? $item['name']}}
-                                    <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top" title="{{ $item['desc_'.$lang_local] ?? $item['desc'] }}"></i>
+                                    <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top"
+                                       title="{{ $item['desc_'.$lang_local] ?? $item['desc'] }}"></i>
                                     @if(!empty($item['per_person']) and $item['per_person'] == "on")
                                         : {{$booking->total_guests}} * {{format_money( $fee_price )}}
                                     @endif
@@ -173,11 +178,13 @@ $lang_local = app()->getLocale();
         @if($booking->total > $booking->paid)
             <tr>
                 <td class="label fsz21">{{__('Remain')}}</td>
-                <td class="val fsz21"><strong style="color: #FA5636">{{format_money($booking->total - $booking->paid)}}</strong></td>
+                <td class="val fsz21"><strong
+                            style="color: #FA5636">{{format_money($booking->total - $booking->paid)}}</strong></td>
             </tr>
         @endif
     </table>
 </div>
 <div class="text-center mt20">
-    <a href="{{ route("user.booking_history") }}" target="_blank" class="btn btn-primary manage-booking-btn">{{__('Manage Bookings')}}</a>
+    <a href="{{ route("user.booking_history") }}" target="_blank"
+       class="btn btn-primary manage-booking-btn">{{__('Manage Bookings')}}</a>
 </div>

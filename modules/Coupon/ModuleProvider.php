@@ -1,5 +1,7 @@
 <?php
+
 namespace Modules\Coupon;
+
 use Modules\Core\Helpers\SitemapHelper;
 use Modules\ModuleServiceProvider;
 use Modules\User\Helpers\PermissionHelper;
@@ -7,9 +9,22 @@ use Modules\User\Helpers\PermissionHelper;
 class ModuleProvider extends ModuleServiceProvider
 {
 
-    public function boot(SitemapHelper $sitemapHelper){
+    public static function getAdminMenu()
+    {
+        return [
+            'coupon' => [
+                "position" => 51,
+                'url' => route('coupon.admin.index'),
+                'title' => __('Coupon'),
+                'icon' => 'fa fa-ticket',
+                'permission' => 'coupon_view',
+            ],
+        ];
+    }
 
-        $this->loadMigrationsFrom(__DIR__ . '/Migrations');
+    public function boot(SitemapHelper $sitemapHelper)
+    {
+        $this->loadMigrationsFrom(__DIR__.'/Migrations');
 
 
         PermissionHelper::add([
@@ -19,8 +34,8 @@ class ModuleProvider extends ModuleServiceProvider
             'coupon_update',
             'coupon_delete',
         ]);
-
     }
+
     /**
      * Register bindings in the container.
      *
@@ -29,18 +44,5 @@ class ModuleProvider extends ModuleServiceProvider
     public function register()
     {
         $this->app->register(RouterServiceProvider::class);
-    }
-
-    public static function getAdminMenu()
-    {
-        return [
-            'coupon'=>[
-                "position"=>51,
-                'url'        => route('coupon.admin.index'),
-                'title'      => __('Coupon'),
-                'icon'       => 'fa fa-ticket',
-                'permission' => 'coupon_view',
-            ],
-        ];
     }
 }

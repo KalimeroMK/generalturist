@@ -1,7 +1,8 @@
+@php use Illuminate\Support\Facades\Auth; @endphp
 @extends ('admin.layouts.app')
 @section ('content')
     <?php
-    $user = \Illuminate\Support\Facades\Auth::user();
+    $user = Auth::user();
     $hasAvailableTools = false;
     ?>
     <div class="container">
@@ -35,7 +36,8 @@
                                 @php $hasAvailableTools = true; @endphp
                                 <div class="col-md-4">
                                     <div class="area-setting-item">
-                                        <a class="setting-item-link" href="{{route('language.admin.translations.index')}}">
+                                        <a class="setting-item-link"
+                                           href="{{route('language.admin.translations.index')}}">
                                             <span class="setting-item-media">
                                                 <i class="icon ion-ios-globe"></i>
                                             </span>
@@ -95,19 +97,19 @@
                                     </div>
                                 </div>
                             @endif
-                                <div class="col-md-4">
-                                    <div class="area-setting-item">
-                                        <a class="setting-item-link" href="{{route('core.tool.clearCache')}}">
+                            <div class="col-md-4">
+                                <div class="area-setting-item">
+                                    <a class="setting-item-link" href="{{route('core.tool.clearCache')}}">
                                         <span class="setting-item-media">
                                             <i class="icon ion-ios-hammer"></i>
                                         </span>
-                                            <span class="setting-item-info">
+                                        <span class="setting-item-info">
                                             <span class="setting-item-title">{{__("Clear Cache")}}</span>
                                             <span class="setting-item-desc">{{__("Clear Cache for Booking Core")}}</span>
                                         </span>
-                                        </a>
-                                    </div>
+                                    </a>
                                 </div>
+                            </div>
                             @if(!$hasAvailableTools)
                                 <div class="col-md-12">
                                     {{__("No tools available")}}

@@ -1,7 +1,8 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <form action="{{route('user.admin.verification.store',['id'=>$row->id])}}" method="post" class="needs-validation" novalidate>
+    <form action="{{route('user.admin.verification.store',['id'=>$row->id])}}" method="post" class="needs-validation"
+          novalidate>
         @csrf
         <div class="container">
             <div class="d-flex justify-content-between mb20">
@@ -19,11 +20,11 @@
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
-                                        <tr>
-                                            <th>{{__('No')}}</th>
-                                            <th>{{__("Information")}}</th>
-                                            <th width="200px">{{__("Mark as verified")}}</th>
-                                        </tr>
+                                    <tr>
+                                        <th>{{__('No')}}</th>
+                                        <th>{{__("Information")}}</th>
+                                        <th width="200px">{{__("Mark as verified")}}</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     @php($only_show_data = true)
@@ -35,25 +36,26 @@
                                             <td>
                                                 @switch($field['type'])
                                                     @case("email")
-                                                    @include('User::frontend.verification.fields.email')
-                                                    @break
+                                                        @include('User::frontend.verification.fields.email')
+                                                        @break
                                                     @case("phone")
-                                                    @include('User::frontend.verification.fields.phone')
-                                                    @break
+                                                        @include('User::frontend.verification.fields.phone')
+                                                        @break
                                                     @case("file")
-                                                    @include('User::frontend.verification.fields.file')
-                                                    @break
+                                                        @include('User::frontend.verification.fields.file')
+                                                        @break
                                                     @case("multi_files")
-                                                    @include('User::frontend.verification.fields.multi_files')
-                                                    @break
+                                                        @include('User::frontend.verification.fields.multi_files')
+                                                        @break
                                                     @case('text')
                                                     @default
-                                                    @include('User::frontend.verification.fields.text')
-                                                    @break
+                                                        @include('User::frontend.verification.fields.text')
+                                                        @break
                                                 @endswitch
                                             </td>
                                             <td>
-                                                <input @if($row->isVerifiedField($field['id'])) checked @endif type="checkbox" name="fields[]" value="{{$field['id']}}" >
+                                                <input @if($row->isVerifiedField($field['id'])) checked
+                                                       @endif type="checkbox" name="fields[]" value="{{$field['id']}}">
                                             </td>
                                         </tr>
                                         @php($i ++)

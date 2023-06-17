@@ -8,52 +8,55 @@ use Illuminate\Support\Str;
 use Mockery\Exception;
 use Modules\Booking\Models\Booking;
 use Modules\Booking\Models\Payment;
-use Modules\Hotel\Models\HotelRoomBooking;
-use Carbon\Carbon;
+use Payrexx\Models\Request\Gateway;
+use Payrexx\Models\Request\Transaction;
+use Payrexx\Payrexx;
+use Payrexx\PayrexxException;
+use Swift_TransportException;
 
 class PayrexxGateway extends BaseGateway
 {
-    public $id   = 'payrexx';
-    public    $name = 'Payrexx Checkout';
+    public $id = 'payrexx';
+    public $name = 'Payrexx Checkout';
     protected $gateway;
 
     public function getOptionsConfigs()
     {
         return [
             [
-                'type'  => 'checkbox',
-                'id'    => 'enable',
+                'type' => 'checkbox',
+                'id' => 'enable',
                 'label' => __('Enable Payrexx Checkout?'),
 
             ],
             [
-                'type'       => 'input',
-                'id'         => 'name',
-                'label'      => __('Custom Name'),
-                'std'        => __("Payrexx Checkout"),
+                'type' => 'input',
+                'id' => 'name',
+                'label' => __('Custom Name'),
+                'std' => __("Payrexx Checkout"),
                 'multi_lang' => "1"
             ],
             [
-                'type'  => 'upload',
-                'id'    => 'logo_id',
+                'type' => 'upload',
+                'id' => 'logo_id',
                 'label' => __('Custom Logo'),
             ],
             [
-                'type'       => 'editor',
-                'id'         => 'html',
-                'label'      => __('Custom HTML Description'),
+                'type' => 'editor',
+                'id' => 'html',
+                'label' => __('Custom HTML Description'),
                 'multi_lang' => "1"
             ],
             [
-                'type'  => 'input',
-                'id'    => 'instance_name',
+                'type' => 'input',
+                'id' => 'instance_name',
                 'label' => __('Instance name'),
             ],
             [
-                'type'  => 'input',
-                'id'    => 'api_secret_key',
+                'type' => 'input',
+                'id' => 'api_secret_key',
                 'label' => __('Api secret key'),
-                'desc'=>__('Url callback: ')."<b>".route('gateway.webhook',['gateway'=>$this->id])."</b>",
+                'desc' => __('Url callback: ')."<b>".route('gateway.webhook', ['gateway' => $this->id])."</b>",
             ]
         ];
     }
@@ -65,7 +68,6 @@ class PayrexxGateway extends BaseGateway
             $booking::COMPLETED,
             $booking::CANCELLED
         ])) {
-
             throw new Exception(__("Booking status does need to be paid"));
         }
         if (!$booking->pay_now) {
@@ -83,15 +85,13 @@ class PayrexxGateway extends BaseGateway
         return $this->payment($booking, $request);
     }
 
-    public function payment($booking,$request){
-
-
-
+    public function payment($booking, $request)
+    {
         $instanceName = $this->getOption('instance_name');
         $secret = $this->getOption('api_secret_key');
-        $payrexx = new \Payrexx\Payrexx($instanceName, $secret);
+        $payrexx = new Payrexx($instanceName, $secret);
 
-        $gateway = new \Payrexx\Models\Request\Gateway();
+        $gateway = new Gateway();
 
 // amount multiplied by 100
         $gateway->setAmount($booking->total * 100);
@@ -107,8 +107,8 @@ class PayrexxGateway extends BaseGateway
 
 
 //success and failed url in case that merchant redirects to payment site instead of using the modal view
-        $gateway->setSuccessRedirectUrl($this->getReturnUrl() . '?c=' . $booking->code);
-        $gateway->setFailedRedirectUrl($this->getCancelUrl() . '?c=' . $booking->code);
+        $gateway->setSuccessRedirectUrl($this->getReturnUrl().'?c='.$booking->code);
+        $gateway->setFailedRedirectUrl($this->getCancelUrl().'?c='.$booking->code);
 
         // optional: payment service provider(s) to use (see http://developers.payrexx.com/docs/miscellaneous)
         // empty array = all available psps
@@ -131,10 +131,10 @@ class PayrexxGateway extends BaseGateway
         //$gateway->setSubscriptionCancellationInterval('P3M');
 
         $desc = [];
-        $desc[]= [
+        $desc[] = [
             'name' => [$booking->service->title],
             'quantity' => 1,
-            'amount' => $booking->pay_now  * 100
+            'amount' => $booking->pay_now * 100
         ];
 
         $gateway->setBasket($desc);
@@ -161,13 +161,13 @@ class PayrexxGateway extends BaseGateway
 //        $gateway->addField($type = 'privacy_policy', $value='23123123123');
         try {
             $response = $payrexx->create($gateway);
-            if(!empty($response->getLink())){
-                $booking->addMeta('payrexxId',$response->getId());
+            if (!empty($response->getLink())) {
+                $booking->addMeta('payrexxId', $response->getId());
                 response()->json([
                     'url' => $response->getLink()
                 ])->send();
             }
-        } catch (\Payrexx\PayrexxException $e) {
+        } catch (PayrexxException $e) {
             throw new \Exception($e->getMessage());
         }
     }
@@ -199,7 +199,7 @@ class PayrexxGateway extends BaseGateway
     public function getDisplayHtml()
     {
         $location = app()->getLocale();
-        if (setting_item('site_locale') == $location){
+        if (setting_item('site_locale') == $location) {
             return $this->getOption('html', '');
         } else {
             return $this->getOption('html_'.$location);
@@ -210,12 +210,13 @@ class PayrexxGateway extends BaseGateway
     {
         $c = $request->query('c');
         $booking = Booking::where('code', $c)->first();
-        if (!empty($booking) and  !in_array($booking->payment_status, [
+        if (!empty($booking) and !in_array($booking->payment_status, [
                 $booking::PAID,
                 $booking::COMPLETED,
-                $booking::CANCELLED])) {
+                $booking::CANCELLED
+            ])) {
             $checkPayment = $this->checkPayment($booking);
-            $status  = $checkPayment->getStatus();
+            $status = $checkPayment->getStatus();
             if ($status != 'confirmed') {
                 $payment = $booking->payment;
                 if ($payment) {
@@ -225,13 +226,13 @@ class PayrexxGateway extends BaseGateway
                     $payment->save();
                 }
                 try {
-                    if($status =='waiting'){
-                            $booking->markAsProcessing($booking,[]);
+                    if ($status == 'waiting') {
+                        $booking->markAsProcessing($booking, []);
                         return redirect($booking->getDetailUrl())->with("error", __("Your payment has been placed"));
-                    }else{
+                    } else {
                         $booking->markAsPaymentFailed();
                     }
-                } catch (\Swift_TransportException $e) {
+                } catch (Swift_TransportException $e) {
                     Log::warning($e->getMessage());
                 }
                 return redirect($booking->getDetailUrl())->with("error", __("Payment Failed"));
@@ -246,11 +247,11 @@ class PayrexxGateway extends BaseGateway
                 try {
                     $booking->paid += (float) $booking->pay_now;
                     $booking->markAsPaid(Booking::CONFIRMED);
-
-                } catch (\Swift_TransportException $e) {
+                } catch (Swift_TransportException $e) {
                     Log::warning($e->getMessage());
                 }
-                return redirect($booking->getDetailUrl())->with("success", __("You payment has been processed successfully"));
+                return redirect($booking->getDetailUrl())->with("success",
+                    __("You payment has been processed successfully"));
             }
         }
         if (!empty($booking)) {
@@ -259,18 +260,56 @@ class PayrexxGateway extends BaseGateway
             return redirect(url('/'));
         }
     }
+
+    public function checkPayment($booking, $transaction = false)
+    {
+        $payrexxId = $booking->getMeta('payrexxId');
+        $instanceName = $this->getOption('instance_name');
+        $secret = $this->getOption('api_secret_key');
+        $payrexx = new Payrexx($instanceName, $secret);
+        $gateway = new Gateway();
+
+
+        if (!empty($transaction['id'])) {
+            //For webhooks
+            $transition = new Transaction();
+            $transition->setId($transaction['id']);
+            try {
+                $response = $payrexx->getOne($transition);
+
+                if (!empty($response->getStatus())) {
+                    return $response;
+                }
+            } catch (PayrexxException $e) {
+                print $e->getMessage();
+            }
+        } else {
+            // Khong the capture dc gateway o day,
+            $gateway->setId($payrexxId);
+            try {
+                $response = $payrexx->getOne($gateway);
+
+                if (!empty($response->getStatus())) {
+                    return $response;
+                }
+            } catch (PayrexxException $e) {
+                print $e->getMessage();
+            }
+        }
+    }
+
     public function callbackPayment(Request $request)
     {
         $transaction = $request->transaction;
-        if(!empty($transaction['referenceId'])){
+        if (!empty($transaction['referenceId'])) {
             $booking = Booking::where('code', $transaction['referenceId'])->first();
             if (!empty($booking) and !in_array($booking->payment_status, [
                     $booking::PAID,
                     $booking::COMPLETED,
-                    $booking::CANCELLED])) {
-
-                $checkPayment = $this->checkPayment($booking,$transaction);
-                $status  = $checkPayment->getStatus();
+                    $booking::CANCELLED
+                ])) {
+                $checkPayment = $this->checkPayment($booking, $transaction);
+                $status = $checkPayment->getStatus();
                 $amount = $checkPayment->getAmount();
                 if ($status != 'confirmed') {
                     $payment = $booking->payment;
@@ -281,18 +320,18 @@ class PayrexxGateway extends BaseGateway
                         $payment->save();
                     }
                     try {
-                        if($status =='waiting'){
-                            $booking->markAsProcessing($booking,[]);
-                            return response()->json(['status'=>'error',"message"=> __("Payment Processing")]);
-                        }elseif ($status=='authorized'){
-                                $booking->markAsProcessing($payment, []);
-                            return response()->json(['status'=>'error',"message"=> __("Payment Processing")]);
-                        }else {
+                        if ($status == 'waiting') {
+                            $booking->markAsProcessing($booking, []);
+                            return response()->json(['status' => 'error', "message" => __("Payment Processing")]);
+                        } elseif ($status == 'authorized') {
+                            $booking->markAsProcessing($payment, []);
+                            return response()->json(['status' => 'error', "message" => __("Payment Processing")]);
+                        } else {
                             $booking->markAsPaymentFailed();
-                            return response()->json(['status'=>'error',"message"=> __("Payment Failed.")]);
+                            return response()->json(['status' => 'error', "message" => __("Payment Failed.")]);
                         }
-                    } catch (\Swift_TransportException $e) {
-                        return response()->json(['status'=>'error',"message"=> __("Payment Failed")]);
+                    } catch (Swift_TransportException $e) {
+                        return response()->json(['status' => 'error', "message" => __("Payment Failed")]);
                     }
                 } else {
                     $payment = $booking->payment;
@@ -303,28 +342,26 @@ class PayrexxGateway extends BaseGateway
                         $payment->save();
                     }
                     try {
-                        $booking->paid += (float) ($amount/100);
+                        $booking->paid += (float) ($amount / 100);
                         $booking->markAsPaid();
-
-
-                    } catch (\Swift_TransportException $e) {
-                        return response()->json(['status'=>'error',"message"=> $e->getMessage()]);
+                    } catch (Swift_TransportException $e) {
+                        return response()->json(['status' => 'error', "message" => $e->getMessage()]);
                     }
 
-                    return response()->json(['status'=>'success',"message"=> __("You payment has been processed successfully before")]);
+                    return response()->json([
+                        'status' => 'success', "message" => __("You payment has been processed successfully before")
+                    ]);
                 }
             }
             if (!empty($booking)) {
-                return response()->json(['status'=>'success',"message"=> __("No information found")]);
+                return response()->json(['status' => 'success', "message" => __("No information found")]);
             } else {
-                return response()->json(['status'=>'error',"message"=> __("No information found")]);
+                return response()->json(['status' => 'error', "message" => __("No information found")]);
             }
-        }else{
-            return response()->json(['status'=>'error',"message"=> __("referenceId can't null")]);
+        } else {
+            return response()->json(['status' => 'error', "message" => __("referenceId can't null")]);
         }
-
     }
-
 
     public function cancelPayment(Request $request)
     {
@@ -344,47 +381,10 @@ class PayrexxGateway extends BaseGateway
         return redirect()->to(route('booking.cancel'));
     }
 
-    public function checkPayment($booking,$transaction=false){
-        $payrexxId = $booking->getMeta('payrexxId');
-        $instanceName = $this->getOption('instance_name');
-        $secret = $this->getOption('api_secret_key');
-        $payrexx = new \Payrexx\Payrexx($instanceName, $secret);
-        $gateway = new \Payrexx\Models\Request\Gateway();
-
-
-        if(!empty($transaction['id'])){
-            //For webhooks
-            $transition = new \Payrexx\Models\Request\Transaction();
-            $transition->setId($transaction['id']);
-            try {
-                $response = $payrexx->getOne($transition);
-
-                if(!empty($response->getStatus())){
-                    return $response;
-                }
-            } catch (\Payrexx\PayrexxException $e) {
-                print $e->getMessage();
-            }
-
-        }else{
-            // Khong the capture dc gateway o day,
-            $gateway->setId($payrexxId);
-            try {
-                $response = $payrexx->getOne($gateway);
-
-                if(!empty($response->getStatus())){
-                    return $response;
-                }
-            } catch (\Payrexx\PayrexxException $e) {
-                print $e->getMessage();
-            }
-        }
-
-    }
     public function getDisplayLogo()
     {
         $logo_id = $this->getOption('logo_id');
-        return get_file_url($logo_id,'medium');
+        return get_file_url($logo_id, 'medium');
     }
 
 }

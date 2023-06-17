@@ -5,6 +5,7 @@
  * Date: 9/13/2019
  * Time: 3:24 PM
  */
+
 namespace Modules\Vendor\Models;
 
 use App\BaseModel;
@@ -14,31 +15,35 @@ class VendorPayout extends BaseModel
 {
     protected $table = 'bravo_payouts';
 
-    public static function getAllStatuses(){
+    public static function getAllStatuses()
+    {
         return [
-            'initial'=>[
-                'title'=>__("Initial")
+            'initial' => [
+                'title' => __("Initial")
             ],
-            'confirmed'=>[
-                'title'=>__("Confirmed")
+            'confirmed' => [
+                'title' => __("Confirmed")
             ],
-            'paid'=>[
-                'title'=>__("Paid")
+            'paid' => [
+                'title' => __("Paid")
             ],
-            'rejected'=>[
-                'title'=>__("Rejected")
+            'rejected' => [
+                'title' => __("Rejected")
             ],
         ];
+    }
+
+    public static function countInitial()
+    {
+        return parent::query()->where('status', 'initial')->count('id');
     }
 
     public function getPayoutMethodNameAttribute()
     {
         $all = json_decode(setting_item('vendor_payout_methods'));
-        if(!empty($all))
-        {
-            foreach ($all as $item){
-                if($item->id == $this->payout_method)
-                {
+        if (!empty($all)) {
+            foreach ($all as $item) {
+                if ($item->id == $this->payout_method) {
                     return $item->name;
                 }
             }
@@ -47,19 +52,17 @@ class VendorPayout extends BaseModel
         return $this->payout_method;
     }
 
-    public function vendor(){
-        return $this->hasOne(User::class,'id','vendor_id')->withDefault();
+    public function vendor()
+    {
+        return $this->hasOne(User::class, 'id', 'vendor_id')->withDefault();
     }
 
-    public function getStatusTextAttribute(){
-        switch ($this->status){
+    public function getStatusTextAttribute()
+    {
+        switch ($this->status) {
             default:
                 return booking_status_to_text($this->status);
                 break;
         }
-    }
-
-    public static function countInitial(){
-        return parent::query()->where('status','initial')->count('id');
     }
 }

@@ -83,19 +83,22 @@
                         </div>
                         @if(!empty($picture))
                             @php $listImages = json_decode($picture->val, true); @endphp
-                        <div class="review_upload_photo_list row mt-3">
-                            @foreach($listImages as $oneImages)
-                                @php $imagesData = json_decode($oneImages, true); @endphp
-                                <div class="col-md-2 mb-2">
-                                    <div class="review_upload_item" data-toggle="modal" data-target="#modal_room_{{$item->id}}" style="background-image: url({{@$imagesData['download']}});">
+                            <div class="review_upload_photo_list row mt-3">
+                                @foreach($listImages as $oneImages)
+                                    @php $imagesData = json_decode($oneImages, true); @endphp
+                                    <div class="col-md-2 mb-2">
+                                        <div class="review_upload_item" data-toggle="modal"
+                                             data-target="#modal_room_{{$item->id}}"
+                                             style="background-image: url({{@$imagesData['download']}});">
+                                        </div>
                                     </div>
-                                </div>
-                            @endforeach
+                                @endforeach
                                 <div class="modal" id="modal_room_{{$item->id}}" tabindex="-1" role="dialog">
                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                         <div class="modal-content">
                                             <div class="modal-body">
-                                                <div class="fotorama" data-nav="thumbs" data-width="100%" data-auto="true" data-allowfullscreen="true">
+                                                <div class="fotorama" data-nav="thumbs" data-width="100%"
+                                                     data-auto="true" data-allowfullscreen="true">
                                                     @foreach($listImages as $oneImages)
                                                         @php $imagesData = json_decode($oneImages, true); @endphp
                                                         <a class="w-100" href="{{@$imagesData['download']}}"></a>
@@ -105,7 +108,7 @@
                                         </div>
                                     </div>
                                 </div>
-                        </div>
+                            </div>
                         @endif
                     </div>
                 @endforeach
@@ -135,7 +138,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <input type="text" required class="form-control" name="review_title" placeholder="{{__("Title")}}">
+                                    <input type="text" required class="form-control" name="review_title"
+                                           placeholder="{{__("Title")}}">
                                     <div class="invalid-feedback">{{__('Review title is required')}}</div>
                                 </div>
                             </div>
@@ -143,7 +147,8 @@
                         <div class="row">
                             <div class="col-xs-12 col-md-8">
                                 <div class="form-group">
-                                    <textarea name="review_content" required class="form-control" placeholder="{{__("Review content")}}" minlength="10"></textarea>
+                                    <textarea name="review_content" required class="form-control"
+                                              placeholder="{{__("Review content")}}" minlength="10"></textarea>
                                     <div class="invalid-feedback">
                                         {{__('Review content has at least 10 character')}}
                                     </div>
@@ -156,7 +161,8 @@
                                         @foreach($tour_review_stats as $item)
                                             <div class="item">
                                                 <label>{{$item->title}}</label>
-                                                <input class="review_stats" type="hidden" name="review_stats[{{$item->title}}]">
+                                                <input class="review_stats" type="hidden"
+                                                       name="review_stats[{{$item->title}}]">
                                                 <div class="rates">
                                                     <i class="fa fa-star-o grey"></i>
                                                     <i class="fa fa-star-o grey"></i>
@@ -194,7 +200,8 @@
                                     <div class="col-md-2">
                                         <div class="review_upload_btn">
                                             <span class="helpText" id="helpText"></span>
-                                            <input type="file" id="file" multiple data-name="review_upload" data-multiple="1" accept="image/*" class="review_upload_file">
+                                            <input type="file" id="file" multiple data-name="review_upload"
+                                                   data-multiple="1" accept="image/*" class="review_upload_file">
                                         </div>
                                     </div>
                                     <div class="col-md-10">

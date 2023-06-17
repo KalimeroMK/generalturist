@@ -22,7 +22,7 @@ class ImageSizeRule implements Rule
      *
      * @return void
      */
-    public function __construct(int $maxWidth,int $maxHeight)
+    public function __construct(int $maxWidth, int $maxHeight)
     {
         //
         $this->maxWidth = $maxWidth;
@@ -45,7 +45,7 @@ class ImageSizeRule implements Rule
             'png',
             'gif',
         ];
-        if(!in_array(strtolower($value->getClientOriginalExtension()), $allowedExtsImage)) {
+        if (!in_array(strtolower($value->getClientOriginalExtension()), $allowedExtsImage)) {
             // not image
             return true;
         }

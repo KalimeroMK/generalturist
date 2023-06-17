@@ -19,23 +19,24 @@ class EnquiryController extends FrontendController
         $this->enquiryClass = $enquiryClass;
     }
 
-    public function enquiryReport(Request $request){
+    public function enquiryReport(Request $request)
+    {
         $this->checkPermission('enquiry_view');
         $user_id = Auth::id();
-        $rows = $this->enquiryClass::where("vendor_id",$user_id)
-            ->whereIn('object_model',array_keys(get_bookable_services()))
+        $rows = $this->enquiryClass::where("vendor_id", $user_id)
+            ->whereIn('object_model', array_keys(get_bookable_services()))
             ->orderBy('id', 'desc');
         $data = [
-            'rows'        => $rows->withCount(['replies'])->paginate(5),
-            'statues'     => $this->enquiryClass::$enquiryStatus,
+            'rows' => $rows->withCount(['replies'])->paginate(5),
+            'statues' => $this->enquiryClass::$enquiryStatus,
             'has_permission_enquiry_update' => $this->hasPermission('enquiry_update'),
             'breadcrumbs' => [
                 [
-                    'name'  => __('Enquiry Report'),
+                    'name' => __('Enquiry Report'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'  => __("Enquiry Report"),
+            'page_title' => __("Enquiry Report"),
         ];
         return view('Vendor::frontend.enquiry.index', $data);
     }
@@ -43,7 +44,7 @@ class EnquiryController extends FrontendController
     public function enquiryReportBulkEdit($enquiry_id, Request $request)
     {
         $status = $request->input('status');
-        if (!empty( $this->hasPermission('enquiry_update') ) and !empty($status) and !empty($enquiry_id)) {
+        if (!empty($this->hasPermission('enquiry_update')) and !empty($status) and !empty($enquiry_id)) {
             $query = $this->enquiryClass::where("id", $enquiry_id);
             $query->where("vendor_id", Auth::id());
             $item = $query->first();
@@ -57,46 +58,47 @@ class EnquiryController extends FrontendController
         return redirect()->back()->with('error', __('Update fail!'));
     }
 
-    public function reply(Enquiry $enquiry,Request  $request){
-
-        if($enquiry->vendor_id != \auth()->id()){
+    public function reply(Enquiry $enquiry, Request $request)
+    {
+        if ($enquiry->vendor_id != \auth()->id()) {
             abort(404);
         }
         $this->checkPermission('enquiry_view');
 
         $data = [
-            'rows'=>$enquiry->replies()->orderByDesc('id')->paginate(20),
+            'rows' => $enquiry->replies()->orderByDesc('id')->paginate(20),
 
             'breadcrumbs' => [
                 [
                     'name' => __('Enquiry'),
-                    'url'  => route('vendor.enquiry_report')
+                    'url' => route('vendor.enquiry_report')
                 ],
                 [
-                    'name'  => __('Enquiry :name',['name'=>'#'.$enquiry->id.' - '.($enquiry->service->title ?? '')]),
-                    'url'=>'#'
+                    'name' => __('Enquiry :name', ['name' => '#'.$enquiry->id.' - '.($enquiry->service->title ?? '')]),
+                    'url' => '#'
                 ],
                 [
-                    'name'  => __('All Replies'),
+                    'name' => __('All Replies'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'=>__("Replies"),
-            'enquiry'=>$enquiry
+            'page_title' => __("Replies"),
+            'enquiry' => $enquiry
         ];
 
-        return view("Vendor::frontend.enquiry.reply",$data);
+        return view("Vendor::frontend.enquiry.reply", $data);
     }
 
-    public function replyStore(Enquiry $enquiry,Request  $request){
-        if($enquiry->vendor_id != \auth()->id()){
+    public function replyStore(Enquiry $enquiry, Request $request)
+    {
+        if ($enquiry->vendor_id != \auth()->id()) {
             abort(404);
         }
 
         $this->checkPermission('enquiry_view');
 
         $request->validate([
-            'content'=>'required'
+            'content' => 'required'
         ]);
 
         $reply = new EnquiryReply();
@@ -106,8 +108,8 @@ class EnquiryController extends FrontendController
 
         $reply->save();
 
-        EnquiryReplyCreated::dispatch($reply,$enquiry);
+        EnquiryReplyCreated::dispatch($reply, $enquiry);
 
-        return back()->with('success',__("Reply added"));
+        return back()->with('success', __("Reply added"));
     }
 }

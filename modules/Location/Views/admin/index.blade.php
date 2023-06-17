@@ -1,3 +1,4 @@
+@php use App\Helpers\MapEngine; @endphp
 @extends('admin.layouts.app')
 @section('content')
     <div class="container-fluid">
@@ -10,25 +11,29 @@
                 <div class="panel">
                     <div class="panel-title">{{__("Add Location")}}</div>
                     <div class="panel-body panel-index">
-                        <form action="{{route('location.admin.store',['id'=>'-1','lang'=>request()->query('lang')])}}" method="post">
+                        <form action="{{route('location.admin.store',['id'=>'-1','lang'=>request()->query('lang')])}}"
+                              method="post">
                             @csrf
                             @include('Location::admin/form',['parents'=>$rows])
                             <div class="form-group form-index-hide">
                                 <label class="control-label">{{__("Location Map")}}</label>
                                 <div class="control-map-group">
                                     <div id="map_content"></div>
-                                    <div class="g-control d-none" >
+                                    <div class="g-control d-none">
                                         <div class="form-group">
                                             <label>{{__("Map Lat")}}:</label>
-                                            <input type="text" name="map_lat" class="form-control" value="{{$row->map_lat}}">
+                                            <input type="text" name="map_lat" class="form-control"
+                                                   value="{{$row->map_lat}}">
                                         </div>
                                         <div class="form-group">
                                             <label>{{__("Map Lng")}}:</label>
-                                            <input type="text" name="map_lng" class="form-control" value="{{$row->map_lng}}">
+                                            <input type="text" name="map_lng" class="form-control"
+                                                   value="{{$row->map_lng}}">
                                         </div>
                                         <div class="form-group">
                                             <label>{{__("Map Zoom")}}:</label>
-                                            <input type="text" name="map_zoom" class="form-control" value="{{$row->map_zoom ?? "8"}}">
+                                            <input type="text" name="map_zoom" class="form-control"
+                                                   value="{{$row->map_zoom ?? "8"}}">
                                         </div>
                                     </div>
                                 </div>
@@ -55,14 +60,19 @@
                                     <option value="draft">{{__(" Move to Draft ")}}</option>
                                     <option value="delete">{{__(" Delete ")}}</option>
                                 </select>
-                                <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
+                                <button data-confirm="{{__("Do you want to delete?")}}"
+                                        class="btn-info btn btn-icon dungdt-apply-form-btn"
+                                        type="button">{{__('Apply')}}</button>
                             </form>
                         @endif
                     </div>
                     <div class="col-left">
-                        <form method="get" action="{{route('location.admin.index')}}" class="filter-form filter-form-right d-flex justify-content-end" role="search">
-                            <input type="text" name="s" value="{{ Request()->s }}" class="form-control" placeholder="{{__("Search by name")}}">
-                            <button class="btn-info btn btn-icon btn_search" id="search-submit" type="submit">{{__('Search')}}</button>
+                        <form method="get" action="{{route('location.admin.index')}}"
+                              class="filter-form filter-form-right d-flex justify-content-end" role="search">
+                            <input type="text" name="s" value="{{ Request()->s }}" class="form-control"
+                                   placeholder="{{__("Search by name")}}">
+                            <button class="btn-info btn btn-icon btn_search" id="search-submit"
+                                    type="submit">{{__('Search')}}</button>
                         </form>
                     </div>
                 </div>
@@ -76,16 +86,20 @@
                                     <th>{{__("Name")}}</th>
                                     <th class="slug">{{__("Slug")}}</th>
                                     <th class="status">{{__("Status")}}</th>
-                                    <th class="date" >{{__("Date")}}</th>
+                                    <th class="date">{{__("Date")}}</th>
                                     <th width="100px"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @if( count($rows) > 0)
-                                    <?php
-                                    $traverse = function ($categories, $prefix = '') use (&$traverse) {
+                                        <?php
+                                    $traverse = function ($categories, $prefix = '')
+
+                                    use (&$traverse)
+
+                                    {
                                     foreach ($categories as $row) {
-                                    ?>
+                                        ?>
                                     <tr>
                                         <td><input type="checkbox" name="ids[]" value="{{$row->id}}" class="check-item">
                                         </td>
@@ -96,16 +110,17 @@
                                         <td><span class="badge badge-{{ $row->status }}">{{ $row->status }}</span></td>
                                         <td>{{display_date($row->updated_at)}}</td>
                                         <td>
-                                            <a href="{{route('location.admin.edit',['id'=>$row->id])}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> {{__('Edit')}}
+                                            <a href="{{route('location.admin.edit',['id'=>$row->id])}}"
+                                               class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> {{__('Edit')}}
                                             </a>
                                         </td>
                                     </tr>
-                                    <?php
-                                    $traverse($row->children, $prefix . '-');
+                                        <?php
+                                        $traverse($row->children, $prefix.'-');
                                     }
                                     };
-                                    $traverse($rows);
-                                    ?>
+                                        $traverse($rows);
+                                        ?>
                                 @else
                                     <tr>
                                         <td colspan="5">{{__("No data")}}</td>
@@ -121,14 +136,14 @@
     </div>
 @endsection
 @push('js')
-    {!! \App\Helpers\MapEngine::scripts() !!}
+    {!! MapEngine::scripts() !!}
     <script>
         jQuery(function ($) {
             new BravoMapEngine('map_content', {
-                disableScripts:true,
+                disableScripts: true,
                 fitBounds: true,
                 center: [{{$row->map_lat ?? setting_item('map_lat_default',51.505 ) }}, {{$row->map_lng ?? setting_item('map_lng_default',-0.09 ) }}],
-                zoom:{{$row->map_zoom ?? "8"}},
+                zoom: {{$row->map_zoom ?? "8"}},
                 ready: function (engineMap) {
                     @if($row->map_lat && $row->map_lng)
                     engineMap.addMarker([{{$row->map_lat}}, {{$row->map_lng}}], {

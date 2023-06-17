@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Event\Admin;
 
 use Modules\Booking\Models\Booking;
@@ -12,7 +13,7 @@ class AvailabilityController extends \Modules\Event\Controllers\AvailabilityCont
     protected $bookingClass;
     protected $indexView = 'Event::admin.availability';
 
-    public function __construct(Event $eventClass, EventDate $eventDateClass,Booking $bookingClass)
+    public function __construct(Event $eventClass, EventDate $eventDateClass, Booking $bookingClass)
     {
         $this->setActiveMenu(route('event.admin.index'));
         $this->middleware('dashboard');

@@ -1,19 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCarTable extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+return new class extends Migration {
+
     public function up()
     {
-
     }
 
     /**
@@ -24,4 +16,4 @@ class CreateCarTable extends Migration
     public function down()
     {
     }
-}
+};

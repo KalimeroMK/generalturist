@@ -1,4 +1,5 @@
 <?php
+
 $user = auth()->user();
 ?>
 <div class="modal fade" tabindex="-1" role="dialog" id="enquiry_form_modal">
@@ -13,14 +14,17 @@ $user = auth()->user();
             <div class="modal-body">
                 <input type="hidden" name="service_id" value="{{$row->id}}">
                 <input type="hidden" name="service_type" value="{{$service_type ?? ''}}">
-                <div class="form-group" >
-                    <input type="text" class="form-control" value="{{$user->display_name ?? ''}}" name="enquiry_name" placeholder="{{ __("Name *") }}">
+                <div class="form-group">
+                    <input type="text" class="form-control" value="{{$user->display_name ?? ''}}" name="enquiry_name"
+                           placeholder="{{ __("Name *") }}">
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" value="{{$user->email ?? ''}}" name="enquiry_email" placeholder="{{ __("Email *") }}">
+                    <input type="text" class="form-control" value="{{$user->email ?? ''}}" name="enquiry_email"
+                           placeholder="{{ __("Email *") }}">
                 </div>
                 <div class="form-group" v-if="!enquiry_is_submit">
-                    <input type="text" class="form-control" value="{{$user->phone ?? ''}}" name="enquiry_phone" placeholder="{{ __("Phone") }}">
+                    <input type="text" class="form-control" value="{{$user->phone ?? ''}}" name="enquiry_phone"
+                           placeholder="{{ __("Phone") }}">
                 </div>
                 <div class="form-group" v-if="!enquiry_is_submit">
                     <textarea class="form-control" placeholder="{{ __("Note") }}" name="enquiry_note"></textarea>
@@ -35,7 +39,7 @@ $user = auth()->user();
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Close')}}</button>
                 <button type="button" class="btn btn-primary btn-submit-enquiry">{{__("Send now")}}
-                <i class="fa icon-loading fa-spinner fa-spin fa-fw" style="display: none"></i>
+                    <i class="fa icon-loading fa-spinner fa-spin fa-fw" style="display: none"></i>
                 </button>
             </div>
         </div>

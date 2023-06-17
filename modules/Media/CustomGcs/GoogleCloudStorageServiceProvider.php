@@ -27,11 +27,12 @@ class GoogleCloudStorageServiceProvider extends \Spatie\GoogleCloudStorage\Googl
             return $this->createFilesystem($adapter, $config);
         });
     }
+
     /**
      * Create a new StorageClient
      *
-     * @param  mixed $config
-     * @return \Google\Cloud\Storage\StorageClient
+     * @param  mixed  $config
+     * @return StorageClient
      */
     private function createClient2($config)
     {
@@ -43,7 +44,7 @@ class GoogleCloudStorageServiceProvider extends \Spatie\GoogleCloudStorage\Googl
             ]);
         }
 
-        if (! is_array($keyFile)) {
+        if (!is_array($keyFile)) {
             $keyFile = [];
         }
         return new StorageClient([

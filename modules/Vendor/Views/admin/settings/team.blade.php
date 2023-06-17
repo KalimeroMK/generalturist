@@ -10,14 +10,18 @@
                     <div class="form-group">
                         <div class="form-controls">
                             <div class="form-group">
-                                <label> <input type="checkbox" @if(setting_item('vendor_team_enable')) checked @endif name="vendor_team_enable" value="1"> {{__("Team Member enable?")}}</label>
+                                <label> <input type="checkbox" @if(setting_item('vendor_team_enable')) checked
+                                               @endif name="vendor_team_enable" value="1"> {{__("Team Member enable?")}}
+                                </label>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="form-controls">
                             <div class="form-group">
-                                <label> <input type="checkbox" @if(setting_item('vendor_team_auto_approved')) checked @endif name="vendor_team_auto_approved" value="1"> {{__("Auto-approve team member request?")}}</label>
+                                <label> <input type="checkbox" @if(setting_item('vendor_team_auto_approved')) checked
+                                               @endif name="vendor_team_auto_approved"
+                                               value="1"> {{__("Auto-approve team member request?")}}</label>
                             </div>
                         </div>
                     </div>

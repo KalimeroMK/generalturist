@@ -1,3 +1,5 @@
+@php use Modules\Template\Models\Template; @endphp
+@php use App\Helpers\AdminForm; @endphp
 @if(is_default_lang())
     <div class="row">
         <div class="col-sm-4">
@@ -7,21 +9,21 @@
             <div class="panel">
                 <div class="panel-body">
                     <div class="form-group">
-                        <label >{{__("Choose Layout for Mobile app")}}</label>
+                        <label>{{__("Choose Layout for Mobile app")}}</label>
                         <div class="form-controls">
-                            <?php
-                            $template = \Modules\Template\Models\Template::find(setting_item('api_app_layout'));
-                            \App\Helpers\AdminForm::select2('api_app_layout',[
-                                'configs'=>[
-                                    'ajax'=>[
-                                        'url'=>route('template.admin.getForSelect2'),
-                                        'dataType'=>'json'
+                                <?php
+                                $template = Template::find(setting_item('api_app_layout'));
+                                AdminForm::select2('api_app_layout', [
+                                    'configs' => [
+                                        'ajax' => [
+                                            'url' => route('template.admin.getForSelect2'),
+                                            'dataType' => 'json'
+                                        ]
                                     ]
-                                ]
-                            ],
-                                !empty($template->id) ? [$template->id,$template->title] :false
-                            )
-                            ?>
+                                ],
+                                    !empty($template->id) ? [$template->id, $template->title] : false
+                                )
+                                ?>
                         </div>
                     </div>
                 </div>

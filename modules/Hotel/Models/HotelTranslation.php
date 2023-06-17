@@ -2,8 +2,6 @@
 
 namespace Modules\Hotel\Models;
 
-use App\BaseModel;
-
 class HotelTranslation extends Hotel
 {
     protected $table = 'bravo_hotel_translations';
@@ -16,21 +14,24 @@ class HotelTranslation extends Hotel
         'surrounding'
     ];
 
-    protected $slugField     = false;
+    protected $slugField = false;
     protected $seo_type = 'hotel_translation';
 
     protected $cleanFields = [
         'content'
     ];
     protected $casts = [
-        'policy'  => 'array',
+        'policy' => 'array',
         'surrounding' => 'array',
     ];
 
-    public function getSeoType(){
+    public function getSeoType()
+    {
         return $this->seo_type;
     }
-    public function getRecordRoot(){
-        return $this->belongsTo(Hotel::class,'origin_id');
+
+    public function getRecordRoot()
+    {
+        return $this->belongsTo(Hotel::class, 'origin_id');
     }
 }

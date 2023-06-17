@@ -10,21 +10,23 @@
         @include('admin.message')
         <div class="filter-div d-flex justify-content-between ">
             <div class="col-left">
-                    <form method="post" action="{{route('template.admin.importTemplate')}}" class="" enctype="multipart/form-data">
-                        {{csrf_field()}}
-                        <div class="custom-file mb-3">
-                            <input type="file" name="file" class="custom-file-input" id="customFile" accept="application/json" required>
-                            <label class="custom-file-label" for="customFile">{{__("Choose file")}}</label>
-                        </div>
-                        <button  class="btn-info btn btn-icon dungdt-apply-form-btn" type="submit">{{__('Import')}}</button>
-                    </form>
+                <form method="post" action="{{route('template.admin.importTemplate')}}" class=""
+                      enctype="multipart/form-data">
+                    {{csrf_field()}}
+                    <div class="custom-file mb-3">
+                        <input type="file" name="file" class="custom-file-input" id="customFile"
+                               accept="application/json" required>
+                        <label class="custom-file-label" for="customFile">{{__("Choose file")}}</label>
+                    </div>
+                    <button class="btn-info btn btn-icon dungdt-apply-form-btn" type="submit">{{__('Import')}}</button>
+                </form>
             </div>
         </div>
     </div>
 @endsection
 @push('js')
     <script>
-        $('#customFile').on('change',function(){
+        $('#customFile').on('change', function () {
             //get the file name
             var fileName = $(this).val();
             //replace the "Choose a file" label

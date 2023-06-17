@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Event\Models;
 
 use App\BaseModel;

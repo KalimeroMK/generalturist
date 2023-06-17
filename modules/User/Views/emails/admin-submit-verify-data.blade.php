@@ -10,12 +10,17 @@
                     @foreach($user->verification_fields as $field)
                         <li>
                             <strong>{{$field['name']}}:</strong>
-                            <i>@if(!empty($field['is_verified'])) {{__("Verified")}} @else {{__("Not verified")}} @endif</i>
+                            <i>@if(!empty($field['is_verified']))
+                                    {{__("Verified")}}
+                                @else
+                                    {{__("Not verified")}}
+                                @endif</i>
                         </li>
                     @endforeach
                 @endif
             </ul>
-            <p>{{__('You can check your information here:')}} <a href="{{route('user.verification.index')}}">{{__('View verification data')}}</a></p>
+            <p>{{__('You can check your information here:')}} <a
+                        href="{{route('user.verification.index')}}">{{__('View verification data')}}</a></p>
 
             <br>
             <p>{{__('Regards')}},<br>{{setting_item('site_title')}}</p>

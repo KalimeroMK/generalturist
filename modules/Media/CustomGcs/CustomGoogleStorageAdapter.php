@@ -26,10 +26,11 @@ class CustomGoogleStorageAdapter extends GoogleCloudStorageAdapter
 
         return true;
     }
+
     /**
      * Returns an array of options from the config.
      *
-     * @param Config $config
+     * @param  Config  $config
      *
      * @return array
      */

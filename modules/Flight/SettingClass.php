@@ -1,9 +1,8 @@
 <?php
 
-namespace  Modules\Flight;
+namespace Modules\Flight;
 
 use Modules\Core\Abstracts\BaseSettingsClass;
-use Modules\Core\Models\Settings;
 
 class SettingClass extends BaseSettingsClass
 {
@@ -11,11 +10,11 @@ class SettingClass extends BaseSettingsClass
     {
         return [
             [
-                'id'   => 'flight',
+                'id' => 'flight',
                 'title' => __("Flight Settings"),
-                'position'=>20,
-                'view'=>"Flight::admin.settings.setting",
-                "keys"=>[
+                'position' => 20,
+                'view' => "Flight::admin.settings.setting",
+                "keys" => [
                     'flight_disable',
                     'flight_page_search_title',
                     'flight_page_search_banner',
@@ -52,7 +51,7 @@ class SettingClass extends BaseSettingsClass
                     'flight_icon_marker_map',
                     'flight_booking_type',
                 ],
-                'html_keys'=>[
+                'html_keys' => [
 
                 ]
             ]

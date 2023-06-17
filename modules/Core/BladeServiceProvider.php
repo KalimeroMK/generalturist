@@ -1,5 +1,7 @@
 <?php
+
 namespace Modules\Core;
+
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 

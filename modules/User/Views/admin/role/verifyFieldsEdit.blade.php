@@ -9,17 +9,18 @@
             <div class="col-md-3">
             </div>
             <div class="col-md-6">
-                <form method="post" action="{{route('user.admin.role.verifyFieldsStore')}}" class="needs-validation" novalidate>
+                <form method="post" action="{{route('user.admin.role.verifyFieldsStore')}}" class="needs-validation"
+                      novalidate>
                     @csrf
-                <div class="panel">
-                    <div class="panel-title"><strong>{{ __('Edit verification field')}}</strong></div>
-                    <div class="panel-body">
-                        @include('User::admin.role.verifyFieldsForm')
+                    <div class="panel">
+                        <div class="panel-title"><strong>{{ __('Edit verification field')}}</strong></div>
+                        <div class="panel-body">
+                            @include('User::admin.role.verifyFieldsForm')
+                        </div>
+                        <div class="panel-footer">
+                            <button type="submit" class="btn btn-success">{{__('Save Changes')}}</button>
+                        </div>
                     </div>
-                    <div class="panel-footer">
-                        <button type="submit" class="btn btn-success">{{__('Save Changes')}}</button>
-                    </div>
-                </div>
                 </form>
             </div>
         </div>

@@ -9,9 +9,10 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 use Illuminate\Support\Facades\Route;
 
 // Page
-Route::group(['prefix'=>config('page.page_route_prefix')],function(){
-    Route::get('/{slug?}','PageController@detail')->name('page.detail');// Detail
+Route::group(['prefix' => config('page.page_route_prefix')], function () {
+    Route::get('/{slug?}', 'PageController@detail')->name('page.detail');// Detail
 });

@@ -19,18 +19,17 @@ class SendNotifyUpdateVerificationData
     {
         $user = $event->user;
         $data = [
-            'id' =>  $user->id,
-            'event'=>'AdminUpdateVerificationData',
-            'to'=>'customer',
-            'name' =>  $user->display_name,
-            'avatar' =>  $user->avatar_url,
+            'id' => $user->id,
+            'event' => 'AdminUpdateVerificationData',
+            'to' => 'customer',
+            'name' => $user->display_name,
+            'avatar' => $user->avatar_url,
             'link' => route('user.verification.index'),
             'type' => 'user_verification_request',
             'message' => __('Your account information was verified')
         ];
 
         $user->notify(new PrivateChannelServices($data));
-
     }
 
 }

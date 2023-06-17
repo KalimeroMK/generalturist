@@ -1,9 +1,8 @@
 <?php
 
-namespace  Modules\Boat;
+namespace Modules\Boat;
 
 use Modules\Core\Abstracts\BaseSettingsClass;
-use Modules\Core\Models\Settings;
 
 class SettingClass extends BaseSettingsClass
 {
@@ -11,11 +10,11 @@ class SettingClass extends BaseSettingsClass
     {
         return [
             [
-                'id'   => 'boat',
+                'id' => 'boat',
                 'title' => __("Boat Settings"),
-                'position'=>20,
-                'view'=>"Boat::admin.settings.boat",
-                "keys"=>[
+                'position' => 20,
+                'view' => "Boat::admin.settings.boat",
+                "keys" => [
                     'boat_disable',
                     'boat_page_search_title',
                     'boat_page_search_banner',
@@ -58,10 +57,10 @@ class SettingClass extends BaseSettingsClass
                     'boat_location_radius_value',
                     'boat_location_radius_type',
                 ],
-                'html_keys'=>[
+                'html_keys' => [
 
                 ],
-                'filter_demo_mode'=>[
+                'filter_demo_mode' => [
                 ]
             ]
         ];

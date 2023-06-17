@@ -16,36 +16,39 @@ class ThemeController extends AdminController
         $this->setActiveMenu(route('theme.admin.index'));
     }
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $this->checkPermission("theme_manage");
-        if(Session::get('success')){
+        if (Session::get('success')) {
             Artisan::call('migrate', [
                 '--force' => true,
             ]);
         }
 
         $data = [
-            "rows"=>ThemeManager::all(),
-            "page_title"=>__("Theme management")
+            "rows" => ThemeManager::all(),
+            "page_title" => __("Theme management")
         ];
 
-        return view('Theme::admin.index',$data);
+        return view('Theme::admin.index', $data);
     }
 
-    public function upload(Request $request){
+    public function upload(Request $request)
+    {
         $this->checkPermission("theme_manage");
 
         $data = [
-            "page_title"=>__("Theme Upload")
+            "page_title" => __("Theme Upload")
         ];
 
-        return view('Theme::admin.upload',$data);
+        return view('Theme::admin.upload', $data);
     }
 
 
-    public function activate($theme){
-        if(is_demo_mode()){
-            return back()->with('error',__("Disable for demo mode"));
+    public function activate($theme)
+    {
+        if (is_demo_mode()) {
+            return back()->with('error', __("Disable for demo mode"));
         }
         $this->checkPermission("theme_manage");
 
@@ -54,29 +57,30 @@ class ThemeController extends AdminController
 
         Storage::disk('root')->put('bc.php', $content);
 
-        return back()->with('success',__("Theme activated"));
+        return back()->with('success', __("Theme activated"));
     }
-    public function seeding($theme){
 
-        if(is_demo_mode()){
-            return back()->with('danger',__("DEMO MODE: You are not allowed to do that"));
+    public function seeding($theme)
+    {
+        if (is_demo_mode()) {
+            return back()->with('danger', __("DEMO MODE: You are not allowed to do that"));
         }
 
         $this->checkPermission("theme_manage");
 
         $provider = ThemeManager::theme($theme);
 
-        if(class_exists($provider))
-        {
+        if (class_exists($provider)) {
             $seeder = $provider::$seeder;
-            if(!class_exists($seeder)) return back()->with('error',__("This theme does not have seeder class"));
+            if (!class_exists($seeder)) {
+                return back()->with('error', __("This theme does not have seeder class"));
+            }
 
             $provider::runSeeder();
 
-            return back()->with('success',__("Demo data has been imported"));
-
+            return back()->with('success', __("Demo data has been imported"));
         }
 
-        return back()->with('error',__("Can not run data import"));
+        return back()->with('error', __("Can not run data import"));
     }
 }

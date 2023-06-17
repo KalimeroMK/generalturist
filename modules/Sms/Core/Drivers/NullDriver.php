@@ -8,15 +8,15 @@ class NullDriver extends Driver
 {
     /**
      * {@inheritdoc}
-    */
+     */
     public function send()
     {
-    	$data = [
-    		'to'=>$this->recipient,
-		    'message'=>$this->message,
-		    'time'=>time()
-	    ];
-    	Log::info($data);
+        $data = [
+            'to' => $this->recipient,
+            'message' => $this->message,
+            'time' => time()
+        ];
+        Log::info($data);
         return [];
     }
 }

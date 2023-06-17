@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTableUserUpgradeRequests extends Migration
 {
@@ -13,7 +13,7 @@ class CreateTableUserUpgradeRequests extends Migration
      */
     public function up()
     {
-        if(!Schema::hasTable('user_upgrade_request')) {
+        if (!Schema::hasTable('user_upgrade_request')) {
             Schema::create('user_upgrade_request', function (Blueprint $table) {
                 //
                 $table->bigIncrements('id');
@@ -38,6 +38,5 @@ class CreateTableUserUpgradeRequests extends Migration
     public function down()
     {
         Schema::dropIfExists('user_upgrade_request');
-
     }
 }

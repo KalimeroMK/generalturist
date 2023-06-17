@@ -3,12 +3,15 @@
 namespace Modules\Boat\Models;
 
 use App\Currency;
-use Illuminate\Http\Response;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
 use Modules\Booking\Models\Bookable;
 use Modules\Booking\Models\Booking;
 use Modules\Booking\Models\Service;
@@ -16,12 +19,9 @@ use Modules\Booking\Traits\CapturesService;
 use Modules\Core\Models\Attributes;
 use Modules\Core\Models\SEO;
 use Modules\Core\Models\Terms;
-use Modules\Media\Helpers\FileHelper;
-use Modules\Review\Models\Review;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Modules\Boat\Models\BoatTranslation;
-use Modules\User\Models\UserWishList;
 use Modules\Location\Models\Location;
+use Modules\Review\Models\Review;
+use Modules\User\Models\UserWishList;
 
 class Boat extends Bookable
 {
@@ -29,13 +29,13 @@ class Boat extends Bookable
     use SoftDeletes;
     use CapturesService;
 
-    protected $table = 'bravo_boats';
     public $type = 'boat';
-    public $checkout_booking_detail_file       = 'Boat::frontend/booking/detail';
+    public $checkout_booking_detail_file = 'Boat::frontend/booking/detail';
     public $checkout_booking_detail_modal_file = 'Boat::frontend/booking/detail-modal';
-    public $set_paid_modal_file                = 'Boat::frontend/booking/set-paid-modal';
-    public $email_new_booking_file             = 'Boat::emails.new_booking_detail';
+    public $set_paid_modal_file = 'Boat::frontend/booking/set-paid-modal';
+    public $email_new_booking_file = 'Boat::emails.new_booking_detail';
     public $availabilityClass = BoatDate::class;
+    protected $table = 'bravo_boats';
     protected $translation_class = BoatTranslation::class;
 
     protected $fillable = [
@@ -44,18 +44,18 @@ class Boat extends Bookable
         'status',
         'faqs'
     ];
-    protected $slugField     = 'slug';
+    protected $slugField = 'slug';
     protected $slugFromField = 'title';
     protected $seo_type = 'boat';
     protected $casts = [
-        'faqs'        => 'array',
-        'specs'       => 'array',
+        'faqs' => 'array',
+        'specs' => 'array',
         'extra_price' => 'array',
         'service_fee' => 'array',
-        'price'       => 'float',
-        'sale_price'  => 'float',
-        'include'     => 'array',
-        'exclude'     => 'array',
+        'price' => 'float',
+        'sale_price' => 'float',
+        'include' => 'array',
+        'exclude' => 'array',
     ];
     /**
      * @var Booking
@@ -112,16 +112,20 @@ class Boat extends Bookable
     static public function getSeoMetaForPageList()
     {
         $meta['seo_title'] = __("Search for Boats");
-        if (!empty($title = setting_item_with_lang("boat_page_list_seo_title",false))) {
+        if (!empty($title = setting_item_with_lang("boat_page_list_seo_title", false))) {
             $meta['seo_title'] = $title;
-        }else if(!empty($title = setting_item_with_lang("boat_page_search_title"))) {
-            $meta['seo_title'] = $title;
+        } else {
+            if (!empty($title = setting_item_with_lang("boat_page_search_title"))) {
+                $meta['seo_title'] = $title;
+            }
         }
         $meta['seo_image'] = null;
         if (!empty($title = setting_item("boat_page_list_seo_image"))) {
             $meta['seo_image'] = $title;
-        }else if(!empty($title = setting_item("boat_page_search_banner"))) {
-            $meta['seo_image'] = $title;
+        } else {
+            if (!empty($title = setting_item("boat_page_search_banner"))) {
+                $meta['seo_image'] = $title;
+            }
         }
         $meta['seo_desc'] = setting_item_with_lang("boat_page_list_seo_desc");
         $meta['seo_share'] = setting_item_with_lang("boat_page_list_seo_share");
@@ -129,40 +133,138 @@ class Boat extends Bookable
         return $meta;
     }
 
+    public static function getLinkForPageSearch($locale = false, $param = [])
+    {
+        return url(app_get_locale(false, false, '/').config('boat.boat_route_prefix')."?".http_build_query($param));
+    }
 
-    public function terms(){
+    public static function searchForMenu($q = false)
+    {
+        $query = static::select('id', 'title as name');
+        if (strlen($q)) {
+            $query->where('title', 'like', "%".$q."%");
+        }
+        $a = $query->orderBy('id', 'desc')->limit(10)->get();
+        return $a;
+    }
+
+    public static function getServiceIconFeatured()
+    {
+        return "icofont-ship";
+    }
+
+    public static function isEnable()
+    {
+        return setting_item('boat_disable') == false;
+    }
+
+    public static function isEnableEnquiry()
+    {
+        if (!empty(setting_item('booking_enquiry_for_boat'))) {
+            return true;
+        }
+        return false;
+    }
+
+    static public function getClassAvailability()
+    {
+        return "\Modules\Boat\Controllers\AvailabilityController";
+    }
+
+    static public function getFiltersSearch()
+    {
+        $min_max_price = self::getMinMaxPrice();
+        return [
+            [
+                "title" => __("Filter Price"),
+                "field" => "price_range",
+                "position" => "1",
+                "min_price" => floor(Currency::convertPrice($min_max_price[0])),
+                "max_price" => ceil(Currency::convertPrice($min_max_price[1])),
+            ],
+            [
+                "title" => __("Review Score"),
+                "field" => "review_score",
+                "position" => "2",
+                "min" => "1",
+                "max" => "5",
+            ],
+            [
+                "title" => __("Attributes"),
+                "field" => "terms",
+                "position" => "3",
+                "data" => Attributes::getAllAttributesForApi("boat")
+            ]
+        ];
+    }
+
+    public static function getMinMaxPrice()
+    {
+        $model = parent::selectRaw('MIN( min_price ) AS min_price ,
+                                    MAX( min_price ) AS max_price ')->where("status", "publish")->first();
+        if (empty($model->min_price) and empty($model->max_price)) {
+            return [
+                0,
+                100
+            ];
+        }
+        return [
+            $model->min_price,
+            $model->max_price
+        ];
+    }
+
+    static public function getFormSearch()
+    {
+        $search_fields = setting_item_array('boat_search_fields');
+        $search_fields = array_values(Arr::sort($search_fields, function ($value) {
+            return $value['position'] ?? 0;
+        }));
+        foreach ($search_fields as &$item) {
+            if ($item['field'] == 'attr' and !empty($item['attr'])) {
+                $attr = Attributes::find($item['attr']);
+                $item['attr_title'] = $attr->translate()->name;
+                foreach ($attr->terms as $term) {
+                    $translate = $term->translate();
+                    $item['terms'][] = [
+                        'id' => $term->id,
+                        'title' => $translate->name,
+                    ];
+                }
+            }
+        }
+        return $search_fields;
+    }
+
+    public function terms()
+    {
         return $this->hasMany($this->boatTermClass, "target_id");
     }
 
     public function getDetailUrl($include_param = true)
     {
         $param = [];
-        if($include_param){
+        if ($include_param) {
             if (!empty($date = request()->input('start'))) {
                 $param['start'] = $date;
             }
         }
-        $urlDetail = app_get_locale(false, false, '/') . config('boat.boat_route_prefix') . "/" . $this->slug;
-        if(!empty($param)){
+        $urlDetail = app_get_locale(false, false, '/').config('boat.boat_route_prefix')."/".$this->slug;
+        if (!empty($param)) {
             $urlDetail .= "?".http_build_query($param);
         }
         return url($urlDetail);
     }
 
-    public static function getLinkForPageSearch( $locale = false , $param = [] ){
-
-        return url(app_get_locale(false , false , '/'). config('boat.boat_route_prefix')."?".http_build_query($param));
-    }
-
     public function getEditUrl()
     {
-        return url(route('boat.admin.edit',['id'=>$this->id]));
+        return url(route('boat.admin.edit', ['id' => $this->id]));
     }
 
     public function fill(array $attributes)
     {
-        if(!empty($attributes)){
-            foreach ( $this->fillable as $item ){
+        if (!empty($attributes)) {
+            foreach ($this->fillable as $item) {
                 $attributes[$item] = $attributes[$item] ?? null;
             }
         }
@@ -171,8 +273,9 @@ class Boat extends Bookable
 
     public function isBookable()
     {
-        if ($this->status != 'publish')
+        if ($this->status != 'publish') {
             return false;
+        }
         return parent::isBookable();
     }
 
@@ -180,11 +283,13 @@ class Boat extends Bookable
     {
         $res = $this->addToCartValidate($request);
 
-        if($res !== true) return $res;
+        if ($res !== true) {
+            return $res;
+        }
         // Add Booking
 
         // Get price in range
-        $number = $request->input('number',1);
+        $number = $request->input('number', 1);
         $total = $this->tmp_price * $number;
 
         // Extra Price
@@ -213,14 +318,14 @@ class Boat extends Bookable
         $total_buyer_fee = 0;
         if (!empty($list_buyer_fees = setting_item('boat_booking_buyer_fees'))) {
             $list_fees = json_decode($list_buyer_fees, true);
-            $total_buyer_fee = $this->calculateServiceFees($list_fees , $total_before_fees , 1);
+            $total_buyer_fee = $this->calculateServiceFees($list_fees, $total_before_fees, 1);
             $total += $total_buyer_fee;
         }
 
         //Service Fees for Vendor
         $total_service_fee = 0;
-        if(!empty($this->enable_service_fee) and !empty($list_service_fee = $this->service_fee)){
-            $total_service_fee = $this->calculateServiceFees($list_service_fee , $total_before_fees , 1);
+        if (!empty($this->enable_service_fee) and !empty($list_service_fee = $this->service_fee)) {
+            $total_service_fee = $this->calculateServiceFees($list_service_fee, $total_before_fees, 1);
             $total += $total_service_fee;
         }
 
@@ -244,15 +349,14 @@ class Boat extends Bookable
         $booking->calculateCommission();
         $booking->number = $number;
 
-        if($this->isDepositEnable())
-        {
+        if ($this->isDepositEnable()) {
             $booking_deposit_fomular = $this->getDepositFomular();
             $tmp_price_total = $booking->total;
-            if($booking_deposit_fomular == "deposit_and_fee"){
+            if ($booking_deposit_fomular == "deposit_and_fee") {
                 $tmp_price_total = $booking->total_before_fees;
             }
 
-            switch ($this->getDepositType()){
+            switch ($this->getDepositType()) {
                 case "percent":
                     $booking->deposit = $tmp_price_total * $this->getDepositAmount() / 100;
                     break;
@@ -260,14 +364,13 @@ class Boat extends Bookable
                     $booking->deposit = $this->getDepositAmount();
                     break;
             }
-            if($booking_deposit_fomular == "deposit_and_fee"){
+            if ($booking_deposit_fomular == "deposit_and_fee") {
                 $booking->deposit = $booking->deposit + $total_buyer_fee + $total_service_fee;
             }
         }
 
         $check = $booking->save();
         if ($check) {
-
             $this->bookingClass::clearDraftBookings();
 
             $booking->addMeta('base_price', $this->tmp_price);
@@ -278,12 +381,11 @@ class Boat extends Bookable
             $booking->addMeta('day', $request->input('day'));
             $booking->addMeta('hour', $request->input('hour'));
 
-            if($this->isDepositEnable())
-            {
-                $booking->addMeta('deposit_info',[
-                    'type'=>$this->getDepositType(),
-                    'amount'=>$this->getDepositAmount(),
-                    'fomular'=>$this->getDepositFomular(),
+            if ($this->isDepositEnable()) {
+                $booking->addMeta('deposit_info', [
+                    'type' => $this->getDepositType(),
+                    'amount' => $this->getDepositAmount(),
+                    'fomular' => $this->getDepositFomular(),
                 ]);
             }
 
@@ -308,126 +410,119 @@ class Boat extends Bookable
                 return $this->sendError('', ['errors' => $validator->errors()]);
             }
         }
-        $total_number = $request->input('number',1);
+        $total_number = $request->input('number', 1);
 
         $start_date = $request->input('start_date');
-        if(strtotime($start_date) < strtotime(date('Y-m-d 00:00:00')))
-        {
+        if (strtotime($start_date) < strtotime(date('Y-m-d 00:00:00'))) {
             return $this->sendError(__("Your selected dates are not valid"));
         }
 
-        if(!empty($this->min_day_before_booking)){
+        if (!empty($this->min_day_before_booking)) {
             $minday_before = strtotime("today +".$this->min_day_before_booking." days");
-            if(  strtotime($start_date) < $minday_before){
-                return $this->sendError(__("You must book the service for :number days in advance",["number"=>$this->min_day_before_booking]));
+            if (strtotime($start_date) < $minday_before) {
+                return $this->sendError(__("You must book the service for :number days in advance",
+                    ["number" => $this->min_day_before_booking]));
             }
         }
 
-        $hour = $request->input('hour',0);
-        $day = $request->input('day',0);
+        $hour = $request->input('hour', 0);
+        $day = $request->input('day', 0);
         $start_time = $request->input('start_time');
 
-        if(empty($hour) and empty($day)){
+        if (empty($hour) and empty($day)) {
             return $this->sendError(__("You haven't selected return day or hours"));
         }
 
-        if(!empty($this->start_time_booking)){
-            if(strtotime($start_time) < strtotime( $this->start_time_booking )){
-                return $this->sendError(__("Start time booking: :time",['time'=>$this->start_time_booking]));
+        if (!empty($this->start_time_booking)) {
+            if (strtotime($start_time) < strtotime($this->start_time_booking)) {
+                return $this->sendError(__("Start time booking: :time", ['time' => $this->start_time_booking]));
             }
         }
-        if(!empty($this->end_time_booking)){
-            if(strtotime($start_time) > strtotime( $this->end_time_booking )){
-                return $this->sendError(__("End time booking: :time",['time'=>$this->end_time_booking]));
+        if (!empty($this->end_time_booking)) {
+            if (strtotime($start_time) > strtotime($this->end_time_booking)) {
+                return $this->sendError(__("End time booking: :time", ['time' => $this->end_time_booking]));
             }
         }
-        $type = empty($day) ? "per_hour":"per_day";
+        $type = empty($day) ? "per_hour" : "per_day";
         $start_date_time = $start_date." ".$start_time;
-        if($type == 'per_hour'){
-            $end_date_time = date('Y-m-d H:i' , strtotime($start_date_time ." +".$hour."hours"));
-            if( strtotime($end_date_time) > strtotime($start_date ." +1day")){
+        if ($type == 'per_hour') {
+            $end_date_time = date('Y-m-d H:i', strtotime($start_date_time." +".$hour."hours"));
+            if (strtotime($end_date_time) > strtotime($start_date." +1day")) {
                 return $this->sendError(__("You need return boat on same-day"));
             }
         }
-        if($type == 'per_day'){
-            $end_date_time = date('Y-m-d H:i' , strtotime($start_date_time ." +".$day."days"));
+        if ($type == 'per_day') {
+            $end_date_time = date('Y-m-d H:i', strtotime($start_date_time." +".$day."days"));
         }
 
-        if(!$this->isAvailableInRanges($start_date_time,$end_date_time,$type,$hour,$total_number)){
+        if (!$this->isAvailableInRanges($start_date_time, $end_date_time, $type, $hour, $total_number)) {
             return $this->sendError(__("This boat is not available at selected dates"));
         }
         return true;
     }
 
-    public function beforeCheckout(Request $request, $booking)
+    public function isAvailableInRanges($start_date_time, $end_date_time, $type, $hour, $number = 1)
     {
-        if(!$this->isAvailableInRanges($booking->start_date,$booking->end_date,$booking->getMeta("type_date"),$booking->getMeta("hour"),$booking->number)){
-            return $this->sendError(__("This boat is not available at selected dates"));
-        }
-    }
-
-    public function isAvailableInRanges($start_date_time,$end_date_time,$type,$hour,$number = 1){
         $allDates = [];
-        if($type == 'per_hour'){
-            $start_date =  date('Y-m-d' , strtotime($start_date_time));
+        if ($type == 'per_hour') {
+            $start_date = date('Y-m-d', strtotime($start_date_time));
             $base_price = $this->price_per_hour;
             $allDates[$start_date] = [
-                'number'=>$this->number,
-                'price'=>$base_price * $hour,
-                'status'=>$this->default_state
+                'number' => $this->number,
+                'price' => $base_price * $hour,
+                'status' => $this->default_state
             ];
-            $datesData = $this->getDatesInRange($start_date,$start_date);
-            if(!empty($datesData)){
-                foreach ($datesData as $date)
-                {
+            $datesData = $this->getDatesInRange($start_date, $start_date);
+            if (!empty($datesData)) {
+                foreach ($datesData as $date) {
                     $allDates[$start_date] = [
-                        'number'=>$date->number,
-                        'price'=>$date->price_per_hour * $hour,
-                        'status'=>$date->active
+                        'number' => $date->number,
+                        'price' => $date->price_per_hour * $hour,
+                        'status' => $date->active
                     ];
                 }
             }
-            if(empty($allDates[$start_date]['status'])){
+            if (empty($allDates[$start_date]['status'])) {
                 return false;
             }
         }
-        if($type == 'per_day'){
+        if ($type == 'per_day') {
             $base_price = $this->price_per_day;
-            $period = periodDate($start_date_time,$end_date_time,true);
+            $period = periodDate($start_date_time, $end_date_time, true);
             foreach ($period as $dt) {
                 $allDates[$dt->format('Y-m-d')] = [
-                    'number'=>$this->number,
-                    'price'=>$base_price,
-                    'status'=>$this->default_state
+                    'number' => $this->number,
+                    'price' => $base_price,
+                    'status' => $this->default_state
                 ];
             }
-            $datesData = $this->getDatesInRange($start_date_time,$end_date_time);
-            if(!empty($datesData)){
-                foreach ($datesData as $date)
-                {
-                    if(empty($allDates[date('Y-m-d',strtotime($date->start_date))])) continue;
-                    $allDates[date('Y-m-d',strtotime($date->start_date))] = [
-                        'number'=>$date->number,
-                        'price'=>$date->price_per_day,
-                        'status'=>$date->active
+            $datesData = $this->getDatesInRange($start_date_time, $end_date_time);
+            if (!empty($datesData)) {
+                foreach ($datesData as $date) {
+                    if (empty($allDates[date('Y-m-d', strtotime($date->start_date))])) {
+                        continue;
+                    }
+                    $allDates[date('Y-m-d', strtotime($date->start_date))] = [
+                        'number' => $date->number,
+                        'price' => $date->price_per_day,
+                        'status' => $date->active
                     ];
                 }
             }
-            foreach ($allDates as $date=>$data)
-            {
-                if(empty($data['status'])){
+            foreach ($allDates as $date => $data) {
+                if (empty($data['status'])) {
                     return false;
                 }
             }
             // Remove ngay cuoi tra boat
             array_pop($allDates);
         }
-        $bookingData = $this->getBookingsInRange($start_date_time,$end_date_time);
-        if(!empty($bookingData) and $bookingData->count() > 0){
+        $bookingData = $this->getBookingsInRange($start_date_time, $end_date_time);
+        if (!empty($bookingData) and $bookingData->count() > 0) {
             return false;
         }
 
-        $this->tmp_price = array_sum(array_column($allDates,'price'));
+        $this->tmp_price = array_sum(array_column($allDates, 'price'));
         $this->tmp_dates = $allDates;
 
         $this->tmp_start_date = $start_date_time;
@@ -436,43 +531,89 @@ class Boat extends Bookable
 
         return true;
     }
-    public function getDatesInRange($start_date,$end_date)
+
+    public function getDatesInRange($start_date, $end_date)
     {
         $query = $this->boatDateClass::query();
-        $query->where('target_id',$this->id);
-        $query->where('start_date','>=',date('Y-m-d',strtotime($start_date)));
-        $query->where('end_date','<=',date('Y-m-d',strtotime($end_date)));
+        $query->where('target_id', $this->id);
+        $query->where('start_date', '>=', date('Y-m-d', strtotime($start_date)));
+        $query->where('end_date', '<=', date('Y-m-d', strtotime($end_date)));
         return $query->take(100)->get();
+    }
+
+    /**
+     * @param $from
+     * @param $to
+     * @return Builder[]|Collection
+     */
+    public function getBookingsInRange($from, $to)
+    {
+        $query = $this->bookingClass::query();
+        $query->whereNotIn('status', $this->bookingClass::$notAcceptedStatus);
+        $query->where('start_date', '<', $to)->where('end_date', '>', $from)->take(100);
+
+        $query->where('object_id', $this->id);
+        $query->where('object_model', $this->type);
+
+        return $query->orderBy('id', 'asc')->get();
+    }
+
+    public function isDepositEnable()
+    {
+        return (setting_item('boat_deposit_enable') and setting_item('boat_deposit_amount'));
+    }
+
+    public function getDepositFomular()
+    {
+        return setting_item('boat_deposit_fomular', 'default');
+    }
+
+    public function getDepositType()
+    {
+        return setting_item('boat_deposit_type');
+    }
+
+    public function getDepositAmount()
+    {
+        return setting_item('boat_deposit_amount');
+    }
+
+    public function beforeCheckout(Request $request, $booking)
+    {
+        if (!$this->isAvailableInRanges($booking->start_date, $booking->end_date, $booking->getMeta("type_date"),
+            $booking->getMeta("hour"), $booking->number)) {
+            return $this->sendError(__("This boat is not available at selected dates"));
+        }
     }
 
     public function getBookingData()
     {
         if (!empty($start = request()->input('start'))) {
-            $start = date("Y-m-d",strtotime($start));
+            $start = date("Y-m-d", strtotime($start));
         }
         $booking_data = [
-            'id'              => $this->id,
-            'extra_price'     => [],
-            'minDate'         => date('m/d/Y'),
-            'max_number'      => $this->number ?? 1,
-            'buyer_fees'      => [],
-            'start_date'      => $start ?? "",
+            'id' => $this->id,
+            'extra_price' => [],
+            'minDate' => date('m/d/Y'),
+            'max_number' => $this->number ?? 1,
+            'buyer_fees' => [],
+            'start_date' => $start ?? "",
             'start_date_html' => request()->input('start') ? display_date(request()->input('start')) : __('Please select'),
-            'deposit'=>$this->isDepositEnable(),
-            'deposit_type'=>$this->getDepositType(),
-            'deposit_amount'=>$this->getDepositAmount(),
-            'deposit_fomular'=>$this->getDepositFomular(),
-            'is_form_enquiry_and_book'=> $this->isFormEnquiryAndBook(),
-            'enquiry_type'=> $this->getBookingEnquiryType(),
-            'start_time'=> $this->start_time_booking ?? "00:00",
+            'deposit' => $this->isDepositEnable(),
+            'deposit_type' => $this->getDepositType(),
+            'deposit_amount' => $this->getDepositAmount(),
+            'deposit_fomular' => $this->getDepositFomular(),
+            'is_form_enquiry_and_book' => $this->isFormEnquiryAndBook(),
+            'enquiry_type' => $this->getBookingEnquiryType(),
+            'start_time' => $this->start_time_booking ?? "00:00",
         ];
         $lang = app()->getLocale();
         if ($this->enable_extra_price) {
             $booking_data['extra_price'] = $this->extra_price;
             if (!empty($booking_data['extra_price'])) {
                 foreach ($booking_data['extra_price'] as $k => &$type) {
-                    if (!empty($lang) and !empty($type['name_' . $lang])) {
-                        $type['name'] = $type['name_' . $lang];
+                    if (!empty($lang) and !empty($type['name_'.$lang])) {
+                        $type['name'] = $type['name_'.$lang];
                     }
                     $type['number'] = 0;
                     $type['enable'] = 0;
@@ -480,40 +621,40 @@ class Boat extends Bookable
                     $type['price_type'] = '';
                     switch ($type['type']) {
                         case "per_day":
-                            $type['price_type'] .= '/' . __('day');
+                            $type['price_type'] .= '/'.__('day');
                             break;
                         case "per_hour":
-                            $type['price_type'] .= '/' . __('hour');
+                            $type['price_type'] .= '/'.__('hour');
                             break;
                     }
                     if (!empty($type['per_person'])) {
-                        $type['price_type'] .= '/' . __('guest');
+                        $type['price_type'] .= '/'.__('guest');
                     }
                 }
             }
 
-            $booking_data['extra_price'] = array_values((array)$booking_data['extra_price']);
+            $booking_data['extra_price'] = array_values((array) $booking_data['extra_price']);
         }
 
         $list_fees = setting_item_array('boat_booking_buyer_fees');
-        if(!empty($list_fees)){
-            foreach ($list_fees as $item){
+        if (!empty($list_fees)) {
+            foreach ($list_fees as $item) {
                 $item['type_name'] = $item['name_'.app()->getLocale()] ?? $item['name'] ?? '';
                 $item['type_desc'] = $item['desc_'.app()->getLocale()] ?? $item['desc'] ?? '';
                 $item['price_type'] = '';
                 if (!empty($item['per_person']) and $item['per_person'] == 'on') {
-                    $item['price_type'] .= '/' . __('guest');
+                    $item['price_type'] .= '/'.__('guest');
                 }
                 $booking_data['buyer_fees'][] = $item;
             }
         }
-        if(!empty($this->enable_service_fee) and !empty($service_fee = $this->service_fee)){
+        if (!empty($this->enable_service_fee) and !empty($service_fee = $this->service_fee)) {
             foreach ($service_fee as $item) {
-                $item['type_name'] = $item['name_' . app()->getLocale()] ?? $item['name'] ?? '';
-                $item['type_desc'] = $item['desc_' . app()->getLocale()] ?? $item['desc'] ?? '';
+                $item['type_name'] = $item['name_'.app()->getLocale()] ?? $item['name'] ?? '';
+                $item['type_desc'] = $item['desc_'.app()->getLocale()] ?? $item['desc'] ?? '';
                 $item['price_type'] = '';
                 if (!empty($item['per_person']) and $item['per_person'] == 'on') {
-                    $item['price_type'] .= '/' . __('guest');
+                    $item['price_type'] .= '/'.__('guest');
                 }
                 $booking_data['buyer_fees'][] = $item;
             }
@@ -521,31 +662,24 @@ class Boat extends Bookable
         return $booking_data;
     }
 
-    public static function searchForMenu($q = false)
+    public static function isFormEnquiryAndBook()
     {
-        $query = static::select('id', 'title as name');
-        if (strlen($q)) {
-
-            $query->where('title', 'like', "%" . $q . "%");
+        $check = setting_item('booking_enquiry_for_boat');
+        if (!empty($check) and setting_item('booking_enquiry_type_boat') == "booking_and_enquiry") {
+            return true;
         }
-        $a = $query->orderBy('id', 'desc')->limit(10)->get();
-        return $a;
+        return false;
     }
 
-    public static function getMinMaxPrice()
+    public static function getBookingEnquiryType()
     {
-        $model = parent::selectRaw('MIN( min_price ) AS min_price ,
-                                    MAX( min_price ) AS max_price ')->where("status", "publish")->first();
-        if (empty($model->min_price) and empty($model->max_price)) {
-            return [
-                0,
-                100
-            ];
+        $check = setting_item('booking_enquiry_for_boat');
+        if (!empty($check)) {
+            if (setting_item('booking_enquiry_type_boat') == "only_enquiry") {
+                return "enquiry";
+            }
         }
-        return [
-            $model->min_price,
-            $model->max_price
-        ];
+        return "book";
     }
 
     public function getReviewEnable()
@@ -558,7 +692,8 @@ class Boat extends Bookable
         return setting_item("boat_review_approved", 0);
     }
 
-    public function review_after_booking(){
+    public function review_after_booking()
+    {
         return setting_item("boat_enable_review_after_booking", 0);
     }
 
@@ -570,125 +705,44 @@ class Boat extends Bookable
             $status_making_completed_booking = json_decode($options);
         }
         $number_review = $this->reviewClass::countReviewByServiceID($this->id, Auth::id(), false, $this->type) ?? 0;
-        $number_booking = $this->bookingClass::countBookingByServiceID($this->id, Auth::id(),$status_making_completed_booking) ?? 0;
+        $number_booking = $this->bookingClass::countBookingByServiceID($this->id, Auth::id(),
+            $status_making_completed_booking) ?? 0;
         $number = $number_booking - $number_review;
-        if($number < 0) $number = 0;
+        if ($number < 0) {
+            $number = 0;
+        }
         return $number;
-    }
-
-    public static function getReviewStats()
-    {
-        $reviewStats = [];
-        if (!empty($list = setting_item("boat_review_stats", []))) {
-            $list = json_decode($list, true);
-            foreach ($list as $item) {
-                $reviewStats[] = $item['title'];
-            }
-        }
-        return $reviewStats;
-    }
-
-    public function getReviewDataAttribute()
-    {
-        $list_score = [
-            'score_total'  => 0,
-            'score_text'   => __("Not rated"),
-            'total_review' => 0,
-            'rate_score'   => [],
-        ];
-        $dataTotalReview = $this->reviewClass::selectRaw(" AVG(rate_number) as score_total , COUNT(id) as total_review ")->where('object_id', $this->id)->where('object_model', $this->type)->where("status", "approved")->first();
-        if (!empty($dataTotalReview->score_total)) {
-            $list_score['score_total'] = number_format($dataTotalReview->score_total, 1);
-            $list_score['score_text'] = Review::getDisplayTextScoreByLever(round($list_score['score_total']));
-        }
-        if (!empty($dataTotalReview->total_review)) {
-            $list_score['total_review'] = $dataTotalReview->total_review;
-        }
-        $list_data_rate = $this->reviewClass::selectRaw('COUNT( CASE WHEN rate_number = 5 THEN rate_number ELSE NULL END ) AS rate_5,
-                                                            COUNT( CASE WHEN rate_number = 4 THEN rate_number ELSE NULL END ) AS rate_4,
-                                                            COUNT( CASE WHEN rate_number = 3 THEN rate_number ELSE NULL END ) AS rate_3,
-                                                            COUNT( CASE WHEN rate_number = 2 THEN rate_number ELSE NULL END ) AS rate_2,
-                                                            COUNT( CASE WHEN rate_number = 1 THEN rate_number ELSE NULL END ) AS rate_1 ')->where('object_id', $this->id)->where('object_model', $this->type)->where("status", "approved")->first()->toArray();
-        for ($rate = 5; $rate >= 1; $rate--) {
-            if (!empty($number = $list_data_rate['rate_' . $rate])) {
-                $percent = ($number / $list_score['total_review']) * 100;
-            } else {
-                $percent = 0;
-            }
-            $list_score['rate_score'][$rate] = [
-                'title'   => $this->reviewClass::getDisplayTextScoreByLever($rate),
-                'total'   => $number,
-                'percent' => round($percent),
-            ];
-        }
-        return $list_score;
-    }
-
-    /**
-     * Get Score Review
-     *
-     * Using for loop space
-     */
-    public function getScoreReview()
-    {
-        $boat_id = $this->id;
-        $list_score = Cache::rememberForever('review_'.$this->type.'_' . $boat_id, function () use ($boat_id) {
-            $dataReview = $this->reviewClass::selectRaw(" AVG(rate_number) as score_total , COUNT(id) as total_review ")->where('object_id', $boat_id)->where('object_model', "boat")->where("status", "approved")->first();
-            $score_total = !empty($dataReview->score_total) ? number_format($dataReview->score_total, 1) : 0;
-            return [
-                'score_total'  => $score_total,
-                'total_review' => !empty($dataReview->total_review) ? $dataReview->total_review : 0,
-            ];
-        });
-        $list_score['review_text'] =  $list_score['score_total'] ? Review::getDisplayTextScoreByLever( round( $list_score['score_total'] )) : __("Not rated");
-        return $list_score;
     }
 
     public function getNumberReviewsInService($status = false)
     {
-        return $this->reviewClass::countReviewByServiceID($this->id, false, $status,$this->type) ?? 0;
-    }
-
-    public function getReviewList(){
-        return $this->reviewClass::select(['id','title','content','rate_number','author_ip','status','created_at','vendor_id','author_id'])->where('object_id', $this->id)->where('object_model', 'boat')->where("status", "approved")->orderBy("id", "desc")->with('author')->paginate(setting_item('boat_review_number_per_page', 5));
+        return $this->reviewClass::countReviewByServiceID($this->id, false, $status, $this->type) ?? 0;
     }
 
     public function getNumberServiceInLocation($location)
     {
         $number = 0;
-        if(!empty($location)) {
+        if (!empty($location)) {
             $number = parent::join('bravo_locations', function ($join) use ($location) {
-                $join->on('bravo_locations.id', '=', $this->table.'.location_id')->where('bravo_locations._lft', '>=', $location->_lft)->where('bravo_locations._rgt', '<=', $location->_rgt);
+                $join->on('bravo_locations.id', '=', $this->table.'.location_id')->where('bravo_locations._lft', '>=',
+                    $location->_lft)->where('bravo_locations._rgt', '<=', $location->_rgt);
             })->where($this->table.".status", "publish")->with(['translation'])->count($this->table.".id");
         }
-        if(empty($number)) return false;
+        if (empty($number)) {
+            return false;
+        }
         if ($number > 1) {
             return __(":number Boats", ['number' => $number]);
         }
         return __(":number Boat", ['number' => $number]);
     }
 
-    /**
-     * @param $from
-     * @param $to
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public function getBookingsInRange($from,$to){
-
-        $query = $this->bookingClass::query();
-        $query->whereNotIn('status',$this->bookingClass::$notAcceptedStatus);
-        $query->where('start_date','<',$to)->where('end_date','>',$from)->take(100);
-
-        $query->where('object_id',$this->id);
-        $query->where('object_model',$this->type);
-
-        return $query->orderBy('id','asc')->get();
-
-    }
-
-    public function saveCloneByID($clone_id){
+    public function saveCloneByID($clone_id)
+    {
         $old = parent::find($clone_id);
-        if(empty($old)) return false;
+        if (empty($old)) {
+            return false;
+        }
         $selected_terms = $old->terms->pluck('term_id');
         $old->title = $old->title." - Copy";
         $new = $old->replicate();
@@ -701,14 +755,15 @@ class Boat extends Bookable
             ]);
         }
         //Language
-        $langs = $this->boatTranslationClass::where("origin_id",$old->id)->get();
-        if(!empty($langs)){
-            foreach ($langs as $lang){
+        $langs = $this->boatTranslationClass::where("origin_id", $old->id)->get();
+        if (!empty($langs)) {
+            foreach ($langs as $lang) {
                 $langNew = $lang->replicate();
                 $langNew->origin_id = $new->id;
                 $langNew->save();
-                $langSeo = SEO::where('object_id', $lang->id)->where('object_model', $lang->getSeoType()."_".$lang->locale)->first();
-                if(!empty($langSeo)){
+                $langSeo = SEO::where('object_id', $lang->id)->where('object_model',
+                    $lang->getSeoType()."_".$lang->locale)->first();
+                if (!empty($langSeo)) {
                     $langSeoNew = $langSeo->replicate();
                     $langSeoNew->object_id = $langNew->id;
                     $langSeoNew->save();
@@ -717,132 +772,89 @@ class Boat extends Bookable
         }
         //SEO
         $metaSeo = SEO::where('object_id', $old->id)->where('object_model', $this->seo_type)->first();
-        if(!empty($metaSeo)){
+        if (!empty($metaSeo)) {
             $metaSeoNew = $metaSeo->replicate();
             $metaSeoNew->object_id = $new->id;
             $metaSeoNew->save();
         }
     }
 
-    public function hasWishList(){
-        return $this->hasOne($this->userWishListClass, 'object_id','id')->where('object_model' , $this->type)->where('user_id' , Auth::id() ?? 0);
+    public function hasWishList()
+    {
+        return $this->hasOne($this->userWishListClass, 'object_id', 'id')->where('object_model',
+            $this->type)->where('user_id', Auth::id() ?? 0);
     }
 
     public function isWishList()
     {
-        if(Auth::id()){
-            if(!empty($this->hasWishList) and !empty($this->hasWishList->id)){
+        if (Auth::id()) {
+            if (!empty($this->hasWishList) and !empty($this->hasWishList->id)) {
                 return 'active';
             }
         }
         return '';
     }
-    public static function getServiceIconFeatured(){
-        return "icofont-ship";
-    }
 
-    public static function isEnable(){
-        return setting_item('boat_disable') == false;
-    }
-
-
-    public function getBookingInRanges($object_id,$object_model,$from,$to,$object_child_id = false){
-
+    public function getBookingInRanges($object_id, $object_model, $from, $to, $object_child_id = false)
+    {
         $query = $this->bookingClass::selectRaw(" * , SUM( number ) as total_numbers ")->where([
-            'object_id'=>$object_id,
-            'object_model'=>$object_model,
-        ])->whereNotIn('status',$this->bookingClass::$notAcceptedStatus)
-            ->where('end_date','>',$from)
-            ->where('start_date','<',$to)
+            'object_id' => $object_id,
+            'object_model' => $object_model,
+        ])->whereNotIn('status', $this->bookingClass::$notAcceptedStatus)
+            ->where('end_date', '>', $from)
+            ->where('start_date', '<', $to)
             ->groupBy('start_date')
             ->take(200);
 
-        if($object_child_id){
-            $query->where('object_child_id',$object_child_id);
+        if ($object_child_id) {
+            $query->where('object_child_id', $object_child_id);
         }
 
         return $query->get();
     }
 
-    public function isDepositEnable(){
-        return (setting_item('boat_deposit_enable') and setting_item('boat_deposit_amount'));
-    }
-    public function getDepositAmount(){
-        return setting_item('boat_deposit_amount');
-    }
-    public function getDepositType(){
-        return setting_item('boat_deposit_type');
-    }
-    public function getDepositFomular(){
-        return setting_item('boat_deposit_fomular','default');
-    }
-	public function detailBookingEachDate($booking){
-		$startDate = $booking->start_date;
-		$endDate = $booking->end_date;
-		$rowDates= json_decode($booking->getMeta('tmp_dates'));
+    public function detailBookingEachDate($booking)
+    {
+        $startDate = $booking->start_date;
+        $endDate = $booking->end_date;
+        $rowDates = json_decode($booking->getMeta('tmp_dates'));
 
-		$allDates=[];
-        $period = periodDate($startDate,$endDate,false);
+        $allDates = [];
+        $period = periodDate($startDate, $endDate, false);
         foreach ($period as $dt) {
-			$price = 0;
-			$date['price'] =$price;
-			$date['price_html'] = format_money($price);
-			$date['from'] = $dt->getTimestamp();
-			$date['from_html'] = $dt->format('d/m/Y');
-			$date['to'] = $dt->getTimestamp();
-			$date['to_html'] = $dt->format('d/m/Y');
-			$allDates[$dt->format(('Y-m-d'))] = $date;
-		}
-
-		if(!empty($rowDates))
-		{
-			foreach ($rowDates as $item => $row)
-			{
-				$startDate = strtotime($item);
-				$price = $row->price;
-				$date['price'] = $price;
-				$date['price_html'] = format_money($price);
-				$date['from'] = $startDate;
-				$date['from_html'] = date('d/m/Y',$startDate);
-				$date['to'] = $startDate;
-				$date['to_html'] = date('d/m/Y',($startDate));
-				$allDates[date('Y-m-d',$startDate)] = $date;
-			}
-		}
-		return $allDates;
-	}
-
-    public static function isEnableEnquiry(){
-        if(!empty(setting_item('booking_enquiry_for_boat'))){
-            return true;
+            $price = 0;
+            $date['price'] = $price;
+            $date['price_html'] = format_money($price);
+            $date['from'] = $dt->getTimestamp();
+            $date['from_html'] = $dt->format('d/m/Y');
+            $date['to'] = $dt->getTimestamp();
+            $date['to_html'] = $dt->format('d/m/Y');
+            $allDates[$dt->format(('Y-m-d'))] = $date;
         }
-        return false;
-    }
-    public static function isFormEnquiryAndBook(){
-        $check = setting_item('booking_enquiry_for_boat');
-        if(!empty($check) and setting_item('booking_enquiry_type_boat') == "booking_and_enquiry" ){
-            return true;
-        }
-        return false;
-    }
-    public static function getBookingEnquiryType(){
-        $check = setting_item('booking_enquiry_for_boat');
-        if(!empty($check)){
-            if( setting_item('booking_enquiry_type_boat') == "only_enquiry" ) {
-                return "enquiry";
+
+        if (!empty($rowDates)) {
+            foreach ($rowDates as $item => $row) {
+                $startDate = strtotime($item);
+                $price = $row->price;
+                $date['price'] = $price;
+                $date['price_html'] = format_money($price);
+                $date['from'] = $startDate;
+                $date['from_html'] = date('d/m/Y', $startDate);
+                $date['to'] = $startDate;
+                $date['to_html'] = date('d/m/Y', ($startDate));
+                $allDates[date('Y-m-d', $startDate)] = $date;
             }
         }
-        return "book";
+        return $allDates;
     }
-
 
     public function search($request)
     {
         $model_boat = parent::query()->select("bravo_boats.*");
         $model_boat->where("bravo_boats.status", "publish");
         if (!empty($location_id = $request["location_id"] ?? "")) {
-            $location = Location::query()->where('id', $location_id)->where("status","publish")->first();
-            if(!empty($location)){
+            $location = Location::query()->where('id', $location_id)->where("status", "publish")->first();
+            if (!empty($location)) {
                 $model_boat->join('bravo_locations', function ($join) use ($location) {
                     $join->on('bravo_locations.id', '=', 'bravo_boats.location_id')
                         ->where('bravo_locations._lft', '>=', $location->_lft)
@@ -854,17 +866,16 @@ class Boat extends Bookable
             $pri_from = explode(";", $price_range)[0];
             $pri_to = explode(";", $price_range)[1];
             $raw_sql_min_max = "( bravo_boats.min_price >= ? ) AND ( bravo_boats.min_price <= ? )";
-            $model_boat->WhereRaw($raw_sql_min_max,[$pri_from,$pri_to]);
+            $model_boat->WhereRaw($raw_sql_min_max, [$pri_from, $pri_to]);
         }
 
         $terms = $request["terms"] ?? "";
-        if($term_id = $request["term_id"] ?? "")
-        {
+        if ($term_id = $request["term_id"] ?? "") {
             $terms[] = $term_id;
         }
         if (is_array($terms) and !empty($terms = array_filter(array_values($terms)))) {
-            foreach ($terms as $index=>$termId){
-                $model_boat->join('bravo_boat_term as tt'.$index, function($join) use ($termId,$index){
+            foreach ($terms as $index => $termId) {
+                $model_boat->join('bravo_boat_term as tt'.$index, function ($join) use ($termId, $index) {
                     $join->on('tt'.$index.'.target_id', "bravo_boats.id");
                     $join->where('tt'.$index.'.term_id', $termId);
                 });
@@ -875,31 +886,29 @@ class Boat extends Bookable
         if (is_array($review_scores) && !empty($review_scores[0])) {
             $where_review_score = [];
             $params = [];
-            foreach ($review_scores as $number){
+            foreach ($review_scores as $number) {
                 $where_review_score[] = " ( bravo_boats.review_score >= ? AND bravo_boats.review_score <= ? ) ";
                 $params[] = $number;
                 $params[] = $number.'.9';
             }
-            $sql_where_review_score = " ( " . implode("OR", $where_review_score) . " )  ";
-            $model_boat->WhereRaw($sql_where_review_score,$params);
+            $sql_where_review_score = " ( ".implode("OR", $where_review_score)." )  ";
+            $model_boat->WhereRaw($sql_where_review_score, $params);
         }
-        if(!empty( $service_name = $request["service_name"] ?? "" )){
-            if( setting_item('site_enable_multi_lang') && setting_item('site_locale') != app()->getLocale() ){
+        if (!empty($service_name = $request["service_name"] ?? "")) {
+            if (setting_item('site_enable_multi_lang') && setting_item('site_locale') != app()->getLocale()) {
                 $model_boat->leftJoin('bravo_boat_translations', function ($join) {
                     $join->on('bravo_boats.id', '=', 'bravo_boat_translations.origin_id');
                 });
-                $model_boat->where('bravo_boat_translations.title', 'LIKE', '%' . $service_name . '%');
-
-            }else{
-                $model_boat->where('bravo_boats.title', 'LIKE', '%' . $service_name . '%');
+                $model_boat->where('bravo_boat_translations.title', 'LIKE', '%'.$service_name.'%');
+            } else {
+                $model_boat->where('bravo_boats.title', 'LIKE', '%'.$service_name.'%');
             }
         }
-        if(!empty($lat = $request["map_lat"] ?? "") and !empty($lgn = $request["map_lgn"] ?? "") and !empty($request["map_place"] ?? ""))
-        {
-            $distance  = setting_item('boat_location_radius_value',0);
-            if(!empty($distance) and setting_item('boat_location_search_style')=='autocompletePlace'){
-                $distanceType = setting_item('boat_location_radius_type',3959);
-                if(empty($distanceType)){
+        if (!empty($lat = $request["map_lat"] ?? "") and !empty($lgn = $request["map_lgn"] ?? "") and !empty($request["map_place"] ?? "")) {
+            $distance = setting_item('boat_location_radius_value', 0);
+            if (!empty($distance) and setting_item('boat_location_search_style') == 'autocompletePlace') {
+                $distanceType = setting_item('boat_location_radius_type', 3959);
+                if (empty($distanceType)) {
                     $distanceType = 3959;
                 }
                 $string = '( ? * acos(
@@ -907,21 +916,20 @@ class Boat extends Bookable
 							    + sin( radians(?) ) * sin( radians(map_lat) )
 							     )
 						 ) <= ?';
-                $model_boat->whereRaw($string,[$distanceType,$lat,$lgn,$lat,$distance]);
+                $model_boat->whereRaw($string, [$distanceType, $lat, $lgn, $lat, $distance]);
             }
 
             $model_boat->orderByRaw("POW((bravo_boats.map_lng-".$lgn."),2) + POW((bravo_boats.map_lat-".$lat."),2)");
         }
-        if(!empty($request['is_featured']))
-        {
-            $model_boat->where('bravo_boats.is_featured',1);
+        if (!empty($request['is_featured'])) {
+            $model_boat->where('bravo_boats.is_featured', 1);
         }
         if (!empty($request['custom_ids'])) {
             $model_boat->whereIn("bravo_boats.id", $request['custom_ids']);
         }
 
         $orderby = $request['orderby'] ?? "";
-        switch ($orderby){
+        switch ($orderby) {
             case "price_low_high":
                 $model_boat->orderBy("min_price", "asc");
                 break;
@@ -932,9 +940,9 @@ class Boat extends Bookable
                 $model_boat->orderBy("review_score", "desc");
                 break;
             default:
-                if(!empty($request['order']) and !empty($request['order_by'])){
+                if (!empty($request['order']) and !empty($request['order_by'])) {
                     $model_boat->orderBy("bravo_boats.".$request['order'], $request['order_by']);
-                }else{
+                } else {
                     $model_boat->orderBy("is_featured", "desc");
                     $model_boat->orderBy("id", "desc");
                 }
@@ -942,23 +950,24 @@ class Boat extends Bookable
 
         $model_boat->groupBy("bravo_boats.id");
 
-        $max_guests = (int)($request["adults"] ?? 0) + (int)($request["children"] ?? 0);
-        if($max_guests){
-            $model_boat->where('max_guests','>=',$max_guests);
+        $max_guests = (int) ($request["adults"] ?? 0) + (int) ($request["children"] ?? 0);
+        if ($max_guests) {
+            $model_boat->where('max_guests', '>=', $max_guests);
         }
 
 
-        return $model_boat->with(['location','hasWishList','translation']);
+        return $model_boat->with(['location', 'hasWishList', 'translation']);
     }
 
-    public function dataForApi($forSingle = false){
+    public function dataForApi($forSingle = false)
+    {
         $data = parent::dataForApi($forSingle);
         $data['max_guest'] = $this->max_guest;
         $data['cabin'] = $this->cabin;
         $data['length'] = $this->length;
         $data['speed'] = $this->speed;
         $data['price'] = $this->min_price;
-        if($forSingle){
+        if ($forSingle) {
             $data['review_score'] = $this->getReviewDataAttribute();
             $data['review_stats'] = $this->getReviewStats();
             $data['review_lists'] = $this->getReviewList();
@@ -976,83 +985,110 @@ class Boat extends Bookable
             $data['default_state'] = $this->default_state;
             $data['booking_fee'] = setting_item_array('boat_booking_buyer_fees');
             if (!empty($location_id = $this->location_id)) {
-                $related =  parent::query()->where('location_id', $location_id)->where("status", "publish")->take(4)->whereNotIn('id', [$this->id])->with(['location','translation','hasWishList'])->get();
+                $related = parent::query()->where('location_id', $location_id)->where("status",
+                    "publish")->take(4)->whereNotIn('id', [$this->id])->with([
+                    'location', 'translation', 'hasWishList'
+                ])->get();
                 $data['related'] = $related->map(function ($related) {
-                        return $related->dataForApi();
-                    }) ?? null;
+                    return $related->dataForApi();
+                }) ?? null;
             }
             $data['terms'] = Terms::getTermsByIdForAPI($this->terms->pluck('term_id'));
-        }else{
+        } else {
             $data['review_score'] = $this->getScoreReview();
         }
         return $data;
     }
 
-    static public function getClassAvailability()
+    public function getReviewDataAttribute()
     {
-        return "\Modules\Boat\Controllers\AvailabilityController";
-    }
-
-    static public function getFiltersSearch()
-    {
-        $min_max_price = self::getMinMaxPrice();
-        return [
-            [
-                "title"    => __("Filter Price"),
-                "field"    => "price_range",
-                "position" => "1",
-                "min_price" => floor ( Currency::convertPrice($min_max_price[0]) ),
-                "max_price" => ceil (Currency::convertPrice($min_max_price[1]) ),
-            ],
-            [
-                "title"    => __("Review Score"),
-                "field"    => "review_score",
-                "position" => "2",
-                "min" => "1",
-                "max" => "5",
-            ],
-            [
-                "title"    => __("Attributes"),
-                "field"    => "terms",
-                "position" => "3",
-                "data" => Attributes::getAllAttributesForApi("boat")
-            ]
+        $list_score = [
+            'score_total' => 0,
+            'score_text' => __("Not rated"),
+            'total_review' => 0,
+            'rate_score' => [],
         ];
+        $dataTotalReview = $this->reviewClass::selectRaw(" AVG(rate_number) as score_total , COUNT(id) as total_review ")->where('object_id',
+            $this->id)->where('object_model', $this->type)->where("status", "approved")->first();
+        if (!empty($dataTotalReview->score_total)) {
+            $list_score['score_total'] = number_format($dataTotalReview->score_total, 1);
+            $list_score['score_text'] = Review::getDisplayTextScoreByLever(round($list_score['score_total']));
+        }
+        if (!empty($dataTotalReview->total_review)) {
+            $list_score['total_review'] = $dataTotalReview->total_review;
+        }
+        $list_data_rate = $this->reviewClass::selectRaw('COUNT( CASE WHEN rate_number = 5 THEN rate_number ELSE NULL END ) AS rate_5,
+                                                            COUNT( CASE WHEN rate_number = 4 THEN rate_number ELSE NULL END ) AS rate_4,
+                                                            COUNT( CASE WHEN rate_number = 3 THEN rate_number ELSE NULL END ) AS rate_3,
+                                                            COUNT( CASE WHEN rate_number = 2 THEN rate_number ELSE NULL END ) AS rate_2,
+                                                            COUNT( CASE WHEN rate_number = 1 THEN rate_number ELSE NULL END ) AS rate_1 ')->where('object_id',
+            $this->id)->where('object_model', $this->type)->where("status", "approved")->first()->toArray();
+        for ($rate = 5; $rate >= 1; $rate--) {
+            if (!empty($number = $list_data_rate['rate_'.$rate])) {
+                $percent = ($number / $list_score['total_review']) * 100;
+            } else {
+                $percent = 0;
+            }
+            $list_score['rate_score'][$rate] = [
+                'title' => $this->reviewClass::getDisplayTextScoreByLever($rate),
+                'total' => $number,
+                'percent' => round($percent),
+            ];
+        }
+        return $list_score;
     }
 
-    static public function getFormSearch()
+    public static function getReviewStats()
     {
-        $search_fields = setting_item_array('boat_search_fields');
-        $search_fields = array_values(\Illuminate\Support\Arr::sort($search_fields, function ($value) {
-            return $value['position'] ?? 0;
-        }));
-        foreach ( $search_fields as &$item){
-            if($item['field'] == 'attr' and !empty($item['attr']) ){
-                $attr = Attributes::find($item['attr']);
-                $item['attr_title'] = $attr->translate()->name;
-                foreach($attr->terms as $term)
-                {
-                    $translate = $term->translate();
-                    $item['terms'][] =  [
-                        'id' => $term->id,
-                        'title' => $translate->name,
-                    ];
-                }
+        $reviewStats = [];
+        if (!empty($list = setting_item("boat_review_stats", []))) {
+            $list = json_decode($list, true);
+            foreach ($list as $item) {
+                $reviewStats[] = $item['title'];
             }
         }
-        return $search_fields;
+        return $reviewStats;
+    }
+
+    public function getReviewList()
+    {
+        return $this->reviewClass::select([
+            'id', 'title', 'content', 'rate_number', 'author_ip', 'status', 'created_at', 'vendor_id', 'author_id'
+        ])->where('object_id', $this->id)->where('object_model', 'boat')->where("status", "approved")->orderBy("id",
+            "desc")->with('author')->paginate(setting_item('boat_review_number_per_page', 5));
+    }
+
+    /**
+     * Get Score Review
+     *
+     * Using for loop space
+     */
+    public function getScoreReview()
+    {
+        $boat_id = $this->id;
+        $list_score = Cache::rememberForever('review_'.$this->type.'_'.$boat_id, function () use ($boat_id) {
+            $dataReview = $this->reviewClass::selectRaw(" AVG(rate_number) as score_total , COUNT(id) as total_review ")->where('object_id',
+                $boat_id)->where('object_model', "boat")->where("status", "approved")->first();
+            $score_total = !empty($dataReview->score_total) ? number_format($dataReview->score_total, 1) : 0;
+            return [
+                'score_total' => $score_total,
+                'total_review' => !empty($dataReview->total_review) ? $dataReview->total_review : 0,
+            ];
+        });
+        $list_score['review_text'] = $list_score['score_total'] ? Review::getDisplayTextScoreByLever(round($list_score['score_total'])) : __("Not rated");
+        return $list_score;
     }
 
     public function capturesService($event)
     {
-        if(in_array($event,['saved','created', 'updated'])){
+        if (in_array($event, ['saved', 'created', 'updated'])) {
             $this->price = $this->min_price;
-            Service::cloneService($this,$event);
+            Service::cloneService($this, $event);
         }
-        if($event=='deleted'){
+        if ($event == 'deleted') {
             Service::deleteService($this);
         }
-        if($event=='restored'){
+        if ($event == 'restored') {
             Service::restoreService($this);
         }
     }

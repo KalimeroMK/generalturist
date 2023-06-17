@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Location\Models;
 
 use App\BaseModel;

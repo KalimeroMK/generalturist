@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Vendor\Controllers;
 
 use App\Helpers\ReCaptchaEngine;
@@ -11,21 +12,22 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 use Illuminate\Validation\Rules\Password;
 use Matrix\Exception;
+use Modules\Booking\Models\Booking;
 use Modules\FrontendController;
 use Modules\User\Events\NewVendorRegistered;
-use Modules\User\Events\SendMailUserRegistered;
 use Modules\Vendor\Models\VendorRequest;
-use Modules\Booking\Models\Booking;
 
 
 class VendorController extends FrontendController
 {
     protected $bookingClass;
+
     public function __construct()
     {
         $this->bookingClass = Booking::class;
         parent::__construct();
     }
+
     public function register(Request $request)
     {
         $rules = [
@@ -34,24 +36,24 @@ class VendorController extends FrontendController
                 'string',
                 'max:255'
             ],
-            'last_name'  => [
+            'last_name' => [
                 'required',
                 'string',
                 'max:255'
             ],
-            'business_name'  => [
+            'business_name' => [
                 'required',
                 'string',
                 'max:255'
             ],
-            'email'      => [
+            'email' => [
                 'required',
                 'string',
                 'email',
                 'max:255',
                 'unique:users'
             ],
-            'password'   => [
+            'password' => [
                 'required',
                 'string',
                 Password::min(8)
@@ -60,16 +62,16 @@ class VendorController extends FrontendController
                     ->symbols()
                     ->uncompromised(),
             ],
-            'term'       => ['required'],
+            'term' => ['required'],
         ];
         $messages = [
-            'email.required'      => __('Email is required field'),
-            'email.email'         => __('Email invalidate'),
-            'password.required'   => __('Password is required field'),
+            'email.required' => __('Email is required field'),
+            'email.email' => __('Email invalidate'),
+            'password.required' => __('Password is required field'),
             'first_name.required' => __('The first name is required field'),
-            'last_name.required'  => __('The last name is required field'),
-            'business_name.required'  => __('The business name is required field'),
-            'term.required'       => __('The terms and conditions field is required'),
+            'last_name.required' => __('The last name is required field'),
+            'business_name.required' => __('The business name is required field'),
+            'term.required' => __('The terms and conditions field is required'),
         ];
         if (ReCaptchaEngine::isEnable() and setting_item("user_enable_register_recaptcha")) {
             $messages['g-recaptcha-response.required'] = __('Please verify the captcha');
@@ -78,7 +80,7 @@ class VendorController extends FrontendController
         $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->fails()) {
             return response()->json([
-                'error'    => true,
+                'error' => true,
                 'messages' => $validator->errors()
             ], 200);
         } else {
@@ -87,20 +89,20 @@ class VendorController extends FrontendController
                 if (!ReCaptchaEngine::verify($codeCapcha)) {
                     $errors = new MessageBag(['message_error' => __('Please verify the captcha')]);
                     return response()->json([
-                        'error'    => true,
+                        'error' => true,
                         'messages' => $errors
                     ], 200);
                 }
             }
-            $user = new \App\User();
+            $user = new User();
 
             $user = $user->fill([
-                'first_name'=>$request->input('first_name'),
-                'last_name'=>$request->input('last_name'),
-                'email'=>$request->input('email'),
-                'password'=>Hash::make($request->input('password')),
-                'business_name'=>$request->input('business_name'),
-                'phone'=>$request->input('phone'),
+                'first_name' => $request->input('first_name'),
+                'last_name' => $request->input('last_name'),
+                'email' => $request->input('email'),
+                'password' => Hash::make($request->input('password')),
+                'business_name' => $request->input('business_name'),
+                'phone' => $request->input('phone'),
             ]);
             $user->status = 'publish';
 
@@ -127,7 +129,7 @@ class VendorController extends FrontendController
             try {
                 event(new NewVendorRegistered($user, $vendorRequestData));
             } catch (Exception $exception) {
-                Log::warning("NewVendorRegistered: " . $exception->getMessage());
+                Log::warning("NewVendorRegistered: ".$exception->getMessage());
             }
             if ($vendorAutoApproved) {
                 return $this->sendSuccess([
@@ -144,15 +146,15 @@ class VendorController extends FrontendController
     public function bookingReport(Request $request)
     {
         $data = [
-            'bookings'    => $this->bookingClass::getBookingHistory($request->input('status'), false, Auth::id()),
-            'statues'     => config('booking.statuses'),
+            'bookings' => $this->bookingClass::getBookingHistory($request->input('status'), false, Auth::id()),
+            'statues' => config('booking.statuses'),
             'breadcrumbs' => [
                 [
-                    'name'  => __('Booking Report'),
+                    'name' => __('Booking Report'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'  => __("Booking Report"),
+            'page_title' => __("Booking Report"),
         ];
         return view('Vendor::frontend.bookingReport.index', $data);
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Booking\Listeners;
 
 
@@ -16,7 +17,7 @@ class VendorLogPaymentListen
     {
         $booking = $event->booking;
         $vendor = User::find($booking->vendor_id);
-        if(!empty($vendor)){
+        if (!empty($vendor)) {
             $plan = $vendor->vendorPlanData;
         }
     }

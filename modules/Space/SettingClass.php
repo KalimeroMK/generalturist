@@ -1,9 +1,8 @@
 <?php
 
-namespace  Modules\Space;
+namespace Modules\Space;
 
 use Modules\Core\Abstracts\BaseSettingsClass;
-use Modules\Core\Models\Settings;
 
 class SettingClass extends BaseSettingsClass
 {
@@ -66,6 +65,6 @@ class SettingClass extends BaseSettingsClass
                 ]
             ]
         ];
-        return apply_filters(Hook::SPACE_SETTING_CONFIG,$configs);
+        return apply_filters(Hook::SPACE_SETTING_CONFIG, $configs);
     }
 }

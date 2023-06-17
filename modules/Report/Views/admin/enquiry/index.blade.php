@@ -8,7 +8,8 @@
         <div class="filter-div d-flex justify-content-between">
             <div class="col-left">
                 @if(!empty($enquiry_update))
-                    <form method="post" action="{{route('report.admin.enquiry.bulkEdit')}}" class="filter-form filter-form-left d-flex justify-content-start">
+                    <form method="post" action="{{route('report.admin.enquiry.bulkEdit')}}"
+                          class="filter-form filter-form-left d-flex justify-content-start">
                         @csrf
                         <select name="action" class="form-control">
                             <option value="">{{__("-- Bulk Actions --")}}</option>
@@ -19,13 +20,16 @@
                             @endif
                             <option value="delete">{{__("DELETE Enquiry")}}</option>
                         </select>
-                        <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
+                        <button data-confirm="{{__("Do you want to delete?")}}"
+                                class="btn-info btn btn-icon dungdt-apply-form-btn"
+                                type="button">{{__('Apply')}}</button>
                     </form>
                 @endif
             </div>
             <div class="col-left">
                 <form method="get" action="" class="filter-form filter-form-right d-flex justify-content-end">
-                    <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by email')}}" class="form-control">
+                    <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by email')}}"
+                           class="form-control">
                     <button class="btn-info btn btn-icon" type="submit">{{__('Filter')}}</button>
                 </form>
             </div>
@@ -49,54 +53,58 @@
                         </tr>
                         </thead>
                         <tbody>
-                            @if($rows->total() > 0)
-                                @foreach($rows as $row)
-                                    <tr>
-                                        <td><input type="checkbox" class="check-item" name="ids[]" value="{{$row->id}}">
-                                            #{{$row->id}}</td>
-                                        <td>
-                                            @if($service = $row->service)
-                                                <a href="{{$service->getDetailUrl()}}" target="_blank">{{$service->title ?? ''}}</a>
-                                                @if($service->author->id)
-                                                    <br>
-                                                    <span>{{__('by')}}</span>
-                                                    <a href="{{route('user.admin.detail',['id'=>$service->author->id])}}"
-                                                       target="_blank">{{ $service->author->getDisplayName() .' (#'.$service->author->id.')' }}</a>
-                                                @endif
-                                            @else
-                                                {{__("[Deleted]")}}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <ul>
-                                                <li>{{__("Name:")}} {{$row->name}}</li>
-                                                <li>{{__("Email:")}} {{$row->email}}</li>
-                                                <li>{{__("Phone:")}} {{$row->phone}}</li>
-                                                <li>{{__("Notes:")}} {{$row->note}}</li>
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <span class="label label-{{$row->status}}">{{$row->statusName}}</span>
-                                        </td>
-                                        <td>{{$row->replies_count}}</td>
-                                        <td>{{display_datetime($row->updated_at)}}</td>
-                                        <td>
-                                            <div class="dropdown">
-                                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-                                                    {{__("Actions")}}
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item" href="{{route('report.admin.enquiry.reply',['enquiry'=>$row])}}">{{__("Reply")}}</a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
+                        @if($rows->total() > 0)
+                            @foreach($rows as $row)
                                 <tr>
-                                    <td colspan="6">{{__("No data")}}</td>
+                                    <td><input type="checkbox" class="check-item" name="ids[]" value="{{$row->id}}">
+                                        #{{$row->id}}</td>
+                                    <td>
+                                        @if($service = $row->service)
+                                            <a href="{{$service->getDetailUrl()}}"
+                                               target="_blank">{{$service->title ?? ''}}</a>
+                                            @if($service->author->id)
+                                                <br>
+                                                <span>{{__('by')}}</span>
+                                                <a href="{{route('user.admin.detail',['id'=>$service->author->id])}}"
+                                                   target="_blank">{{ $service->author->getDisplayName() .' (#'.$service->author->id.')' }}</a>
+                                            @endif
+                                        @else
+                                            {{__("[Deleted]")}}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li>{{__("Name:")}} {{$row->name}}</li>
+                                            <li>{{__("Email:")}} {{$row->email}}</li>
+                                            <li>{{__("Phone:")}} {{$row->phone}}</li>
+                                            <li>{{__("Notes:")}} {{$row->note}}</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <span class="label label-{{$row->status}}">{{$row->statusName}}</span>
+                                    </td>
+                                    <td>{{$row->replies_count}}</td>
+                                    <td>{{display_datetime($row->updated_at)}}</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button"
+                                                    id="dropdownMenuButton" data-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                {{__("Actions")}}
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item"
+                                                   href="{{route('report.admin.enquiry.reply',['enquiry'=>$row])}}">{{__("Reply")}}</a>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
-                            @endif
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="6">{{__("No data")}}</td>
+                            </tr>
+                        @endif
                         </tbody>
                     </table>
                 </form>

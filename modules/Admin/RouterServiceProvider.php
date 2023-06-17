@@ -1,8 +1,9 @@
 <?php
+
 namespace Modules\Admin;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class RouterServiceProvider extends ServiceProvider
 {
@@ -35,7 +36,6 @@ class RouterServiceProvider extends ServiceProvider
      */
     public function map()
     {
-
         $this->mapWebRoutes();
 
         $this->mapAdminRoutes();
@@ -54,7 +54,7 @@ class RouterServiceProvider extends ServiceProvider
     {
         Route::middleware('web')
             ->namespace($this->moduleNamespace)
-            ->group(__DIR__ . '/Routes/web.php');
+            ->group(__DIR__.'/Routes/web.php');
     }
 
     /**
@@ -66,11 +66,12 @@ class RouterServiceProvider extends ServiceProvider
      */
     protected function mapAdminRoutes()
     {
-        Route::middleware(['web','dashboard'])
+        Route::middleware(['web', 'dashboard'])
             ->namespace($this->adminModuleNamespace)
             ->prefix('admin')
-            ->group(__DIR__ . '/Routes/admin.php');
+            ->group(__DIR__.'/Routes/admin.php');
     }
+
     /**
      * Define the "lang" routes for the application.
      *
@@ -83,7 +84,7 @@ class RouterServiceProvider extends ServiceProvider
         Route::middleware('web')
             ->namespace($this->moduleNamespace)
             ->prefix(app()->getLocale())
-            ->group(__DIR__ . '/Routes/language.php');
+            ->group(__DIR__.'/Routes/language.php');
     }
 
     /**
@@ -96,8 +97,8 @@ class RouterServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::prefix('api')
-            ->middleware(['api','set_language_for_api'])
+            ->middleware(['api', 'set_language_for_api'])
             ->namespace($this->moduleApiNamespace)
-            ->group(__DIR__ . '/Routes/api.php');
+            ->group(__DIR__.'/Routes/api.php');
     }
 }

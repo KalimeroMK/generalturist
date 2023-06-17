@@ -5,9 +5,8 @@
  * Date: 7/16/2019
  * Time: 2:05 PM
  */
-namespace Modules\Core\Models;
 
-use App\BaseModel;
+namespace Modules\Core\Models;
 
 class MenuTranslation extends Menu
 {

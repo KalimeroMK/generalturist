@@ -8,7 +8,8 @@
     <div class="booking-history-manager">
         <div class="tabbable">
             <ul class="nav nav-tabs ht-nav-tabs">
-                <?php $status_type = Request::query('status'); ?>
+                <?php
+                $status_type = Request::query('status'); ?>
                 <li class="@if(empty($status_type)) active @endif">
                     <a href="{{route("vendor.bookingReport")}}">{{__("All Booking")}}</a>
                 </li>
@@ -59,14 +60,14 @@
         $(document).on('click', '#set_paid_btn', function (e) {
             var id = $(this).data('id');
             $.ajax({
-                url:bookingCore.url+'/booking/setPaidAmount',
-                data:{
+                url: bookingCore.url + '/booking/setPaidAmount',
+                data: {
                     id: id,
-                    remain: $('#modal-paid-'+id+' #set_paid_input').val(),
+                    remain: $('#modal-paid-' + id + ' #set_paid_input').val(),
                 },
-                dataType:'json',
-                type:'post',
-                success:function(res){
+                dataType: 'json',
+                type: 'post',
+                success: function (res) {
                     alert(res.message);
                     window.location.reload();
                 }

@@ -1,9 +1,7 @@
 <?php
 
-namespace Modules\Sms\Core ;
+namespace Modules\Sms\Core;
 
-use Modules\Sms\Core\SmsManager;
-use Illuminate\Support\ServiceProvider;
 use Modules\Sms\ModuleProvider;
 
 class SmsServiceProvider extends ModuleProvider
@@ -20,22 +18,24 @@ class SmsServiceProvider extends ModuleProvider
      *
      * @return void
      */
-    public function boot(){
-    	$this->publishes([
-		    __DIR__.'/Config/sms.php'=>config_path('sms.php')
-	    ]);
+    public function boot()
+    {
+        $this->publishes([
+            __DIR__.'/Config/sms.php' => config_path('sms.php')
+        ]);
     }
+
     public function register()
     {
-	    $this->mergeConfigFrom(
-		    __DIR__.'/Config/sms.php', 'sms'
-	    );
+        $this->mergeConfigFrom(
+            __DIR__.'/Config/sms.php', 'sms'
+        );
         $this->app->singleton('sms', function ($app) {
             return new SmsManager($app);
         });
-
     }
-	/**
+
+    /**
      * Get the services provided by the provider.
      *
      * @return array

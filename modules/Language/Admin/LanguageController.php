@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Language\Admin;
 
 use Illuminate\Http\Request;
@@ -13,38 +14,38 @@ class LanguageController extends AdminController
     {
         $this->checkPermission('language_manage');
         if ($request->isMethod('post') and !empty($request->input())) {
-            $this->validate($request,[
-                'name'=>'required',
-                'flag'=>'required',
-                'locale'=>'required'
+            $this->validate($request, [
+                'name' => 'required',
+                'flag' => 'required',
+                'locale' => 'required'
             ]);
             $check = Language::withTrashed()->where('locale', $request->input('locale'))->first();
             if ($check and $check->trashed()) {
                 $check->restore();
                 $check->fill($request->input());
                 $check->save();
-            }else{
-                $this->validate($request,[
-                    'locale'=>'unique:core_languages,locale'
+            } else {
+                $this->validate($request, [
+                    'locale' => 'unique:core_languages,locale'
                 ]);
                 $row = new Language($request->input());
                 $row->save();
             }
             return redirect(route('language.admin.index'))->with('success', __("Language created"));
         }
-        $listLanguage = Language::query() ;
+        $listLanguage = Language::query();
         if (!empty($search = $request->query('s'))) {
-            $listLanguage->where('name', 'LIKE', '%' . $search . '%');
-            $listLanguage->Orwhere('locale', 'LIKE', '%' . $search . '%');
+            $listLanguage->where('name', 'LIKE', '%'.$search.'%');
+            $listLanguage->Orwhere('locale', 'LIKE', '%'.$search.'%');
         }
         $listLanguage->orderBy('created_at', 'asc');
         $data = [
-            'rows'        => $listLanguage->paginate(20),
-            'row'         => new Language(),
-            'locales'     => config('languages.locales'),
+            'rows' => $listLanguage->paginate(20),
+            'row' => new Language(),
+            'locales' => config('languages.locales'),
             'breadcrumbs' => [
                 [
-                    'name'  => __('Language Management'),
+                    'name' => __('Language Management'),
                     'class' => 'active'
                 ],
             ]
@@ -65,11 +66,10 @@ class LanguageController extends AdminController
 
 
         if (!empty($request->input())) {
-
-            $this->validate($request,[
-                'name'=>'required',
-                'flag'=>'required',
-                'locale'=>[
+            $this->validate($request, [
+                'name' => 'required',
+                'flag' => 'required',
+                'locale' => [
                     'required',
                     Rule::unique('core_languages')->ignore($row->id)
                 ]
@@ -85,15 +85,15 @@ class LanguageController extends AdminController
             }
         }
         $data = [
-            'row'         => $row,
-            'locales'     => config('languages.locales'),
+            'row' => $row,
+            'locales' => config('languages.locales'),
             'breadcrumbs' => [
                 [
                     'name' => __('Languages'),
-                    'url'  => route('language.admin.index')
+                    'url' => route('language.admin.index')
                 ],
                 [
-                    'name'  => __('Edit: :name', ['name' => $row->name]),
+                    'name' => __('Edit: :name', ['name' => $row->name]),
                     'class' => 'active'
                 ],
             ]
@@ -117,7 +117,7 @@ class LanguageController extends AdminController
         if ($action == "delete") {
             foreach ($ids as $id) {
                 $query = Language::where("id", $id)->first();
-                if(!empty($query)){
+                if (!empty($query)) {
                     $query->delete();
                 }
             }

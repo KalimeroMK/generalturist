@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Tour\Models;
 
 use App\BaseModel;

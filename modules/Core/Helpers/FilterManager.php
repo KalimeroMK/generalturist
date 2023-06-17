@@ -1,13 +1,16 @@
 <?php
+
 namespace Modules\Core\Helpers;
+
 class FilterManager extends BaseAction
 {
     protected $value = '';
+
     /**
      * Filters a value.
      *
-     * @param string $action Name of filter
-     * @param array $args Arguments passed to the filter
+     * @param  string  $action  Name of filter
+     * @param  array  $args  Arguments passed to the filter
      *
      * @return string Always returns the value
      */

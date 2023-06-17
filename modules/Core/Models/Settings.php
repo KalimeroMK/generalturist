@@ -1,19 +1,22 @@
 <?php
+
 namespace Modules\Core\Models;
 
 use App\BaseModel;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Concerns\HasEvents;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Modules\Language\Models\Language;
+use Plugins\ServiceProvider;
 
 class Settings extends BaseModel
 {
     use HasEvents;
 
     protected $table = 'core_settings';
-    protected $fillable=['name','group','val'];
+    protected $fillable = ['name', 'group', 'val'];
 
-    public static function getSettings($group = '',$locale = '')
+    public static function getSettings($group = '', $locale = '')
     {
         if ($group) {
             static::where('group', $group);
@@ -28,60 +31,60 @@ class Settings extends BaseModel
 
     public static function item($item, $default = false)
     {
-        if($item == 'wallet_module_disable'){
+        if ($item == 'wallet_module_disable') {
             return true;
         }
-        $value = Cache::rememberForever('setting_' . $item, function () use ($item ,$default) {
+        $value = Cache::rememberForever('setting_'.$item, function () use ($item, $default) {
             $val = Settings::where('name', $item)->first();
-            return $val?$val['val']:'';
+            return $val ? $val['val'] : '';
         });
 
-        return (empty($value) and strlen($value)===0)?$default:$value;
+        return (empty($value) and strlen($value) === 0) ? $default : $value;
     }
 
-    public static function store($key,$data){
-
+    public static function store($key, $data)
+    {
         $check = Settings::where('name', $key)->first();
-        if($check){
+        if ($check) {
             $check->val = $data;
             $check->save();
-        }else{
+        } else {
             $check = new self();
             $check->val = $data;
             $check->name = $key;
             $check->save();
         }
 
-        Cache::forget('setting_' . $key);
+        Cache::forget('setting_'.$key);
     }
 
-    public static function getSettingPages($forMenu = false){
+    public static function getSettingPages($forMenu = false)
+    {
         $allSettings = [
-            'general'=>[
-                'id'=>'general',
+            'general' => [
+                'id' => 'general',
                 'title' => __("General Settings"),
-                'position'=>10
+                'position' => 10
             ],
-            'style'=>[
-                'id'   => 'style',
+            'style' => [
+                'id' => 'style',
                 'title' => __("Style Settings"),
-                'position'=>70
+                'position' => 70
             ],
         ];
 
         // Modules
         $custom_modules = \Modules\ServiceProvider::getActivatedModules();
-        if(!empty($custom_modules)){
-            foreach($custom_modules as $module=>$moduleData){
-                $moduleClass = str_replace('ModuleProvider','SettingClass',$moduleData['class']);
-                if(!class_exists($moduleClass) and !empty($moduleData['parent'])){
-                    $moduleClass = str_replace('ModuleProvider','SettingClass',$moduleData['parent']);
+        if (!empty($custom_modules)) {
+            foreach ($custom_modules as $module => $moduleData) {
+                $moduleClass = str_replace('ModuleProvider', 'SettingClass', $moduleData['class']);
+                if (!class_exists($moduleClass) and !empty($moduleData['parent'])) {
+                    $moduleClass = str_replace('ModuleProvider', 'SettingClass', $moduleData['parent']);
                 }
-                if(class_exists($moduleClass))
-                {
-                    $blockConfig = call_user_func([$moduleClass,'getSettingPages']);
-                    if(!empty($blockConfig)){
-                        foreach ($blockConfig as $k=>$v){
+                if (class_exists($moduleClass)) {
+                    $blockConfig = call_user_func([$moduleClass, 'getSettingPages']);
+                    if (!empty($blockConfig)) {
+                        foreach ($blockConfig as $k => $v) {
                             $allSettings[$v['id']] = $v;
                         }
                     }
@@ -90,14 +93,13 @@ class Settings extends BaseModel
         }
         //Custom
         $custom_modules = \Custom\ServiceProvider::getModules();
-        if(!empty($custom_modules)){
-            foreach($custom_modules as $module){
+        if (!empty($custom_modules)) {
+            foreach ($custom_modules as $module) {
                 $moduleClass = "\\Custom\\".ucfirst($module)."\\SettingClass";
-                if(class_exists($moduleClass))
-                {
-                    $blockConfig = call_user_func([$moduleClass,'getSettingPages']);
-                    if(!empty($blockConfig)){
-                        foreach ($blockConfig as $k=>$v){
+                if (class_exists($moduleClass)) {
+                    $blockConfig = call_user_func([$moduleClass, 'getSettingPages']);
+                    if (!empty($blockConfig)) {
+                        foreach ($blockConfig as $k => $v) {
                             $allSettings[$v['id']] = $v;
                         }
                     }
@@ -105,15 +107,14 @@ class Settings extends BaseModel
             }
         }
         //Plugins
-        $plugins_modules = \Plugins\ServiceProvider::getModules();
-        if(!empty($plugins_modules)){
-            foreach($plugins_modules as $module){
+        $plugins_modules = ServiceProvider::getModules();
+        if (!empty($plugins_modules)) {
+            foreach ($plugins_modules as $module) {
                 $moduleClass = "\\Plugins\\".ucfirst($module)."\\SettingClass";
-                if(class_exists($moduleClass))
-                {
-                    $blockConfig = call_user_func([$moduleClass,'getSettingPages']);
-                    if(!empty($blockConfig)){
-                        foreach ($blockConfig as $k=>$v){
+                if (class_exists($moduleClass)) {
+                    $blockConfig = call_user_func([$moduleClass, 'getSettingPages']);
+                    if (!empty($blockConfig)) {
+                        foreach ($blockConfig as $k => $v) {
                             $allSettings[$v['id']] = $v;
                         }
                     }
@@ -121,18 +122,17 @@ class Settings extends BaseModel
             }
         }
         //@todo Sort items by Position
-        $allSettings = array_values(\Illuminate\Support\Arr::sort($allSettings, function ($value) {
+        $allSettings = array_values(Arr::sort($allSettings, function ($value) {
             return $value['position'] ?? 0;
         }));
 
-        if(!empty($allSettings)){
-            foreach ($allSettings as $k=>$item)
-            {
-                if(!empty($item['hide_in_settings_menu']) and $forMenu){
+        if (!empty($allSettings)) {
+            foreach ($allSettings as $k => $item) {
+                if (!empty($item['hide_in_settings_menu']) and $forMenu) {
                     unset($allSettings[$k]);
                     continue;
                 }
-                $item['url'] = route('core.admin.settings.index',['group'=>$item['id']]);
+                $item['url'] = route('core.admin.settings.index', ['group' => $item['id']]);
                 $item['name'] = $item['title'] ?? $item['id'];
                 $item['icon'] = $item['icon'] ?? '';
 
@@ -141,12 +141,13 @@ class Settings extends BaseModel
         }
         return $allSettings;
     }
-    public static function clearCustomCssCache(){
+
+    public static function clearCustomCssCache()
+    {
         $langs = Language::getActive();
-        if(!empty($langs)){
-            foreach ($langs as $lang)
-            {
-                Cache::forget("custom_css_". config('bc.active_theme').'_' .$lang->locale);
+        if (!empty($langs)) {
+            foreach ($langs as $lang) {
+                Cache::forget("custom_css_".config('bc.active_theme').'_'.$lang->locale);
             }
         }
     }

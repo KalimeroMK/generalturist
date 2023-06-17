@@ -1,7 +1,9 @@
 <?php
+
 namespace Modules\Type\Enum;
 
-class Label{
+class Label
+{
     const PLURAL = 'plural';
     const NAME = 'name';
 }

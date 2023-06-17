@@ -1,5 +1,6 @@
 <?php
-/* @var $type \Modules\Type\Abstracts\BaseType */
+/* @var $type BaseType */
+
 ?>
 @extends('Layout::admin.app')
 @section('content')
@@ -8,7 +9,8 @@
             <h1 class="title-bar">{{$page_title}}</h1>
             <div class="title-actions">
                 @if(empty($is_recovery))
-                    <a href="{{route('type.admin.create',['type'=>$typeId])}}" class="btn btn-primary">{{__("Add new :type",['type'=>$type->label(\Modules\Type\Enum\Label::NAME)])}}</a>
+                    <a href="{{route('type.admin.create',['type'=>$typeId])}}"
+                       class="btn btn-primary">{{__("Add new :type",['type'=>$type->label(Label::NAME)])}}</a>
                 @endif
             </div>
         </div>
@@ -16,7 +18,8 @@
         <div class="filter-div d-flex justify-content-between ">
             <div class="col-left">
                 @if(!empty($rows))
-                    <form method="post" action="{{route('type.admin.bulkEdit',['type'=>$typeId])}}" class="filter-form filter-form-left d-flex justify-content-start">
+                    <form method="post" action="{{route('type.admin.bulkEdit',['type'=>$typeId])}}"
+                          class="filter-form filter-form-left d-flex justify-content-start">
                         {{csrf_field()}}
                         <select name="action" class="form-control">
                             <option value="">{{__(" Bulk Actions ")}}</option>
@@ -32,15 +35,21 @@
                                 <option value="delete">{{__(" Delete ")}}</option>
                             @endif
                         </select>
-                        <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
+                        <button data-confirm="{{__("Do you want to delete?")}}"
+                                class="btn-info btn btn-icon dungdt-apply-form-btn"
+                                type="button">{{__('Apply')}}</button>
                     </form>
                 @endif
             </div>
             <div class="col-left dropdown">
-                <form method="get" action="{{ !empty($recovery) ? route('type.admin.recovery',['type'=>$typeId]) : route('type.admin.index',['type'=>$typeId])}}" class="filter-form filter-form-right d-flex justify-content-end flex-column flex-sm-row" role="search">
-                    <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by name')}}" class="form-control">
+                <form method="get"
+                      action="{{ !empty($recovery) ? route('type.admin.recovery',['type'=>$typeId]) : route('type.admin.index',['type'=>$typeId])}}"
+                      class="filter-form filter-form-right d-flex justify-content-end flex-column flex-sm-row"
+                      role="search">
+                    <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by name')}}"
+                           class="form-control">
 
-                        <button class="btn-info btn btn-icon btn_search" type="submit">{{__('Search')}}</button>
+                    <button class="btn-info btn btn-icon btn_search" type="submit">{{__('Search')}}</button>
                 </form>
             </div>
         </div>
@@ -87,13 +96,16 @@
                                         </td>
                                         <td><span class="badge badge-{{ $row->status }}">{{ $row->status }}</span></td>
                                         <td>
-                                            <a target="_blank" href="{{ route('review.admin.index',['service_id'=>$row->id]) }}" class="review-count-approved">
+                                            <a target="_blank"
+                                               href="{{ route('review.admin.index',['service_id'=>$row->id]) }}"
+                                               class="review-count-approved">
                                                 {{ $row->getNumberReviewsInService() }}
                                             </a>
                                         </td>
                                         <td>{{ display_date($row->updated_at)}}</td>
                                         <td>
-                                            <a href="{{route('type.admin.edit',['type'=>$typeId,'id'=>$row->id])}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> {{__('Edit')}}
+                                            <a href="{{route('type.admin.edit',['type'=>$typeId,'id'=>$row->id])}}"
+                                               class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> {{__('Edit')}}
                                             </a>
                                         </td>
                                     </tr>

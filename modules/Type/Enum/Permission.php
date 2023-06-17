@@ -1,6 +1,8 @@
 <?php
+
 namespace Modules\Type\Enum;
 
-class Permission{
+class Permission
+{
     const MANAGE = 'manage';
 }

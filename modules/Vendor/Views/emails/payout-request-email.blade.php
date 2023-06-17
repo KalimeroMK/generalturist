@@ -19,10 +19,12 @@
                     <ul>
                         <li><strong>{{__('Status:')}}</strong> <strong>{{$payout_request->status_text}}</strong></li>
                         @if($payout_request->pay_date)
-                            <li><strong>{{__('Pay date:')}}</strong> <strong>{{display_date($payout_request->pay_date)}}</strong></li>
+                            <li><strong>{{__('Pay date:')}}</strong>
+                                <strong>{{display_date($payout_request->pay_date)}}</strong></li>
                         @endif
                         @if($payout_request->note_to_vendor)
-                            <li><strong>{{__('Note to vendor:')}}</strong> <strong>{!! clean($payout_request->note_to_vendor) !!}</strong></li>
+                            <li><strong>{{__('Note to vendor:')}}</strong>
+                                <strong>{!! clean($payout_request->note_to_vendor) !!}</strong></li>
                         @endif
                     </ul>
                     <p>{{__('Payout information:')}}</p>
@@ -30,21 +32,24 @@
 
                 <ul>
                     <li><strong>{{__("Payout ID:")}}</strong> <strong>#{{$payout_request->id}}</strong></li>
-                    <li><strong>{{__('Amount: ')}}</strong> <strong>{{format_money($payout_request->amount)}}</strong></li>
+                    <li><strong>{{__('Amount: ')}}</strong> <strong>{{format_money($payout_request->amount)}}</strong>
+                    </li>
                     <li><strong>{{__('Payout method: ')}}</strong>
                         {{__(':name to :info',['name'=>$payout_request->payout_method_name,'info'=>$payout_request->account_info])}}
                     </li>
                     @if($payout_request->note_to_admin)
-                    <li><strong>{{__('Note to admin: ')}}</strong>
-                        {{$payout_request->note_to_admin}}
-                    </li>
+                        <li><strong>{{__('Note to admin: ')}}</strong>
+                            {{$payout_request->note_to_admin}}
+                        </li>
                     @endif
                     <li><strong>{{__('Created at: ')}}</strong>
                         {{display_datetime($payout_request->created_at)}}
                     </li>
 
                 </ul>
-                <p>{{__('You can check your payout request here:')}} <a class="btn btn-primary" target="_blank" href="{{route('vendor.payout.index')}}">{{__('View payouts')}}</a></p>
+                <p>{{__('You can check your payout request here:')}} <a class="btn btn-primary" target="_blank"
+                                                                        href="{{route('vendor.payout.index')}}">{{__('View payouts')}}</a>
+                </p>
 
                 <br>
             @else
@@ -64,10 +69,12 @@
                     <ul>
                         <li><strong>{{__('Status:')}}</strong> <strong>{{$payout_request->status_text}}</strong></li>
                         @if($payout_request->pay_date)
-                            <li><strong>{{__('Pay date:')}}</strong> <strong>{{display_date($payout_request->pay_date)}}</strong></li>
+                            <li><strong>{{__('Pay date:')}}</strong>
+                                <strong>{{display_date($payout_request->pay_date)}}</strong></li>
                         @endif
                         @if($payout_request->note_to_vendor)
-                        <li><strong>{{__('Note to vendor:')}}</strong> <strong>{!! clean($payout_request->note_to_vendor) !!}</strong></li>
+                            <li><strong>{{__('Note to vendor:')}}</strong>
+                                <strong>{!! clean($payout_request->note_to_vendor) !!}</strong></li>
                         @endif
                     </ul>
                     <p>{{__('Payout information:')}}</p>
@@ -75,22 +82,27 @@
 
                 <ul>
                     <li><strong>{{__("Payout ID:")}}</strong> <strong>#{{$payout_request->id}}</strong></li>
-                    <li><strong>{{__('Vendor: ')}}</strong> <strong><a target="_blank" href="{{route('user.profile',['id'=>$payout_request->vendor_id])}}">{{$payout_request->vendor->getDisplayName()}}</a></strong></li>
-                    <li><strong>{{__('Amount: ')}}</strong> <strong>{{format_money($payout_request->amount)}}</strong></li>
+                    <li><strong>{{__('Vendor: ')}}</strong> <strong><a target="_blank"
+                                                                       href="{{route('user.profile',['id'=>$payout_request->vendor_id])}}">{{$payout_request->vendor->getDisplayName()}}</a></strong>
+                    </li>
+                    <li><strong>{{__('Amount: ')}}</strong> <strong>{{format_money($payout_request->amount)}}</strong>
+                    </li>
                     <li><strong>{{__('Payout method: ')}}</strong>
                         {{__(':name to :info',['name'=>$payout_request->payout_method_name,'info'=>$payout_request->account_info])}}
                     </li>
                     @if($payout_request->note_to_admin)
-                    <li><strong>{{__('Note to admin: ')}}</strong>
-                        {{$payout_request->note_to_admin}}
-                    </li>
+                        <li><strong>{{__('Note to admin: ')}}</strong>
+                            {{$payout_request->note_to_admin}}
+                        </li>
                     @endif
                     <li><strong>{{__('Created at: ')}}</strong>
                         {{display_datetime($payout_request->created_at)}}
                     </li>
 
                 </ul>
-                <p>{{__('You can check all payout request here:')}} <a class="btn btn-primary" target="_blank" href="{{route('vendor.admin.payout.index')}}">{{__('Manage payouts')}}</a></p>
+                <p>{{__('You can check all payout request here:')}} <a class="btn btn-primary" target="_blank"
+                                                                       href="{{route('vendor.admin.payout.index')}}">{{__('Manage payouts')}}</a>
+                </p>
                 <br>
             @endif
             <p>{{__('Regards')}},<br>{{setting_item('site_title')}}</p>

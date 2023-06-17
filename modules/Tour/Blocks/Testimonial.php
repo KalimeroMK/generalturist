@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Tour\Blocks;
 
 use Modules\Media\Helpers\FileHelper;
@@ -6,47 +7,48 @@ use Modules\Template\Blocks\BaseBlock;
 
 class Testimonial extends BaseBlock
 {
-    public function getOptions(){
+    public function getOptions()
+    {
         return [
             'settings' => [
                 [
-                    'id'        => 'title',
-                    'type'      => 'input',
+                    'id' => 'title',
+                    'type' => 'input',
                     'inputType' => 'text',
-                    'label'     => __('Title')
+                    'label' => __('Title')
                 ],
                 [
-                    'id'          => 'list_item',
-                    'type'        => 'listItem',
-                    'label'       => __('List Item(s)'),
+                    'id' => 'list_item',
+                    'type' => 'listItem',
+                    'label' => __('List Item(s)'),
                     'title_field' => 'title',
-                    'settings'    => [
+                    'settings' => [
                         [
-                            'id'        => 'name',
-                            'type'      => 'input',
+                            'id' => 'name',
+                            'type' => 'input',
                             'inputType' => 'text',
-                            'label'     => __('Name')
+                            'label' => __('Name')
                         ],
                         [
-                            'id'    => 'desc',
-                            'type'  => 'textArea',
+                            'id' => 'desc',
+                            'type' => 'textArea',
                             'label' => __('Desc')
                         ],
                         [
-                            'id'        => 'number_star',
-                            'type'      => 'input',
+                            'id' => 'number_star',
+                            'type' => 'input',
                             'inputType' => 'number',
-                            'label'     => __('Number star')
+                            'label' => __('Number star')
                         ],
                         [
-                            'id'    => 'avatar',
-                            'type'  => 'uploader',
+                            'id' => 'avatar',
+                            'type' => 'uploader',
                             'label' => __('Avatar Image')
                         ],
                     ]
                 ],
             ],
-            'category'=>__("Other Block")
+            'category' => __("Other Block")
         ];
     }
 
@@ -60,9 +62,10 @@ class Testimonial extends BaseBlock
         return view('Tour::frontend.blocks.testimonial.index', $model);
     }
 
-    public function contentAPI($model = []){
-        if(!empty($model['list_item'])){
-            foreach (  $model['list_item'] as &$item ){
+    public function contentAPI($model = [])
+    {
+        if (!empty($model['list_item'])) {
+            foreach ($model['list_item'] as &$item) {
                 $item['avatar_url'] = FileHelper::url($item['avatar'], 'full');
             }
         }

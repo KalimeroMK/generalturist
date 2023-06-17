@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\User\Emails;
 
 use App\User;
@@ -9,11 +10,12 @@ use Illuminate\Queue\SerializesModels;
 class AdminUpdateVerifyDataToUser extends Mailable
 {
     use Queueable, SerializesModels;
+
     public $user;
     protected $email_type;
     protected $is_full;
 
-    public function __construct(User $user,$is_full)
+    public function __construct(User $user, $is_full)
     {
         $this->user = $user;
         $this->is_full = $is_full;
@@ -21,7 +23,7 @@ class AdminUpdateVerifyDataToUser extends Mailable
 
     public function build()
     {
-        $subject = __('[:site_name] We updated your verification data',['site_name'=>setting_item('site_title')]);
+        $subject = __('[:site_name] We updated your verification data', ['site_name' => setting_item('site_title')]);
 
         return $this->subject($subject)->view('User::emails.admin-submit-verify-data')->with([
             'user' => $this->user,

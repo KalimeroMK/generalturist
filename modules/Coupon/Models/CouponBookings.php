@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Coupon\Models;
 
 use App\BaseModel;

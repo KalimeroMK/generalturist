@@ -1,74 +1,76 @@
 <?php
+
 namespace Modules\Tour\Blocks;
 
-use Modules\Template\Blocks\BaseBlock;
 use Modules\Media\Helpers\FileHelper;
+use Modules\Template\Blocks\BaseBlock;
 
 class ListFeaturedItem extends BaseBlock
 {
-    public function getOptions(){
+    public function getOptions()
+    {
         return [
             'settings' => [
                 [
-                    'id'          => 'list_item',
-                    'type'        => 'listItem',
-                    'label'       => __('List Item(s)'),
+                    'id' => 'list_item',
+                    'type' => 'listItem',
+                    'label' => __('List Item(s)'),
                     'title_field' => 'title',
-                    'settings'    => [
+                    'settings' => [
                         [
-                            'id'        => 'title',
-                            'type'      => 'input',
+                            'id' => 'title',
+                            'type' => 'input',
                             'inputType' => 'text',
-                            'label'     => __('Title')
+                            'label' => __('Title')
                         ],
                         [
-                            'id'        => 'sub_title',
-                            'type'      => 'input',
+                            'id' => 'sub_title',
+                            'type' => 'input',
                             'inputType' => 'textArea',
-                            'label'     => __('Sub Title')
+                            'label' => __('Sub Title')
                         ],
                         [
-                            'id'    => 'icon_image',
-                            'type'  => 'uploader',
+                            'id' => 'icon_image',
+                            'type' => 'uploader',
                             'label' => __('Image Uploader')
                         ],
                         [
-                            'id'        => 'order',
-                            'type'      => 'input',
+                            'id' => 'order',
+                            'type' => 'input',
                             'inputType' => 'number',
-                            'label'     => __('Order')
+                            'label' => __('Order')
                         ],
                     ]
                 ],
                 [
-                    'id'            => 'style',
-                    'type'          => 'radios',
-                    'label'         => __('Style'),
-                    'values'        => [
+                    'id' => 'style',
+                    'type' => 'radios',
+                    'label' => __('Style'),
+                    'values' => [
                         [
-                            'value'   => 'normal',
+                            'value' => 'normal',
                             'name' => __("Normal")
                         ],
                         [
-                            'value'   => 'style2',
+                            'value' => 'style2',
                             'name' => __("Style 2")
                         ],
                         [
-                            'value'   => 'style3',
+                            'value' => 'style3',
                             'name' => __("Style 3")
                         ],
                         [
-                            'value'   => 'style4',
+                            'value' => 'style4',
                             'name' => __("Style 4")
                         ],
                         [
-                            'value'   => 'style5',
+                            'value' => 'style5',
                             'name' => __("Style 5")
                         ]
                     ]
                 ]
             ],
-            'category'=>__("Other Block")
+            'category' => __("Other Block")
         ];
     }
 
@@ -81,9 +83,11 @@ class ListFeaturedItem extends BaseBlock
     {
         return view('Tour::frontend.blocks.list-featured-item.index', $model);
     }
-    public function contentAPI($model = []){
-        if(!empty($model['list_item'])){
-            foreach (  $model['list_item'] as &$item ){
+
+    public function contentAPI($model = [])
+    {
+        if (!empty($model['list_item'])) {
+            foreach ($model['list_item'] as &$item) {
                 $item['icon_image_url'] = FileHelper::url($item['icon_image'], 'full');
             }
         }

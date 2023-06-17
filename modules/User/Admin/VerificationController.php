@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\User\Admin;
 
 use App\User;
@@ -16,35 +17,35 @@ class VerificationController extends AdminController
         $this->setActiveMenu(route('user.admin.index'));
     }
 
-    public function index(Request $request){
-
+    public function index(Request $request)
+    {
         $data = [];
         $this->checkPermission('user_view');
         $username = $request->query('s');
-        $listUser = User::query()->orderBy('id','desc');
+        $listUser = User::query()->orderBy('id', 'desc');
         if (!empty($username)) {
-            $listUser->where(function($query) use($username){
-                $query->where('first_name', 'LIKE', '%' . $username . '%');
-                $query->orWhere('id',  $username);
-                $query->orWhere('phone',  $username);
-                $query->orWhere('email', 'LIKE', '%' . $username . '%');
-                $query->orWhere('last_name', 'LIKE', '%' . $username . '%');
+            $listUser->where(function ($query) use ($username) {
+                $query->where('first_name', 'LIKE', '%'.$username.'%');
+                $query->orWhere('id', $username);
+                $query->orWhere('phone', $username);
+                $query->orWhere('email', 'LIKE', '%'.$username.'%');
+                $query->orWhere('last_name', 'LIKE', '%'.$username.'%');
             });
         }
 
-        if($request->query('role')){
+        if ($request->query('role')) {
             $listUser->role($request->query('role'));
         }
 
-        switch ($request->input('status')){
+        switch ($request->input('status')) {
             case "pending":
-                $listUser->whereIn('verify_submit_status',['new','partial']);
+                $listUser->whereIn('verify_submit_status', ['new', 'partial']);
                 break;
             case "approved":
-                $listUser->whereIn('verify_submit_status',['completed']);
+                $listUser->whereIn('verify_submit_status', ['completed']);
                 break;
             default:
-                $listUser->whereIn('verify_submit_status',['new','partial','completed']);
+                $listUser->whereIn('verify_submit_status', ['new', 'partial', 'completed']);
         }
 
         $data = [
@@ -52,7 +53,7 @@ class VerificationController extends AdminController
             'roles' => Role::all()
         ];
 
-        return view("User::admin.verification.index",$data);
+        return view("User::admin.verification.index", $data);
     }
 
     public function detail(Request $request, $id)
@@ -65,66 +66,66 @@ class VerificationController extends AdminController
             abort(403);
         }
         $data = [
-            'row'   => $row,
+            'row' => $row,
             'roles' => Role::all(),
-            'breadcrumbs'=>[
+            'breadcrumbs' => [
                 [
-                    'name'=>__("Users"),
-                    'url'=>route('user.admin.index')
+                    'name' => __("Users"),
+                    'url' => route('user.admin.index')
                 ],
                 [
-                    'name'=>__("Verification Request"),
-                    'url'=>route('user.admin.verification.index')
+                    'name' => __("Verification Request"),
+                    'url' => route('user.admin.verification.index')
                 ],
                 [
-                    'name'=>__("Verify request: :email",['email'=>$row->email]),
+                    'name' => __("Verify request: :email", ['email' => $row->email]),
                     'class' => 'active'
                 ],
             ]
         ];
         return view('User::admin.verification.detail', $data);
     }
+
     public function store(Request $request, $id)
     {
         $row = User::find($id);
         if (empty($row)) {
-            return redirect()->back()->with("danger",__("User not found"));
+            return redirect()->back()->with("danger", __("User not found"));
         }
         if ($row->id != Auth::user()->id and !Auth::user()->hasPermission('user_update')) {
             abort(403);
         }
 
         $fields = $row->verification_fields;
-        if(empty($fields)){
-            return redirect()->back()->with("danger",__("No verification field found"));
+        if (empty($fields)) {
+            return redirect()->back()->with("danger", __("No verification field found"));
         }
 
         $verifiedFields = $request->input('fields');
         $full = true;
 
-        foreach ($fields as $field)
-        {
-            if(in_array($field['id'],$verifiedFields)){
-                $row->addMeta('is_verified_'.$field['id'],1);
-            }else{
-                $row->addMeta('is_verified_'.$field['id'],0);
+        foreach ($fields as $field) {
+            if (in_array($field['id'], $verifiedFields)) {
+                $row->addMeta('is_verified_'.$field['id'], 1);
+            } else {
+                $row->addMeta('is_verified_'.$field['id'], 0);
                 $full = false;
             }
         }
 
-        if($full){
+        if ($full) {
             $row->verify_submit_status = 'completed';
             $row->is_verified = 1;
-        }else{
+        } else {
             $row->verify_submit_status = 'partial';
             $row->is_verified = 0;
         }
 
         $row->save();
 
-        event(new AdminUpdateVerificationData($row,$full));
+        event(new AdminUpdateVerificationData($row, $full));
 
-        return redirect()->back()->with("success",__("Updated"));
+        return redirect()->back()->with("success", __("Updated"));
     }
 
     public function bulkEdit(Request $request)
@@ -132,16 +133,18 @@ class VerificationController extends AdminController
         $this->checkPermission('user_create');
         $ids = $request->input('ids');
         $action = $request->input('action');
-        if (empty($ids))
+        if (empty($ids)) {
             return redirect()->back()->with('error', __('Select at leas 1 item!'));
-        if (empty($action))
+        }
+        if (empty($action)) {
             return redirect()->back()->with('error', __('Select an Action!'));
+        }
 
-        switch ($action){
+        switch ($action) {
             case "delete":
                 foreach ($ids as $id) {
                     $query = User::find($id);
-                    if(!empty($query)){
+                    if (!empty($query)) {
                         $query->verify_submit_status = null;
                     }
                     $query->save();

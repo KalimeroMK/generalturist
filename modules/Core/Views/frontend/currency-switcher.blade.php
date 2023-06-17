@@ -1,6 +1,6 @@
 @php
-    $actives = \App\Currency::getActiveCurrency();
-    $current = \App\Currency::getCurrent('currency_main');
+    use App\Currency;$actives = Currency::getActiveCurrency();
+    $current = Currency::getCurrent('currency_main');
 @endphp
 {{--Multi Language--}}
 @if(!empty($actives) and count($actives) > 1)

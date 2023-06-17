@@ -1,9 +1,10 @@
 <?php
+
 namespace Modules\News\Blocks;
 
-use Modules\Template\Blocks\BaseBlock;
 use Modules\News\Models\News;
 use Modules\News\Models\NewsCategory;
+use Modules\Template\Blocks\BaseBlock;
 
 class ListNews extends BaseBlock
 {
@@ -12,70 +13,70 @@ class ListNews extends BaseBlock
         return ([
             'settings' => [
                 [
-                    'id'        => 'title',
-                    'type'      => 'input',
+                    'id' => 'title',
+                    'type' => 'input',
                     'inputType' => 'text',
-                    'label'     => __('Title')
+                    'label' => __('Title')
                 ],
                 [
-                    'id'        => 'desc',
-                    'type'      => 'input',
+                    'id' => 'desc',
+                    'type' => 'input',
                     'inputType' => 'text',
-                    'label'     => __('Desc')
+                    'label' => __('Desc')
                 ],
                 [
-                    'id'        => 'number',
-                    'type'      => 'input',
+                    'id' => 'number',
+                    'type' => 'input',
                     'inputType' => 'number',
-                    'label'     => __('Number Item')
+                    'label' => __('Number Item')
                 ],
                 [
-                    'id'      => 'category_id',
-                    'type'    => 'select2',
-                    'label'   => __('Filter by Category'),
+                    'id' => 'category_id',
+                    'type' => 'select2',
+                    'label' => __('Filter by Category'),
                     'select2' => [
-                        'ajax'  => [
-                            'url'      => route('news.admin.category.getForSelect2') ,
+                        'ajax' => [
+                            'url' => route('news.admin.category.getForSelect2'),
                             'dataType' => 'json'
                         ],
                         'width' => '100%',
                         'allowClear' => 'true',
                         'placeholder' => __('-- Select --')
                     ],
-                    'pre_selected'=>route('news.admin.category.getForSelect2',['pre_selected'=>1])
+                    'pre_selected' => route('news.admin.category.getForSelect2', ['pre_selected' => 1])
                 ],
                 [
-                    'id'            => 'order',
-                    'type'          => 'radios',
-                    'label'         => __('Order'),
-                    'values'        => [
+                    'id' => 'order',
+                    'type' => 'radios',
+                    'label' => __('Order'),
+                    'values' => [
                         [
-                            'value'   => 'id',
+                            'value' => 'id',
                             'name' => __("Date Create")
                         ],
                         [
-                            'value'   => 'title',
+                            'value' => 'title',
                             'name' => __("Title")
                         ],
                     ]
                 ],
                 [
-                    'id'            => 'order_by',
-                    'type'          => 'radios',
-                    'label'         => __('Order By'),
-                    'values'        => [
+                    'id' => 'order_by',
+                    'type' => 'radios',
+                    'label' => __('Order By'),
+                    'values' => [
                         [
-                            'value'   => 'asc',
+                            'value' => 'asc',
                             'name' => __("ASC")
                         ],
                         [
-                            'value'   => 'desc',
+                            'value' => 'desc',
                             'name' => __("DESC")
                         ],
                     ]
                 ]
             ],
-            'category'=>__("News")
+            'category' => __("News")
         ]);
     }
 
@@ -88,42 +89,41 @@ class ListNews extends BaseBlock
     {
         $list = $this->query($model);
         $data = [
-            'rows'       => $list,
-            'title'      => $model['title'] ?? "",
-            'desc'      => $model['desc'] ?? "",
+            'rows' => $list,
+            'title' => $model['title'] ?? "",
+            'desc' => $model['desc'] ?? "",
         ];
         return view('News::frontend.blocks.list-news.index', $data);
     }
 
-    public function contentAPI($model = []){
-        $rows = $this->query($model);
-        $model['data']= $rows->map(function($row){
-            return $row->dataForApi();
-        });
-        return $model;
-    }
-
-    public function query($model){
+    public function query($model)
+    {
         $model_news = News::select("core_news.*")->with(['translation']);
-        if(empty($model['order'])) $model['order'] = "id";
-        if(empty($model['order_by'])) $model['order_by'] = "desc";
-        if(empty($model['number'])) $model['number'] = 5;
+        if (empty($model['order'])) {
+            $model['order'] = "id";
+        }
+        if (empty($model['order_by'])) {
+            $model['order_by'] = "desc";
+        }
+        if (empty($model['number'])) {
+            $model['number'] = 5;
+        }
         if (!empty($model['category_id'])) {
             $category_ids = [$model['category_id']];
-            $list_cat = NewsCategory::whereIn('id', $category_ids)->where("status","publish")->get();
-            if(!empty($list_cat)){
+            $list_cat = NewsCategory::whereIn('id', $category_ids)->where("status", "publish")->get();
+            if (!empty($list_cat)) {
                 $where_left_right = [];
                 $params = [];
-                foreach ($list_cat as $cat){
+                foreach ($list_cat as $cat) {
                     $where_left_right[] = " ( core_news_category._lft >= ? AND core_news_category._rgt <= ? ) ";
                     $params[] = $cat->_lft;
                     $params[] = $cat->_rgt;
                 }
-                $sql_where_join = " ( ".implode("OR" , $where_left_right)." )  ";
+                $sql_where_join = " ( ".implode("OR", $where_left_right)." )  ";
                 $model_news
-                    ->join('core_news_category', function ($join) use($sql_where_join,$params) {
+                    ->join('core_news_category', function ($join) use ($sql_where_join, $params) {
                         $join->on('core_news_category.id', '=', 'core_news.cat_id')
-                            ->WhereRaw($sql_where_join,$params);
+                            ->WhereRaw($sql_where_join, $params);
                     });
             }
         }
@@ -132,5 +132,14 @@ class ListNews extends BaseBlock
         $model_news->where("core_news.status", "publish");
         $model_news->groupBy("core_news.id");
         return $model_news->with(['category'])->limit($model['number'])->get();
+    }
+
+    public function contentAPI($model = [])
+    {
+        $rows = $this->query($model);
+        $model['data'] = $rows->map(function ($row) {
+            return $row->dataForApi();
+        });
+        return $model;
     }
 }

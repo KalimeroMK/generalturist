@@ -1,22 +1,24 @@
 <?php
-namespace  Modules\Email;
+
+namespace Modules\Email;
 
 use Modules\Core\Abstracts\BaseSettingsClass;
 
 class SettingClass extends BaseSettingsClass
 {
-    const EMAIL_DRIVER=[
-        "mail","smtp", "sendmail", "mailgun",  "ses","sparkpost", "postmark", "log", "array"
+    const EMAIL_DRIVER = [
+        "mail", "smtp", "sendmail", "mailgun", "ses", "sparkpost", "postmark", "log", "array"
     ];
+
     public static function getSettingPages()
     {
         return [
             [
-                'id'   => 'email',
+                'id' => 'email',
                 'title' => __("Email Settings"),
-                'position'=>90,
-                'view'=>"Email::admin.settings.email",
-                "keys"=>[
+                'position' => 90,
+                'view' => "Email::admin.settings.email",
+                "keys" => [
                     'email_driver',
                     'email_host',
                     'email_port',
@@ -37,7 +39,7 @@ class SettingClass extends BaseSettingsClass
                     'email_from_name',
                     'email_from_address',
                 ],
-                'html_keys'=>[
+                'html_keys' => [
 
                 ]
             ]

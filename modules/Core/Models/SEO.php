@@ -1,11 +1,12 @@
 <?php
+
 namespace Modules\Core\Models;
 
 use App\BaseModel;
 
 class SEO extends BaseModel
 {
-    protected $table    = 'bravo_seo';
+    protected $table = 'bravo_seo';
     protected $fillable = [
         'seo_index',
         'seo_title',
@@ -15,13 +16,13 @@ class SEO extends BaseModel
     ];
 
     protected $casts = [
-        'seo_share'  => 'array',
+        'seo_share' => 'array',
     ];
 
     public function fill(array $attributes)
     {
-        if(!empty($attributes)){
-            foreach ( $this->fillable as $item ){
+        if (!empty($attributes)) {
+            foreach ($this->fillable as $item) {
                 $attributes[$item] = $attributes[$item] ?? null;
             }
         }

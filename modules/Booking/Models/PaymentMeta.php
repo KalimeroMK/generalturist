@@ -10,8 +10,8 @@ class PaymentMeta extends BaseModel
 {
     protected $table = 'bravo_booking_payment_meta';
     protected $fillable = [
-        'name' ,
-        'val'  ,
+        'name',
+        'val',
         'payment_id',
     ];
 }

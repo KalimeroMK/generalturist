@@ -1,9 +1,11 @@
 <?php
-/* @var $type \Modules\Type\Abstracts\BaseType */
+/* @var $type BaseType */
+
 ?>
 @extends('admin.layouts.app')
 @section('content')
-    <form action="{{route('tour.admin.attribute.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}" method="post">
+    <form action="{{route('tour.admin.attribute.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}"
+          method="post">
         @csrf
         <input type="hidden" name="id" value="{{$row->id}}">
         <div class="container">

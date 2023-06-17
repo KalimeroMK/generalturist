@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Core\Helpers;
 
 class HookManager
@@ -17,14 +18,16 @@ class HookManager
      * @var FilterManager
      */
     protected $filter;
+
     /**
      * Construct the class.
      */
-    public function __construct(ActionManager $action,FilterManager $filter)
+    public function __construct(ActionManager $action, FilterManager $filter)
     {
         $this->action = $action;
         $this->filter = $filter;
     }
+
     /**
      * Get the action instance.
      *
@@ -34,6 +37,7 @@ class HookManager
     {
         return $this->action;
     }
+
     /**
      * Get the action instance.
      *
@@ -43,70 +47,77 @@ class HookManager
     {
         return $this->filter;
     }
+
     /**
      * Add an action.
      *
-     * @param string $hook      Hook name
-     * @param mixed  $callback  Function to execute
-     * @param int    $priority  Priority of the action
-     * @param int    $arguments Number of arguments to accept
+     * @param  string  $hook  Hook name
+     * @param  mixed  $callback  Function to execute
+     * @param  int  $priority  Priority of the action
+     * @param  int  $arguments  Number of arguments to accept
      */
     public function addAction($hook, $callback, $priority = 20, $arguments = 1)
     {
         $this->action->listen($hook, $callback, $priority, $arguments);
     }
+
     /**
      * Remove an action.
      *
-     * @param string $hook     Hook name
-     * @param mixed  $callback Function to execute
-     * @param int    $priority Priority of the action
+     * @param  string  $hook  Hook name
+     * @param  mixed  $callback  Function to execute
+     * @param  int  $priority  Priority of the action
      */
     public function removeAction($hook, $callback, $priority = 20)
     {
         $this->action->remove($hook, $callback, $priority);
     }
+
     /**
      * Remove all actions.
      *
-     * @param string $hook Hook name
+     * @param  string  $hook  Hook name
      */
     public function removeAllActions($hook = null)
     {
         $this->action->removeAll($hook);
     }
+
     /**
      * Adds a filter.
      *
-     * @param string $hook      Hook name
-     * @param mixed  $callback  Function to execute
-     * @param int    $priority  Priority of the action
-     * @param int    $arguments Number of arguments to accept
+     * @param  string  $hook  Hook name
+     * @param  mixed  $callback  Function to execute
+     * @param  int  $priority  Priority of the action
+     * @param  int  $arguments  Number of arguments to accept
      */
     public function addFilter($hook, $callback, $priority = 20, $arguments = 1)
     {
         $this->filter->listen($hook, $callback, $priority, $arguments);
     }
+
     /**
      * Remove a filter.
      *
-     * @param string $hook     Hook name
-     * @param mixed  $callback Function to execute
-     * @param int    $priority Priority of the action
+     * @param  string  $hook  Hook name
+     * @param  mixed  $callback  Function to execute
+     * @param  int  $priority  Priority of the action
      */
     public function removeFilter($hook, $callback, $priority = 20)
     {
         $this->filter->remove($hook, $callback, $priority);
     }
+
     /**
      * Remove all filters.
      *
-     * @param string $hook Hook name
+     * @param  string  $hook  Hook name
      */
     public function removeAllFilters($hook = null)
     {
         $this->filter->removeAll($hook);
     }
+
     /**
      * Set a new action.
      *
@@ -114,9 +125,9 @@ class HookManager
      *
      * You can add as many parameters as you'd like.
      *
-     * @param string $action     Name of hook
-     * @param mixed  $parameter1 A parameter
-     * @param mixed  $parameter2 Another parameter
+     * @param  string  $action  Name of hook
+     * @param  mixed  $parameter1  A parameter
+     * @param  mixed  $parameter2  Another parameter
      *
      * @return void
      */
@@ -128,6 +139,7 @@ class HookManager
         $args = array_values($args);
         $this->action->fire($hook, $args);
     }
+
     /**
      * Set a new filter.
      *
@@ -135,10 +147,10 @@ class HookManager
      *
      * You can add as many parameters as you'd like.
      *
-     * @param string $action     Name of hook
-     * @param mixed  $value      The original filter value
-     * @param mixed  $parameter1 A parameter
-     * @param mixed  $parameter2 Another parameter
+     * @param  string  $action  Name of hook
+     * @param  mixed  $value  The original filter value
+     * @param  mixed  $parameter1  A parameter
+     * @param  mixed  $parameter2  Another parameter
      *
      * @return void
      */

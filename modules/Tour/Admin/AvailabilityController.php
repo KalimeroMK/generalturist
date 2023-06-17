@@ -1,10 +1,7 @@
 <?php
+
 namespace Modules\Tour\Admin;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Modules\AdminController;
-use Modules\Space\Models\Space;
 use Modules\Space\Models\SpaceDate;
 
 class AvailabilityController extends \Modules\Tour\Controllers\AvailabilityController

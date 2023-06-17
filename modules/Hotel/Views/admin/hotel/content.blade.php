@@ -1,32 +1,37 @@
+@php use Modules\Media\Helpers\FileHelper; @endphp
+@php use Modules\Hotel\Hook; @endphp
 <div class="panel">
     <div class="panel-title"><strong>{{__("Hotel Content")}}</strong></div>
     <div class="panel-body">
         <div class="form-group">
             <label>{{__("Title")}}</label>
-            <input type="text" value="{!! clean($translation->title) !!}" placeholder="{{__("Name of the hotel")}}" name="title" class="form-control">
+            <input type="text" value="{!! clean($translation->title) !!}" placeholder="{{__("Name of the hotel")}}"
+                   name="title" class="form-control">
         </div>
         <div class="form-group">
             <label class="control-label">{{__("Content")}}</label>
             <div class="">
-                <textarea name="content" class="d-none has-ckeditor" cols="30" rows="10">{{$translation->content}}</textarea>
+                <textarea name="content" class="d-none has-ckeditor" cols="30"
+                          rows="10">{{$translation->content}}</textarea>
             </div>
         </div>
         @if(is_default_lang())
             <div class="form-group">
                 <label class="control-label">{{__("Youtube Video")}}</label>
-                <input type="text" name="video" class="form-control" value="{{$row->video}}" placeholder="{{__("Youtube link video")}}">
+                <input type="text" name="video" class="form-control" value="{{$row->video}}"
+                       placeholder="{{__("Youtube link video")}}">
             </div>
         @endif
         @if(is_default_lang())
             <div class="form-group">
                 <label class="control-label">{{__("Banner Image")}}</label>
                 <div class="form-group-image">
-                    {!! \Modules\Media\Helpers\FileHelper::fieldUpload('banner_image_id',$row->banner_image_id) !!}
+                    {!! FileHelper::fieldUpload('banner_image_id',$row->banner_image_id) !!}
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label">{{__("Gallery")}}</label>
-                {!! \Modules\Media\Helpers\FileHelper::fieldGalleryUpload('gallery',$row->gallery) !!}
+                {!! FileHelper::fieldGalleryUpload('gallery',$row->gallery) !!}
             </div>
         @endif
     </div>
@@ -40,7 +45,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>{{__("Hotel rating standard")}}</label>
-                        <input type="number" value="{{$row->star_rate}}" placeholder="{{__("Eg: 5")}}" name="star_rate" class="form-control">
+                        <input type="number" value="{{$row->star_rate}}" placeholder="{{__("Eg: 5")}}" name="star_rate"
+                               class="form-control">
                     </div>
                 </div>
             </div>
@@ -60,13 +66,17 @@
                         <div class="item" data-number="{{$key}}">
                             <div class="row">
                                 <div class="col-md-5">
-                                    <input type="text" name="policy[{{$key}}][title]" class="form-control" value="{{$item['title']}}" placeholder="{{__('Eg: What kind of foowear is most suitable ?')}}">
+                                    <input type="text" name="policy[{{$key}}][title]" class="form-control"
+                                           value="{{$item['title']}}"
+                                           placeholder="{{__('Eg: What kind of foowear is most suitable ?')}}">
                                 </div>
                                 <div class="col-md-6">
-                                    <textarea name="policy[{{$key}}][content]" class="form-control" placeholder="...">{{$item['content']}}</textarea>
+                                    <textarea name="policy[{{$key}}][content]" class="form-control"
+                                              placeholder="...">{{$item['content']}}</textarea>
                                 </div>
                                 <div class="col-md-1">
-                                    <span class="btn btn-danger btn-sm btn-remove-item"><i class="fa fa-trash"></i></span>
+                                    <span class="btn btn-danger btn-sm btn-remove-item"><i
+                                                class="fa fa-trash"></i></span>
                                 </div>
                             </div>
                         </div>
@@ -80,10 +90,12 @@
                 <div class="item" data-number="__number__">
                     <div class="row">
                         <div class="col-md-5">
-                            <input type="text" __name__="policy[__number__][title]" class="form-control" placeholder="{{__('Eg: What kind of foowear is most suitable ?')}}">
+                            <input type="text" __name__="policy[__number__][title]" class="form-control"
+                                   placeholder="{{__('Eg: What kind of foowear is most suitable ?')}}">
                         </div>
                         <div class="col-md-6">
-                            <textarea __name__="policy[__number__][content]" class="form-control" placeholder=""></textarea>
+                            <textarea __name__="policy[__number__][content]" class="form-control"
+                                      placeholder=""></textarea>
                         </div>
                         <div class="col-md-1">
                             <span class="btn btn-danger btn-sm btn-remove-item"><i class="fa fa-trash"></i></span>
@@ -93,6 +105,7 @@
             </div>
         </div>
 
-        <?php do_action(\Modules\Hotel\Hook::FORM_AFTER_POLICY,$row) ?>
+        <?php
+        do_action(Hook::FORM_AFTER_POLICY, $row) ?>
     </div>
 </div>

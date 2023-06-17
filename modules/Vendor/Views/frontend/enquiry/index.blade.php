@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\URL; @endphp
 @extends('layouts.user')
 @section('content')
     <h2 class="title-bar no-border-bottom">
@@ -33,7 +34,8 @@
                                         </td>
                                         <td>
                                             @if($service = $row->service)
-                                                <a href="{{$service->getDetailUrl()}}" target="_blank">{{$service->title ?? ''}}</a>
+                                                <a href="{{$service->getDetailUrl()}}"
+                                                   target="_blank">{{$service->title ?? ''}}</a>
                                             @else
                                                 {{__("[Deleted]")}}
                                             @endif
@@ -56,11 +58,13 @@
                                                     {{__("Action")}}
                                                 </a>
                                                 <div class="dropdown-menu">
-                                                    <a href="{{route('vendor.enquiry_report.reply',['enquiry'=>$row])}}"><i class="icofont-long-arrow-right"></i> {{__("Add Reply")}}</a>
+                                                    <a href="{{route('vendor.enquiry_report.reply',['enquiry'=>$row])}}"><i
+                                                                class="icofont-long-arrow-right"></i> {{__("Add Reply")}}
+                                                    </a>
                                                     <div class="dropdown-divider"></div>
                                                     @if(!empty($statues))
                                                         @foreach($statues as $status)
-                                                            <a href="{{ \Illuminate\Support\Facades\URL::signedRoute("vendor.enquiry_report.bulk_edit" , ['id'=>$row->id , 'status'=>$status]) }}">
+                                                            <a href="{{ URL::signedRoute("vendor.enquiry_report.bulk_edit" , ['id'=>$row->id , 'status'=>$status]) }}">
                                                                 <i class="icofont-long-arrow-right"></i> {{__('Mark as: :name',['name'=>booking_status_to_text($status)])}}
                                                             </a>
                                                         @endforeach

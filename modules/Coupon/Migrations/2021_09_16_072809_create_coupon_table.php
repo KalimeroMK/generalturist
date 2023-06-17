@@ -1,23 +1,18 @@
 <?php
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 
-class CreateCouponTable extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
     public function up()
     {
         Schema::create('bravo_coupons', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('code',50)->unique();
+            $table->string('code', 50)->unique();
             $table->string('name')->nullable();
             $table->float('amount')->nullable();
-            $table->string('discount_type',50)->nullable();
+            $table->string('discount_type', 50)->nullable();
             $table->dateTime('end_date')->nullable();
 
             $table->float('min_total')->nullable();
@@ -25,7 +20,7 @@ class CreateCouponTable extends Migration
 
             $table->string('services')->nullable();
             $table->integer('only_for_user')->nullable();
-            $table->string('status',30)->nullable();
+            $table->string('status', 30)->nullable();
 
             $table->integer('quantity_limit')->nullable();
             $table->integer('limit_per_user')->nullable();
@@ -52,12 +47,12 @@ class CreateCouponTable extends Migration
         Schema::create('bravo_booking_coupons', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('booking_id')->nullable();
-            $table->string('booking_status',30)->nullable();
+            $table->string('booking_status', 30)->nullable();
             $table->bigInteger('object_id')->nullable();
             $table->string('object_model')->nullable();
 
             $table->string('coupon_code')->nullable();
-            $table->decimal('coupon_amount',10,2)->nullable()->default(0);
+            $table->decimal('coupon_amount', 10, 2)->nullable()->default(0);
             $table->text('coupon_data')->nullable();
 
             $table->bigInteger('create_user')->nullable();
@@ -77,4 +72,4 @@ class CreateCouponTable extends Migration
         Schema::dropIfExists('bravo_coupon_services');
         Schema::dropIfExists('bravo_booking_coupons');
     }
-}
+};

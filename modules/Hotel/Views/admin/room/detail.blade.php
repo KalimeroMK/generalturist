@@ -1,7 +1,8 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <form action="{{route('hotel.admin.room.store',['hotel_id'=>$hotel->id,'id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}" method="post">
+    <form action="{{route('hotel.admin.room.store',['hotel_id'=>$hotel->id,'id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}"
+          method="post">
         @csrf
         <div class="container-fluid">
             <div class="row">
@@ -22,7 +23,8 @@
                                 @include('Hotel::admin.room.form')
                             </div>
                             <div class="panel-footer">
-                                <button class="btn btn-success" type="submit"><i class="fa fa-save"></i> {{__("Save Changes")}}</button>
+                                <button class="btn btn-success" type="submit"><i
+                                            class="fa fa-save"></i> {{__("Save Changes")}}</button>
                             </div>
                         </div>
                     </div>

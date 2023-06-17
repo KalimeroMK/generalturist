@@ -13,10 +13,12 @@
                 <div class="item" data-number="{{$key}}">
                     <div class="row">
                         <div class="col-md-11">
-                            <input type="text" name="include[{{$key}}][title]" class="form-control" value="{{$include['title'] ?? ""}}" placeholder="{{__('Eg: Specialized bilingual guide')}}">
+                            <input type="text" name="include[{{$key}}][title]" class="form-control"
+                                   value="{{$include['title'] ?? ""}}"
+                                   placeholder="{{__('Eg: Specialized bilingual guide')}}">
                         </div>
                         <div class="col-md-1">
-                                <span class="btn btn-danger btn-sm btn-remove-item"><i class="fa fa-trash"></i></span>
+                            <span class="btn btn-danger btn-sm btn-remove-item"><i class="fa fa-trash"></i></span>
                         </div>
                     </div>
                 </div>
@@ -24,13 +26,14 @@
         @endif
     </div>
     <div class="text-right">
-            <span class="btn btn-info btn-sm btn-add-item"><i class="icon ion-ios-add-circle-outline"></i> {{__('Add item')}}</span>
+        <span class="btn btn-info btn-sm btn-add-item"><i class="icon ion-ios-add-circle-outline"></i> {{__('Add item')}}</span>
     </div>
     <div class="g-more hide">
         <div class="item" data-number="__number__">
             <div class="row">
                 <div class="col-md-11">
-                    <input type="text" __name__="include[__number__][title]" class="form-control" placeholder="{{__('Eg: Specialized bilingual guide')}}">
+                    <input type="text" __name__="include[__number__][title]" class="form-control"
+                           placeholder="{{__('Eg: Specialized bilingual guide')}}">
                 </div>
                 <div class="col-md-1">
                     <span class="btn btn-danger btn-sm btn-remove-item"><i class="fa fa-trash"></i></span>
@@ -54,10 +57,12 @@
                 <div class="item" data-number="{{$key}}">
                     <div class="row">
                         <div class="col-md-11">
-                            <input type="text" name="exclude[{{$key}}][title]" class="form-control" value="{{$exclude['title'] ?? ""}}" placeholder="{{__('Eg: Specialized bilingual guide')}}">
+                            <input type="text" name="exclude[{{$key}}][title]" class="form-control"
+                                   value="{{$exclude['title'] ?? ""}}"
+                                   placeholder="{{__('Eg: Specialized bilingual guide')}}">
                         </div>
                         <div class="col-md-1">
-                                <span class="btn btn-danger btn-sm btn-remove-item"><i class="fa fa-trash"></i></span>
+                            <span class="btn btn-danger btn-sm btn-remove-item"><i class="fa fa-trash"></i></span>
                         </div>
                     </div>
                 </div>
@@ -65,13 +70,14 @@
         @endif
     </div>
     <div class="text-right">
-            <span class="btn btn-info btn-sm btn-add-item"><i class="icon ion-ios-add-circle-outline"></i> {{__('Add item')}}</span>
+        <span class="btn btn-info btn-sm btn-add-item"><i class="icon ion-ios-add-circle-outline"></i> {{__('Add item')}}</span>
     </div>
     <div class="g-more hide">
         <div class="item" data-number="__number__">
             <div class="row">
                 <div class="col-md-11">
-                    <input type="text" __name__="exclude[__number__][title]" class="form-control" placeholder="{{__('Eg: Additional Services')}}">
+                    <input type="text" __name__="exclude[__number__][title]" class="form-control"
+                           placeholder="{{__('Eg: Additional Services')}}">
                 </div>
                 <div class="col-md-1">
                     <span class="btn btn-danger btn-sm btn-remove-item"><i class="fa fa-trash"></i></span>

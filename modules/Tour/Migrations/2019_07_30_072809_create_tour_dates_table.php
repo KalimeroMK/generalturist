@@ -1,19 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateTourDatesTable extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+return new class extends Migration {
     public function up()
     {
-
         Schema::table('bravo_tours', function (Blueprint $table) {
             $table->tinyInteger('default_state')->default(1)->nullable();
             $table->tinyInteger('enable_fixed_date')->default(false)->nullable();
@@ -27,7 +20,7 @@ class CreateTourDatesTable extends Migration
 
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
-            $table->decimal('price',12,2)->nullable();
+            $table->decimal('price', 12, 2)->nullable();
             $table->text('person_types')->nullable();
             $table->tinyInteger('max_guests')->nullable();
             $table->tinyInteger('active')->default(0)->nullable();
@@ -38,7 +31,6 @@ class CreateTourDatesTable extends Migration
             $table->bigInteger('create_user')->nullable();
             $table->bigInteger('update_user')->nullable();
             $table->timestamps();
-
         });
     }
 
@@ -51,4 +43,4 @@ class CreateTourDatesTable extends Migration
     {
         Schema::dropIfExists('bravo_tour_dates');
     }
-}
+};

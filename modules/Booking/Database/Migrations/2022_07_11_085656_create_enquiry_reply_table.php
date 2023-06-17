@@ -4,14 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEnquiryReplyTable extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+return new class extends Migration {
+    public function up(): void
     {
         Schema::create('bravo_enquiry_replies', function (Blueprint $table) {
             $table->id();
@@ -33,9 +27,9 @@ class CreateEnquiryReplyTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('bravo_enquiry_replies');
         Schema::dropIfExists('enquiry_reply');
     }
-}
+};

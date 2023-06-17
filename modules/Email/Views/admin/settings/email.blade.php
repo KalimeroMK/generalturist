@@ -1,3 +1,4 @@
+@php use Modules\Email\SettingClass; @endphp
 <div class="row">
     <div class="col-sm-4">
         <h3 class="form-group-title">{{__('Config Email')}}</h3>
@@ -11,47 +12,56 @@
                         <label>{{__('Email Driver')}}</label>
                         <div class="form-controls">
                             <select name="email_driver" class="form-control">
-                                @foreach(\Modules\Email\SettingClass::EMAIL_DRIVER as $item=>$value)
+                                @foreach(SettingClass::EMAIL_DRIVER as $item=>$value)
                                     <option value="{{$value}}" {{($settings['email_driver'] ?? '') == $value ? 'selected' : ''  }}>{{__(strtoupper($value))}}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
-                    <div data-operator="or" data-condition="email_driver:is(smtp),email_driver:is(sendmail),email_driver:is(mailgun),email_driver:is(postmark),email_driver:is(ses),email_driver:is(sparkpost)">
+                    <div data-operator="or"
+                         data-condition="email_driver:is(smtp),email_driver:is(sendmail),email_driver:is(mailgun),email_driver:is(postmark),email_driver:is(ses),email_driver:is(sparkpost)">
 
                         <hr>
                         <div data-operator="or" data-condition="email_driver:is(smtp),email_driver:is(sendmail)">
                             <div class="form-group">
                                 <label>{{__('Email Host')}}</label>
                                 <div class="form-controls">
-                                    <input type="text" class="form-control" name="email_host" value="{{!empty($settings['email_host'])?$settings['email_host']:"smtp.mailgun.org" }}">
+                                    <input type="text" class="form-control" name="email_host"
+                                           value="{{!empty($settings['email_host'])?$settings['email_host']:"smtp.mailgun.org" }}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>{{__('Email Port')}}</label>
                                 <div class="form-controls">
-                                    <input type="text" class="form-control" name="email_port" value="{{!empty($settings['email_port'])?$settings['email_port']:"587" }}">
+                                    <input type="text" class="form-control" name="email_port"
+                                           value="{{!empty($settings['email_port'])?$settings['email_port']:"587" }}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>{{__('Email Encryption')}}</label>
                                 <div class="form-controls">
                                     <select name="email_encryption" class="form-control">
-                                        <option value="tls" {{($settings['email_encryption'] ?? '') == 'tls' ? 'selected' : ''  }}>TLS</option>
-                                        <option value="ssl" {{($settings['email_encryption'] ?? '') == 'ssl' ? 'selected' : ''  }}>SSL</option>
+                                        <option value="tls" {{($settings['email_encryption'] ?? '') == 'tls' ? 'selected' : ''  }}>
+                                            TLS
+                                        </option>
+                                        <option value="ssl" {{($settings['email_encryption'] ?? '') == 'ssl' ? 'selected' : ''  }}>
+                                            SSL
+                                        </option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>{{__('Email Username')}}</label>
                                 <div class="form-controls">
-                                    <input type="text" class="form-control" name="email_username" value="{{@$settings['email_username'] }}">
+                                    <input type="text" class="form-control" name="email_username"
+                                           value="{{@$settings['email_username'] }}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>{{__('Email Password')}}</label>
                                 <div class="form-controls">
-                                    <input type="password" class="form-control" name="email_password" value="{{@$settings['email_password'] }}">
+                                    <input type="password" class="form-control" name="email_password"
+                                           value="{{@$settings['email_password'] }}">
                                 </div>
                             </div>
                         </div>
@@ -59,21 +69,25 @@
                             <div class="form-group">
                                 <label class="">{{__("Mailgun Domain")}}</label>
                                 <div class="form-controls">
-                                    <input autocomplete="no" type="text" class="form-control" name="email_mailgun_domain" value="{{@$settings['email_mailgun_domain'] }}">
+                                    <input autocomplete="no" type="text" class="form-control"
+                                           name="email_mailgun_domain" value="{{@$settings['email_mailgun_domain'] }}">
                                 </div>
                             </div>
                             <div class="form-group">
 
                                 <label class="">{{__("Mailgun Secret")}}</label>
                                 <div class="form-controls">
-                                    <input autocomplete="no" type="text" class="form-control" name="email_mailgun_secret" value="{{@$settings['email_mailgun_secret'] }}">
+                                    <input autocomplete="no" type="text" class="form-control"
+                                           name="email_mailgun_secret" value="{{@$settings['email_mailgun_secret'] }}">
                                 </div>
                             </div>
                             <div class="form-group">
 
                                 <label class="">{{__("Mailgun Endpoint")}}</label>
                                 <div class="form-controls">
-                                    <input autocomplete="no" type="text" class="form-control" name="email_mailgun_endpoint" value="{{!empty($settings['email_mailgun_endpoint'])?$settings['email_mailgun_endpoint']:"api.mailgun.net" }}">
+                                    <input autocomplete="no" type="text" class="form-control"
+                                           name="email_mailgun_endpoint"
+                                           value="{{!empty($settings['email_mailgun_endpoint'])?$settings['email_mailgun_endpoint']:"api.mailgun.net" }}">
                                 </div>
                             </div>
                         </div>
@@ -81,7 +95,8 @@
                             <div class="form-group">
                                 <label class="">{{__("Postmark Token")}}</label>
                                 <div class="form-controls">
-                                    <input type="text" autocomplete="no" class="form-control" name="email_postmark_token" value="{{@$settings['email_postmark_token'] }}">
+                                    <input type="text" autocomplete="no" class="form-control"
+                                           name="email_postmark_token" value="{{@$settings['email_postmark_token'] }}">
                                 </div>
                             </div>
                         </div>
@@ -89,19 +104,22 @@
                             <div class="form-group">
                                 <label class="">{{__("Ses Key")}}</label>
                                 <div class="form-controls">
-                                    <input type="text" autocomplete="no" class="form-control" name="email_ses_key" value="{{@$settings['email_ses_key'] }}">
+                                    <input type="text" autocomplete="no" class="form-control" name="email_ses_key"
+                                           value="{{@$settings['email_ses_key'] }}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="">{{__("Ses Secret")}}</label>
                                 <div class="form-controls">
-                                    <input type="text" autocomplete="no" class="form-control" name="email_ses_secret" value="{{@$settings['email_ses_secret'] }}">
+                                    <input type="text" autocomplete="no" class="form-control" name="email_ses_secret"
+                                           value="{{@$settings['email_ses_secret'] }}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="">{{__("Ses Region")}}</label>
                                 <div class="form-controls">
-                                    <input type="text" autocomplete="no" class="form-control" name="email_ses_region" value="{{!empty($settings['email_ses_region'])?$settings['email_ses_region']:"us-east-1" }}">
+                                    <input type="text" autocomplete="no" class="form-control" name="email_ses_region"
+                                           value="{{!empty($settings['email_ses_region'])?$settings['email_ses_region']:"us-east-1" }}">
                                 </div>
                             </div>
 
@@ -110,19 +128,22 @@
                             <div class="form-group">
                                 <label class="">{{__("Ses Key")}}</label>
                                 <div class="form-controls">
-                                    <input type="text" autocomplete="no" class="form-control" name="email_ses_key" value="{{@$settings['email_ses_key'] }}">
+                                    <input type="text" autocomplete="no" class="form-control" name="email_ses_key"
+                                           value="{{@$settings['email_ses_key'] }}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="">{{__("Ses Secret")}}</label>
                                 <div class="form-controls">
-                                    <input type="text" autocomplete="no" class="form-control" name="email_ses_secret" value="{{@$settings['email_ses_secret'] }}">
+                                    <input type="text" autocomplete="no" class="form-control" name="email_ses_secret"
+                                           value="{{@$settings['email_ses_secret'] }}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="">{{__("Ses Region")}}</label>
                                 <div class="form-controls">
-                                    <input type="text" autocomplete="no" class="form-control" name="email_ses_region" value="{{!empty($settings['email_ses_region'])?$settings['email_ses_region']:"us-east-1" }}">
+                                    <input type="text" autocomplete="no" class="form-control" name="email_ses_region"
+                                           value="{{!empty($settings['email_ses_region'])?$settings['email_ses_region']:"us-east-1" }}">
                                 </div>
                             </div>
 
@@ -131,7 +152,9 @@
                             <div class="form-group">
                                 <label class="">{{__("Sparkpost Secret")}}</label>
                                 <div class="form-controls">
-                                    <input type="text" autocomplete="no" class="form-control" name="email_sparkpost_secret" value="{{@$settings['email_sparkpost_secret'] }}">
+                                    <input type="text" autocomplete="no" class="form-control"
+                                           name="email_sparkpost_secret"
+                                           value="{{@$settings['email_sparkpost_secret'] }}">
                                 </div>
                             </div>
                         </div>
@@ -158,20 +181,23 @@
                     <div class="form-group">
                         <label>{{__("Admin Email")}}</label>
                         <div class="form-controls">
-                            <input type="email" class="form-control" name="admin_email" value="{{$settings['admin_email'] ?? '' }}">
+                            <input type="email" class="form-control" name="admin_email"
+                                   value="{{$settings['admin_email'] ?? '' }}">
                             <p><i>{{__("You will get all notifications from this email")}}</i></p>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>{{__("Email Form Name")}}</label>
                         <div class="form-controls">
-                            <input type="text" class="form-control" name="email_from_name" value="{{$settings['email_from_name'] ?? '' }}">
+                            <input type="text" class="form-control" name="email_from_name"
+                                   value="{{$settings['email_from_name'] ?? '' }}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>{{__("Email Form Address")}}</label>
                         <div class="form-controls">
-                            <input type="email" class="form-control" name="email_from_address" value="{{$settings['email_from_address'] ?? '' }}">
+                            <input type="email" class="form-control" name="email_from_address"
+                                   value="{{$settings['email_from_address'] ?? '' }}">
                         </div>
                     </div>
                 </div>
@@ -194,7 +220,8 @@
                     </div>
                     <div class="form-controls">
                         <br>
-                        <div id="email-testing" style="cursor: pointer;" class="btn btn-primary">{{__('Send Email Test')}}</div>
+                        <div id="email-testing" style="cursor: pointer;"
+                             class="btn btn-primary">{{__('Send Email Test')}}</div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -217,15 +244,17 @@
         <div class="panel">
             <div class="panel-body">
                 <div class="form-group">
-                    <label >{{__("Header")}}</label>
+                    <label>{{__("Header")}}</label>
                     <div class="form-controls">
-                        <textarea name="email_header" class="d-none has-ckeditor" data-fullurl="true" cols="30" rows="10">{{setting_item_with_lang('email_header',request()->query('lang')) }}</textarea>
+                        <textarea name="email_header" class="d-none has-ckeditor" data-fullurl="true" cols="30"
+                                  rows="10">{{setting_item_with_lang('email_header',request()->query('lang')) }}</textarea>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label >{{__("Footer")}}</label>
+                    <label>{{__("Footer")}}</label>
                     <div class="form-controls">
-                        <textarea name="email_footer" class="d-none has-ckeditor" data-fullurl="true" cols="30" rows="10">{{setting_item_with_lang('email_footer',request()->query('lang')) }}</textarea>
+                        <textarea name="email_footer" class="d-none has-ckeditor" data-fullurl="true" cols="30"
+                                  rows="10">{{setting_item_with_lang('email_footer',request()->query('lang')) }}</textarea>
                     </div>
                 </div>
             </div>

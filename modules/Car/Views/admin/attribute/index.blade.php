@@ -10,7 +10,8 @@
                 <div class="panel">
                     <div class="panel-title">{{__("Add Attributes")}}</div>
                     <div class="panel-body">
-                        <form action="{{route('car.admin.attribute.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}" method="post">
+                        <form action="{{route('car.admin.attribute.store',['id'=>($row->id) ? $row->id : '-1','lang'=>request()->query('lang')])}}"
+                              method="post">
                             @csrf
                             @include('Car::admin/attribute/form',['parents'=>$rows])
                             <div class="">
@@ -24,20 +25,26 @@
                 <div class="filter-div d-flex justify-content-between ">
                     <div class="col-left">
                         @if(!empty($rows))
-                            <form method="post" action="{{route('car.admin.attribute.editAttrBulk')}}" class="filter-form filter-form-left d-flex justify-content-start">
+                            <form method="post" action="{{route('car.admin.attribute.editAttrBulk')}}"
+                                  class="filter-form filter-form-left d-flex justify-content-start">
                                 {{csrf_field()}}
                                 <select name="action" class="form-control">
                                     <option value="">{{__(" Bulk Action ")}}</option>
                                     <option value="delete">{{__(" Delete ")}}</option>
                                 </select>
-                                <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
+                                <button data-confirm="{{__("Do you want to delete?")}}"
+                                        class="btn-info btn btn-icon dungdt-apply-form-btn"
+                                        type="button">{{__('Apply')}}</button>
                             </form>
                         @endif
                     </div>
                     <div class="col-left">
-                        <form method="get" action="{{route('car.admin.attribute.index')}} " class="filter-form filter-form-right d-flex justify-content-end" role="search">
-                            <input type="text" name="s" value="{{ Request()->s }}" class="form-control" placeholder="{{__("Search by name")}}">
-                            <button class="btn-info btn btn-icon btn_search" id="search-submit" type="submit">{{__('Search')}}</button>
+                        <form method="get" action="{{route('car.admin.attribute.index')}} "
+                              class="filter-form filter-form-right d-flex justify-content-end" role="search">
+                            <input type="text" name="s" value="{{ Request()->s }}" class="form-control"
+                                   placeholder="{{__("Search by name")}}">
+                            <button class="btn-info btn btn-icon btn_search" id="search-submit"
+                                    type="submit">{{__('Search')}}</button>
                         </form>
                     </div>
                 </div>
@@ -58,7 +65,8 @@
                                 @if(count($rows) > 0)
                                     @foreach($rows as $row)
                                         <tr>
-                                            <td><input type="checkbox" class="check-item" name="ids[]" value="{{$row->id}}">
+                                            <td><input type="checkbox" class="check-item" name="ids[]"
+                                                       value="{{$row->id}}">
                                             </td>
                                             <td class="title">
                                                 <a href="{{route('car.admin.attribute.edit',['id'=>$row->id])}}">{{$row->name}}</a>
@@ -67,9 +75,13 @@
                                                 {{$row->position ?? 0}}
                                             </td>
                                             <td>
-                                                <a href="{{route('car.admin.attribute.edit',['id'=>$row->id])}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> {{__('Edit')}}
+                                                <a href="{{route('car.admin.attribute.edit',['id'=>$row->id])}}"
+                                                   class="btn btn-primary btn-sm"><i
+                                                            class="fa fa-edit"></i> {{__('Edit')}}
                                                 </a>
-                                                <a href="{{route('car.admin.attribute.term.index',['id'=>$row->id])}}" class="btn btn-sm btn-success"><i class="fa fa"></i> {{__("Manage Terms")}}
+                                                <a href="{{route('car.admin.attribute.term.index',['id'=>$row->id])}}"
+                                                   class="btn btn-sm btn-success"><i
+                                                            class="fa fa"></i> {{__("Manage Terms")}}
                                                 </a>
 
                                             </td>

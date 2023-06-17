@@ -5,7 +5,8 @@
  * Date: 7/2/2019
  * Time: 10:26 AM
  */
-namespace  Modules\Tour;
+
+namespace Modules\Tour;
 
 use Modules\Core\Abstracts\BaseSettingsClass;
 
@@ -15,11 +16,11 @@ class SettingClass extends BaseSettingsClass
     {
         return [
             [
-                'id'   => 'tour',
+                'id' => 'tour',
                 'title' => __("Tour Settings"),
-                'position'=>20,
-                'view'=>"Tour::admin.settings.tour",
-                "keys"=>[
+                'position' => 20,
+                'view' => "Tour::admin.settings.tour",
+                "keys" => [
                     'tour_disable',
                     'tour_page_search_title',
                     'tour_page_search_banner',
@@ -60,7 +61,7 @@ class SettingClass extends BaseSettingsClass
                     'tour_location_radius_value',
                     'tour_location_radius_type',
                 ],
-                'html_keys'=>[
+                'html_keys' => [
 
                 ]
             ]

@@ -11,10 +11,13 @@ abstract class BaseCrudModule
 
     public $model;
 
-    public function index(){
-        return  [];
+    public function index()
+    {
+        return [];
     }
-    public function create(){
-        return  [];
+
+    public function create()
+    {
+        return [];
     }
 }

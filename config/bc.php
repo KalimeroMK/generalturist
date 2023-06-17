@@ -1,6 +1,6 @@
 <?php
 return [
-    'active_theme'=>isset($_GET['_xtheme']) ? $_GET['_xtheme'] :env('BC_ACTIVE_THEME',defined('BC_INIT_THEME') ? BC_INIT_THEME : 'BC'),
+    'active_theme'=> $_GET['_xtheme'] ?? env('BC_ACTIVE_THEME', defined('BC_INIT_THEME') ? BC_INIT_THEME : 'BC'),
     "media"=>[
         "groups"=>[
             "default"=>[

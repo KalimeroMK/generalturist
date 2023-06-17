@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Tour\Admin;
 
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ class AttributeController extends AdminController
 {
     protected $attributesClass;
     protected $termsClass;
+
     public function __construct()
     {
         $this->setActiveMenu(route('tour.admin.index'));
@@ -24,20 +26,20 @@ class AttributeController extends AdminController
         $this->checkPermission('tour_manage_attributes');
         $listAttr = $this->attributesClass::where("service", 'tour');
         if (!empty($search = $request->query('s'))) {
-            $listAttr->where('name', 'LIKE', '%' . $search . '%');
+            $listAttr->where('name', 'LIKE', '%'.$search.'%');
         }
         $listAttr->orderBy('created_at', 'desc');
         $data = [
-            'rows'        => $listAttr->get(),
-            'row'         => new $this->attributesClass(),
-            'translation'    => new AttributesTranslation(),
+            'rows' => $listAttr->get(),
+            'row' => new $this->attributesClass(),
+            'translation' => new AttributesTranslation(),
             'breadcrumbs' => [
                 [
                     'name' => __('Tour'),
-                    'url'  => route('tour.admin.index')
+                    'url' => route('tour.admin.index')
                 ],
                 [
-                    'name'  => __('Attributes'),
+                    'name' => __('Attributes'),
                     'class' => 'active'
                 ],
             ]
@@ -51,24 +53,24 @@ class AttributeController extends AdminController
         if (empty($row)) {
             return redirect()->back()->with('error', __('Attributes not found!'));
         }
-        $translation = $row->translate($request->query('lang',get_main_lang()));
+        $translation = $row->translate($request->query('lang', get_main_lang()));
         $this->checkPermission('tour_manage_attributes');
         $data = [
-            'translation'    => $translation,
-            'enable_multi_lang'=>true,
-            'rows'        => $this->attributesClass::where("service", 'tour')->get(),
-            'row'         => $row,
+            'translation' => $translation,
+            'enable_multi_lang' => true,
+            'rows' => $this->attributesClass::where("service", 'tour')->get(),
+            'row' => $row,
             'breadcrumbs' => [
                 [
                     'name' => __('Tour'),
-                    'url'  => route('tour.admin.index')
+                    'url' => route('tour.admin.index')
                 ],
                 [
                     'name' => __('Attributes'),
-                    'url'  => route('tour.admin.attribute.index')
+                    'url' => route('tour.admin.attribute.index')
                 ],
                 [
-                    'name'  => __('Attributes: :name', ['name' => $row->name]),
+                    'name' => __('Attributes: :name', ['name' => $row->name]),
                     'class' => 'active'
                 ],
             ]
@@ -114,7 +116,7 @@ class AttributeController extends AdminController
             foreach ($ids as $id) {
                 $query = $this->attributesClass::where("id", $id);
                 $query->first();
-                if(!empty($query)){
+                if (!empty($query)) {
                     $query->delete();
                 }
             }
@@ -131,25 +133,25 @@ class AttributeController extends AdminController
         }
         $listTerms = $this->termsClass::where("attr_id", $attr_id);
         if (!empty($search = $request->query('s'))) {
-            $listTerms->where('name', 'LIKE', '%' . $search . '%');
+            $listTerms->where('name', 'LIKE', '%'.$search.'%');
         }
         $listTerms->orderBy('created_at', 'desc');
         $data = [
-            'rows'        => $listTerms->paginate(20),
-            'attr'        => $row,
-            "row"         => new $this->termsClass(),
-            'translation'    => new TermsTranslation(),
+            'rows' => $listTerms->paginate(20),
+            'attr' => $row,
+            "row" => new $this->termsClass(),
+            'translation' => new TermsTranslation(),
             'breadcrumbs' => [
                 [
                     'name' => __('Tour'),
-                    'url'  => route('tour.admin.index')
+                    'url' => route('tour.admin.index')
                 ],
                 [
                     'name' => __('Attributes'),
-                    'url'  => route('tour.admin.attribute.index')
+                    'url' => route('tour.admin.attribute.index')
                 ],
                 [
-                    'name'  => __('Attribute: :name', ['name' => $row->name]),
+                    'name' => __('Attribute: :name', ['name' => $row->name]),
                     'class' => 'active'
                 ],
             ]
@@ -164,27 +166,27 @@ class AttributeController extends AdminController
         if (empty($row)) {
             return redirect()->back()->with('error', __('Term not found'));
         }
-        $translation = $row->translate($request->query('lang',get_main_lang()));
+        $translation = $row->translate($request->query('lang', get_main_lang()));
         $attr = $this->attributesClass::find($row->attr_id);
         $data = [
-            'row'         => $row,
-            'translation'    => $translation,
-            'enable_multi_lang'=>true,
+            'row' => $row,
+            'translation' => $translation,
+            'enable_multi_lang' => true,
             'breadcrumbs' => [
                 [
                     'name' => __('Tour'),
-                    'url'  => route('tour.admin.index')
+                    'url' => route('tour.admin.index')
                 ],
                 [
                     'name' => __('Attributes'),
-                    'url'  => route('tour.admin.attribute.index')
+                    'url' => route('tour.admin.attribute.index')
                 ],
                 [
                     'name' => $attr->name,
-                    'url'  => route('tour.admin.attribute.term.index',['attr_id'=>$row->attr_id])
+                    'url' => route('tour.admin.attribute.term.index', ['attr_id' => $row->attr_id])
                 ],
                 [
-                    'name'  => __('Term: :name', ['name' => $row->name]),
+                    'name' => __('Term: :name', ['name' => $row->name]),
                     'class' => 'active'
                 ],
             ]
@@ -230,14 +232,13 @@ class AttributeController extends AdminController
             foreach ($ids as $id) {
                 $query = $this->termsClass::where("id", $id);
                 $query->first();
-                if(!empty($query)){
+                if (!empty($query)) {
                     $query->delete();
                 }
             }
         }
         return redirect()->back()->with('success', __('Updated success!'));
     }
-
 
 
 }

@@ -1,5 +1,7 @@
 <?php
+
 namespace Modules\Template\Blocks;
+
 class Row extends BaseBlock
 {
     public function getName()
@@ -10,10 +12,10 @@ class Row extends BaseBlock
     public function getOptions()
     {
         return [
-            'parent_of'    => ['column'],
+            'parent_of' => ['column'],
             'is_container' => true,
-            'component'    => 'RowBlock',
-            'settings'     => []
+            'component' => 'RowBlock',
+            'settings' => []
         ];
     }
 }

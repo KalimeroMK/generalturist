@@ -1,34 +1,36 @@
 <?php
+
 namespace Modules\Booking\Gateways;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\Booking\Events\BookingCreatedEvent;
+use Swift_TransportException;
 
 class OfflinePaymentGateway extends BaseGateway
 {
     public $name = 'Offline Payment';
-    public $is_offline =  true;
+    public $is_offline = true;
 
     public function process(Request $request, $booking, $service)
     {
         $service->beforePaymentProcess($booking, $this);
         // Simple change status to processing
 
-        if($booking->paid <= 0){
+        if ($booking->paid <= 0) {
             $booking->status = $booking::PROCESSING;
-        }else{
-            if($booking->paid < $booking->total){
+        } else {
+            if ($booking->paid < $booking->total) {
                 $booking->status = $booking::PARTIAL_PAYMENT;
-            }else{
+            } else {
                 $booking->status = $booking::PAID;
             }
         }
 
         $booking->save();
-        try{
+        try {
             event(new BookingCreatedEvent($booking));
-        } catch(\Swift_TransportException $e){
+        } catch (Swift_TransportException $e) {
             Log::warning($e->getMessage());
         }
 
@@ -43,38 +45,38 @@ class OfflinePaymentGateway extends BaseGateway
         $payment->status = 'processing';
         $payment->save();
 
-        return [true,__("Thank you, we will contact you shortly")];
+        return [true, __("Thank you, we will contact you shortly")];
     }
 
     public function getOptionsConfigs()
     {
         return [
             [
-                'type'  => 'checkbox',
-                'id'    => 'enable',
+                'type' => 'checkbox',
+                'id' => 'enable',
                 'label' => __('Enable Offline Payment?')
             ],
             [
-                'type'  => 'input',
-                'id'    => 'name',
+                'type' => 'input',
+                'id' => 'name',
                 'label' => __('Custom Name'),
-                'std'   => __("Offline Payment"),
+                'std' => __("Offline Payment"),
                 'multi_lang' => "1"
             ],
             [
-                'type'  => 'upload',
-                'id'    => 'logo_id',
+                'type' => 'upload',
+                'id' => 'logo_id',
                 'label' => __('Custom Logo'),
             ],
             [
-                'type'  => 'textarea',
-                'id'    => 'payment_note',
+                'type' => 'textarea',
+                'id' => 'payment_note',
                 'label' => __('Payment Note'),
                 'multi_lang' => "1"
             ],
             [
-                'type'  => 'editor',
-                'id'    => 'html',
+                'type' => 'editor',
+                'id' => 'html',
                 'label' => __('Custom HTML Description'),
                 'multi_lang' => "1"
             ],

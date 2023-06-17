@@ -24,5 +24,8 @@ class Hook extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'hook_manager'; }
+    protected static function getFacadeAccessor()
+    {
+        return 'hook_manager';
+    }
 }

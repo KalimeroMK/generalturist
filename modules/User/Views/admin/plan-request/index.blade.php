@@ -1,3 +1,4 @@
+@php use App\Helpers\AdminForm; @endphp
 @extends('admin.layouts.app')
 @section('content')
     <div class="container-fluid">
@@ -8,13 +9,16 @@
         <div class="filter-div d-flex justify-content-between">
             <div class="col-left">
                 @if(!empty($rows))
-                    <form method="post" action="{{route('user.admin.plan_request.bulkEdit')}}" class="filter-form filter-form-left d-flex justify-content-start">
+                    <form method="post" action="{{route('user.admin.plan_request.bulkEdit')}}"
+                          class="filter-form filter-form-left d-flex justify-content-start">
                         {{csrf_field()}}
                         <select name="action" class="form-control">
                             <option value="">{{__(" Bulk Actions ")}}</option>
                             <option value="completed">{{__("Mark as completed")}}</option>
                         </select>
-                        <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
+                        <button data-confirm="{{__("Do you want to delete?")}}"
+                                class="btn-info btn btn-icon dungdt-apply-form-btn"
+                                type="button">{{__('Apply')}}</button>
                     </form>
                 @endif
             </div>
@@ -22,25 +26,28 @@
                 <form method="get" action="" class="filter-form filter-form-right d-flex justify-content-end">
                     <select name="status" class="form-control">
                         <option value="">{{__("-- Status --")}}</option>
-                        <option @if(request()->query('status') == 'fail') selected @endif value="fail">{{__("Failed")}}</option>
-                        <option @if(request()->query('status') == 'processing') selected @endif value="processing">{{__("Processing")}}</option>
-                        <option @if(request()->query('status') == 'completed') selected @endif value="completed">{{__("Completed")}}</option>
+                        <option @if(request()->query('status') == 'fail') selected
+                                @endif value="fail">{{__("Failed")}}</option>
+                        <option @if(request()->query('status') == 'processing') selected
+                                @endif value="processing">{{__("Processing")}}</option>
+                        <option @if(request()->query('status') == 'completed') selected
+                                @endif value="completed">{{__("Completed")}}</option>
                     </select>
                     @csrf
                     <?php
                     $user = !empty(Request()->user_id) ? App\User::find(Request()->user_id) : false;
-                    \App\Helpers\AdminForm::select2('user_id', [
+                    AdminForm::select2('user_id', [
                         'configs' => [
-                            'ajax'        => [
-                                'url'      => route('user.admin.getForSelect2'),
+                            'ajax' => [
+                                'url' => route('user.admin.getForSelect2'),
                                 'dataType' => 'json'
                             ],
-                            'allowClear'  => true,
+                            'allowClear' => true,
                             'placeholder' => __('-- User --')
                         ]
                     ], !empty($user->id) ? [
                         $user->id,
-                        $user->name_or_email . ' (#' . $user->id . ')'
+                        $user->name_or_email.' (#'.$user->id.')'
                     ] : false)
                     ?>
                     <button class="btn-info btn btn-icon" type="submit">{{__('Filter')}}</button>
@@ -73,7 +80,8 @@
                                     #{{$row->id}}</td>
                                 <td>
                                     @if($row->user)
-                                        <a target="_blank" href="{{route('user.admin.detail',['id' => $row->user->id])}}">{{$row->user->display_name}}</a>
+                                        <a target="_blank"
+                                           href="{{route('user.admin.detail',['id' => $row->user->id])}}">{{$row->user->display_name}}</a>
                                     @endif
                                 </td>
                                 <td>
@@ -82,7 +90,7 @@
 
                                         @if($row->getMeta('annual')!=1)
                                             <p>{{__('Duration:  :duration_text',['duration_text'=>$row->plan->duration_text])}}</p>
-                                            @else
+                                        @else
                                             <p>{{__('Year')}}</p>
                                         @endif
                                     @endif

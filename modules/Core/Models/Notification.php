@@ -5,13 +5,14 @@
  * Date: 8/9/2019
  * Time: 11:56 PM
  */
+
 namespace Modules\Core\Models;
 
 use App\BaseModel;
 
 class Notification extends BaseModel
 {
-    protected $table  = 'core_notifications';
+    protected $table = 'core_notifications';
 
     protected $fillable = [
         'from_user',

@@ -1,6 +1,7 @@
 <?php
-if(!auth()->check()) return;
-[$notifications,$countUnread] = getNotify();
+
+if (!auth()->check()) return;
+[$notifications, $countUnread] = getNotify();
 ?>
 
 <li class="dropdown-notifications dropdown p-0">
@@ -14,7 +15,8 @@ if(!auth()->check()) return;
             <div class="dropdown-toolbar-actions">
                 <a href="#" class="markAllAsRead">{{__('Mark all as read')}}</a>
             </div>
-            <h3 class="dropdown-toolbar-title">{{__('Notifications')}} (<span class="notif-count">{{$countUnread}}</span>)</h3>
+            <h3 class="dropdown-toolbar-title">{{__('Notifications')}} (<span
+                        class="notif-count">{{$countUnread}}</span>)</h3>
         </div>
         <ul class="dropdown-list-items p-0">
             @if(count($notifications)> 0)

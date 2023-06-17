@@ -10,26 +10,29 @@ class TestCrud extends BaseCrudModule
 {
     public $model = Page::class;
 
-    public function index(){
+    public function index()
+    {
         return [
-          "permission"=>"xxx",
-          "layouts"=>[
+            "permission" => "xxx",
+            "layouts" => [
 
-          ]
+            ]
         ];
     }
-    public function create(){
+
+    public function create()
+    {
         return [
-          "permission"=>"page_create",
-          "layouts"=>[
-                "div"=>[
-                    "class"=>"xxx",
-                    "text"=>"xxx"
+            "permission" => "page_create",
+            "layouts" => [
+                "div" => [
+                    "class" => "xxx",
+                    "text" => "xxx"
                 ],
-              "span"=>[
-                  "text"=>"Xin chào bạn"
-              ]
-          ]
+                "span" => [
+                    "text" => "Xin chào bạn"
+                ]
+            ]
         ];
     }
 }

@@ -1,11 +1,12 @@
 <?php
+
 namespace Modules\User\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Modules\User\Models\Subscriber;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class SubscriberExport implements FromCollection, WithHeadings, WithMapping
 {
@@ -21,15 +22,15 @@ class SubscriberExport implements FromCollection, WithHeadings, WithMapping
     }
 
     /**
-     * @var Subscriber $subscriber
      * @return array
+     * @var Subscriber $subscriber
      */
     public function map($subscriber): array
     {
         return [
-            ltrim($subscriber->email,"=-"),
-            ltrim($subscriber->first_name,"=-"),
-            ltrim($subscriber->last_name,"=-"),
+            ltrim($subscriber->email, "=-"),
+            ltrim($subscriber->first_name, "=-"),
+            ltrim($subscriber->last_name, "=-"),
         ];
     }
 

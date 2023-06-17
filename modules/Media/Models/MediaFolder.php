@@ -13,7 +13,8 @@ class MediaFolder extends BaseModel
         'parent_id'
     ];
 
-    public function scopeOfMine($query){
-        $query->where('user_id',auth()->id());
+    public function scopeOfMine($query)
+    {
+        $query->where('user_id', auth()->id());
     }
 }

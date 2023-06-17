@@ -17,11 +17,13 @@
                             <h3 class="panel-body-title">{{ __('Role Content')}} </h3>
                             <div class="form-group">
                                 <label>{{ __('Name')}}</label>
-                                <input type="text" value="{{old('name',$row->name)}}" placeholder="{{ __('Role Name')}}" name="name" class="form-control">
+                                <input type="text" value="{{old('name',$row->name)}}" placeholder="{{ __('Role Name')}}"
+                                       name="name" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label>{{ __('Code')}}</label>
-                                <input type="text" value="{{old('code',$row->name)}}" placeholder="{{ __('Role Code')}}" name="code" class="form-control">
+                                <input type="text" value="{{old('code',$row->name)}}" placeholder="{{ __('Role Code')}}"
+                                       name="code" class="form-control">
                                 <p><i>{{__("Should be unique and letters only")}}</i></p>
                             </div>
                         </div>

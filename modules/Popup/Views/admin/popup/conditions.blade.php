@@ -15,9 +15,10 @@
                                     <div class="col-md-11">
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text" >{{url('/')}}/</span>
+                                                <span class="input-group-text">{{url('/')}}/</span>
                                             </div>
-                                            <input type="text" name="include_url[{{$key}}][url]" value="{{$item['url'] ?? ''}}" class="form-control">
+                                            <input type="text" name="include_url[{{$key}}][url]"
+                                                   value="{{$item['url'] ?? ''}}" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-1">
@@ -36,13 +37,14 @@
                                 <div class="col-md-11">
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" >{{url('/')}}/</span>
+                                            <span class="input-group-text">{{url('/')}}/</span>
                                         </div>
                                         <input type="text" __name__="include_url[__number__][url]" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <span class="btn btn-danger btn-sm btn-remove-item"><i class="fa fa-trash"></i></span>
+                                    <span class="btn btn-danger btn-sm btn-remove-item"><i
+                                                class="fa fa-trash"></i></span>
                                 </div>
                             </div>
                         </div>
@@ -67,13 +69,15 @@
                                         <div class="col-md-11">
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text" >{{url('/')}}/</span>
+                                                    <span class="input-group-text">{{url('/')}}/</span>
                                                 </div>
-                                                <input type="text" name="exclude_url[{{$key}}][url]" value="{{$item['url'] ?? ''}}" class="form-control">
+                                                <input type="text" name="exclude_url[{{$key}}][url]"
+                                                       value="{{$item['url'] ?? ''}}" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-md-1">
-                                            <span class="btn btn-danger btn-sm btn-remove-item"><i class="fa fa-trash"></i></span>
+                                            <span class="btn btn-danger btn-sm btn-remove-item"><i
+                                                        class="fa fa-trash"></i></span>
                                         </div>
                                     </div>
                                 </div>
@@ -89,13 +93,14 @@
                                 <div class="col-md-11">
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" >{{url('/')}}/</span>
+                                            <span class="input-group-text">{{url('/')}}/</span>
                                         </div>
                                         <input type="text" __name__="exclude_url[__number__][url]" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <span class="btn btn-danger btn-sm btn-remove-item"><i class="fa fa-trash"></i></span>
+                                    <span class="btn btn-danger btn-sm btn-remove-item"><i
+                                                class="fa fa-trash"></i></span>
                                 </div>
                             </div>
                         </div>

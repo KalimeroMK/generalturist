@@ -16,7 +16,8 @@
                 <div class="filter-div d-flex justify-content-between ">
                     <div class="col-left">
                         @if(!empty($rows))
-                            <form method="post" action="{{route('coupon.admin.bulkEdit')}}" class="filter-form filter-form-left d-flex justify-content-start">
+                            <form method="post" action="{{route('coupon.admin.bulkEdit')}}"
+                                  class="filter-form filter-form-left d-flex justify-content-start">
                                 {{csrf_field()}}
                                 <select name="action" class="form-control">
                                     <option value="">{{__(" Bulk Actions ")}}</option>
@@ -24,13 +25,15 @@
                                     <option value="draft">{{__(" Move to Draft ")}}</option>
                                     <option value="delete">{{__(" Delete ")}}</option>
                                 </select>
-                                <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
+                                <button data-confirm="{{__("Do you want to delete?")}}"
+                                        class="btn-info btn btn-icon dungdt-apply-form-btn"
+                                        type="button">{{__('Apply')}}</button>
                             </form>
                         @endif
                     </div>
                     <div class="col-right">
                         <form method="get" action="" class="filter-form filter-form-left d-flex justify-content-start">
-                           
+
                         </form>
                     </div>
                 </div>
@@ -55,7 +58,8 @@
                                     @if($rows->total() > 0)
                                         @foreach($rows as $row)
                                             <tr class="{{$row->status}}">
-                                                <td><input type="checkbox" name="ids[]" class="check-item" value="{{$row->id}}">
+                                                <td><input type="checkbox" name="ids[]" class="check-item"
+                                                           value="{{$row->id}}">
                                                 </td>
                                                 <td class="title">
                                                     <strong>{{$row->code}}</strong>
@@ -64,9 +68,13 @@
                                                 <td>{{$row->amount}}</td>
                                                 <td>{{$row->discount_type == 'percent' ? __("Percent") : __("Amount")}}</td>
                                                 <td>{{ ($row->end_date) }}</td>
-                                                <td><span class="badge badge-{{ $row->status }}">{{ $row->status }}</span></td>
                                                 <td>
-                                                    <a href="{{route('coupon.admin.edit',['id'=>$row->id])}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> {{__('Edit')}}
+                                                    <span class="badge badge-{{ $row->status }}">{{ $row->status }}</span>
+                                                </td>
+                                                <td>
+                                                    <a href="{{route('coupon.admin.edit',['id'=>$row->id])}}"
+                                                       class="btn btn-primary btn-sm"><i
+                                                                class="fa fa-edit"></i> {{__('Edit')}}
                                                     </a>
                                                 </td>
                                             </tr>

@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Admin;
 
 use Modules\ModuleServiceProvider;
@@ -8,7 +9,7 @@ class ModuleProvider extends ModuleServiceProvider
     public function boot()
     {
         Crud::register([
-            'test'=>TestCrud::class
+            'test' => TestCrud::class
         ]);
     }
 

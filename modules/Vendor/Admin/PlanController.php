@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Vendor\Admin;
 
 use Illuminate\Http\Request;
@@ -18,18 +19,18 @@ class PlanController extends AdminController
     {
         $query = new VendorPlan;
         if (!empty($request->name)) {
-            $query = VendorPlan::where('name', 'LIKE', '%' . $request->name . '%');
+            $query = VendorPlan::where('name', 'LIKE', '%'.$request->name.'%');
         }
         $plans = $query->orderBy('name', 'asc');
         $data = [
-            'rows'        => $plans->with("author")->paginate(20),
+            'rows' => $plans->with("author")->paginate(20),
             'breadcrumbs' => [
                 [
                     'name' => __('Vendor Plans'),
-                    'url'  => route('vendor.admin.plan.index')
+                    'url' => route('vendor.admin.plan.index')
                 ],
                 [
-                    'name'  => __('All'),
+                    'name' => __('All'),
                     'class' => 'active'
                 ],
             ]
@@ -56,14 +57,14 @@ class PlanController extends AdminController
             ]);
         }
         $data = [
-            'row'         => $row,
+            'row' => $row,
             'breadcrumbs' => [
                 [
                     'name' => __('Vendor Plans'),
-                    'url'  => route('vendor.admin.plan.index')
+                    'url' => route('vendor.admin.plan.index')
                 ],
                 [
-                    'name'  => __('Add Plan'),
+                    'name' => __('Add Plan'),
                     'class' => 'active'
                 ],
             ]
@@ -97,14 +98,14 @@ class PlanController extends AdminController
             }
         }
         $data = [
-            'row'         => $row,
+            'row' => $row,
             'breadcrumbs' => [
                 [
                     'name' => __('Vendor Plans'),
-                    'url'  => route('vendor.admin.plan.index')
+                    'url' => route('vendor.admin.plan.index')
                 ],
                 [
-                    'name'  => __('Edit Page'),
+                    'name' => __('Edit Page'),
                     'class' => 'active'
                 ],
             ]
@@ -117,7 +118,7 @@ class PlanController extends AdminController
         $q = $request->query('q');
         $query = VendorPlan::select('id', 'name as text');
         if ($q) {
-            $query->where('title', 'like', '%' . $q . '%');
+            $query->where('title', 'like', '%'.$q.'%');
         }
         $res = $query->orderBy('id', 'desc')->limit(20)->get();
         return response()->json([
@@ -143,7 +144,7 @@ class PlanController extends AdminController
                     $this->checkPermission('page_delete');
                 }
                 $query->first();
-                if(!empty($query)){
+                if (!empty($query)) {
                     $query->delete();
                 }
             }

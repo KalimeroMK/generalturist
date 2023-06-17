@@ -15,9 +15,9 @@
         @if(!empty($vendor_payout_methods))
             <div class="row">
                 @if(!empty($payout_accounts))
-                <div class="col-md-6">
-                    @include("Vendor::frontend.payouts.request")
-                </div>
+                    <div class="col-md-6">
+                        @include("Vendor::frontend.payouts.request")
+                    </div>
                 @endif
                 <div class="col-md-6">
                     @include("Vendor::frontend.payouts.setup")
@@ -27,11 +27,11 @@
             <div class="alert alert-warning">{{__("No payout methods available. Please contact administrator")}}</div>
         @endif
         @if(count($payouts))
-        <hr>
-        <h4>{{__("Payout history")}}</h4>
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped table-booking-history">
-                <thead>
+            <hr>
+            <h4>{{__("Payout history")}}</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-booking-history">
+                    <thead>
                     <tr>
                         <th width="2%">{{__("#")}}</th>
                         <th>{{__("Amount")}}</th>
@@ -41,8 +41,8 @@
                         <th>{{__("Date Processed")}}</th>
                         <th>{{__("Status")}}</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     @foreach($payouts as $payout)
                         <tr>
                             <td>#{{$payout->id}}</td>
@@ -53,12 +53,12 @@
                             <td>{{display_date($payout->created_at)}}</td>
                             <td>
                                 @if($payout->note_to_admin)
-                                    <label ><strong>{{__("To admin:")}}</strong></label>
+                                    <label><strong>{{__("To admin:")}}</strong></label>
                                     <br>
                                     <div>{{$payout->note_to_admin}}</div>
                                 @endif
                                 @if($payout->note_to_vendor)
-                                    <label ><strong>{{__("To vendor:")}}</strong></label>
+                                    <label><strong>{{__("To vendor:")}}</strong></label>
                                     <br>
                                     <div>{{$payout->note_to_vendor}}</div>
                                 @endif
@@ -67,12 +67,12 @@
                             <td>{{$payout->status_text}}</td>
                         </tr>
                     @endforeach
-                </tbody>
-            </table>
-        </div>
-        <div class="bravo-pagination">
-            {{$payouts->appends(request()->query())->links()}}
-        </div>
+                    </tbody>
+                </table>
+            </div>
+            <div class="bravo-pagination">
+                {{$payouts->appends(request()->query())->links()}}
+            </div>
         @endif
     </div>
 @endsection

@@ -5,10 +5,10 @@
  * Date: 8/13/2019
  * Time: 10:19 PM
  */
+
 namespace Modules\Core\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\Core\Models\Notification;
@@ -16,20 +16,20 @@ use Modules\Core\Models\NotificationPush;
 
 class NotificationController extends Controller
 {
-    public function markRead(Request $request){
+    public function markRead(Request $request)
+    {
         $ids = $request->input('ids');
-        if(!empty($ids) and is_array($ids))
-        {
-            Notification::query()->whereIn('id',$ids)->where('to_user',Auth::id())->update([
-                'is_read'=>1
+        if (!empty($ids) and is_array($ids)) {
+            Notification::query()->whereIn('id', $ids)->where('to_user', Auth::id())->update([
+                'is_read' => 1
             ]);
         }
     }
 
-    public function markAsRead(Request $request){
+    public function markAsRead(Request $request)
+    {
         $id = $request->get('id');
-        if(!empty($id))
-        {
+        if (!empty($id)) {
             NotificationPush::query()->where('id', $id)->update([
                 'read_at' => now()
             ]);
@@ -37,14 +37,15 @@ class NotificationController extends Controller
         return response()->json([], 200);
     }
 
-    public function markAllAsRead(Request $request){
+    public function markAllAsRead(Request $request)
+    {
         $notify = NotificationPush::query();
-        if(is_admin()){
-            $notify->where(function($q){
+        if (is_admin()) {
+            $notify->where(function ($q) {
                 $q->where('for_admin', 1);
                 $q->orWhere('notifiable_id', Auth::id());
             });
-        }else{
+        } else {
             $notify->where('for_admin', 0);
             $notify->where('notifiable_id', Auth::id());
         }
@@ -58,31 +59,31 @@ class NotificationController extends Controller
     public function loadNotify(Request $request)
     {
         $type = $request->get('type', '');
-        $query  = \Modules\Core\Models\NotificationPush::query();
+        $query = NotificationPush::query();
 
-        if(is_admin()){
-            $query->where(function($q){
+        if (is_admin()) {
+            $query->where(function ($q) {
                 $q->where('for_admin', 1);
                 $q->orWhere('notifiable_id', Auth::id());
             });
-        }else{
+        } else {
             $query->where('for_admin', 0);
             $query->where('notifiable_id', Auth::id());
         }
 
-        if($type == 'unread'){
+        if ($type == 'unread') {
             $query->where('read_at', null);
         }
 
-        if($type == 'read'){
+        if ($type == 'read') {
             $query->where('read_at', '!=', null);
         }
 
-        $query->orderBy('created_at','desc');
+        $query->orderBy('created_at', 'desc');
         $data = [
-            'rows'                  => $query->paginate(20),
-            'page_title'            => __("All Notifications"),
-            'type'                  => $type
+            'rows' => $query->paginate(20),
+            'page_title' => __("All Notifications"),
+            'type' => $type
         ];
         return view('Core::frontend.notification.index', $data);
     }

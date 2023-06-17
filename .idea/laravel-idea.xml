@@ -12,5 +12,6 @@
       </LaravelCodeGeneration>
     </option>
     <option name="frameworkFound" value="true" />
+    <option name="moduleSystemName" value="nwidart/laravel-modules" />
   </component>
 </project>

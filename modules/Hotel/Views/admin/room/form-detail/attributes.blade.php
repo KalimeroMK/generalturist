@@ -9,7 +9,8 @@
                         @foreach($attribute->terms as $term)
                             @php $term_translate = $term->translate(app_get_locale()); @endphp
                             <label class="term-item">
-                                <input @if(!empty($selected_terms) and $selected_terms->contains($term->id)) checked @endif type="checkbox" name="terms[]" value="{{$term->id}}">
+                                <input @if(!empty($selected_terms) and $selected_terms->contains($term->id)) checked
+                                       @endif type="checkbox" name="terms[]" value="{{$term->id}}">
                                 <span class="term-name">{{$term_translate->name}}</span>
                             </label>
                         @endforeach

@@ -1,14 +1,15 @@
 <?php
+
 namespace Modules\Type;
 
 
 use Modules\ModuleServiceProvider;
-use Modules\Type\Types\SpaType;
 
 class ModuleProvider extends ModuleServiceProvider
 {
 
-    public function boot(TypeManager $type_manager){
+    public function boot(TypeManager $type_manager)
+    {
         //$type_manager->register("spa",SpaType::class);
     }
 

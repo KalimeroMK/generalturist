@@ -1,19 +1,19 @@
 <?php
+
 namespace Modules\Flight\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Modules\AdminController;
 use Modules\Core\Models\Attributes;
 use Modules\Core\Models\AttributesTranslation;
 use Modules\Core\Models\Terms;
 use Modules\Core\Models\TermsTranslation;
-use Illuminate\Support\Facades\DB;
 
 class AttributeController extends AdminController
 {
     protected $attributesClass;
     protected $termsClass;
+
     public function __construct()
     {
         $this->setActiveMenu(route('flight.admin.index'));
@@ -26,20 +26,20 @@ class AttributeController extends AdminController
         $this->checkPermission('flight_manage_attributes');
         $listAttr = $this->attributesClass::where("service", 'flight');
         if (!empty($search = $request->query('s'))) {
-            $listAttr->where('name', 'LIKE', '%' . $search . '%');
+            $listAttr->where('name', 'LIKE', '%'.$search.'%');
         }
         $listAttr->orderBy('created_at', 'desc');
         $data = [
-            'rows'        => $listAttr->get(),
-            'row'         => new $this->attributesClass(),
-            'translation'    => new AttributesTranslation(),
+            'rows' => $listAttr->get(),
+            'row' => new $this->attributesClass(),
+            'translation' => new AttributesTranslation(),
             'breadcrumbs' => [
                 [
                     'name' => __('Flight'),
-                    'url'  => route('flight.admin.index')
+                    'url' => route('flight.admin.index')
                 ],
                 [
-                    'name'  => __('Attributes'),
+                    'name' => __('Attributes'),
                     'class' => 'active'
                 ],
             ]
@@ -53,24 +53,24 @@ class AttributeController extends AdminController
         if (empty($row)) {
             return redirect()->back()->with('error', __('Attributes not found!'));
         }
-        $translation = $row->translate($request->query('lang',get_main_lang()));
+        $translation = $row->translate($request->query('lang', get_main_lang()));
         $this->checkPermission('flight_manage_attributes');
         $data = [
-            'translation'    => $translation,
-            'enable_multi_lang'=>true,
-            'rows'        => $this->attributesClass::where("service", 'flight')->get(),
-            'row'         => $row,
+            'translation' => $translation,
+            'enable_multi_lang' => true,
+            'rows' => $this->attributesClass::where("service", 'flight')->get(),
+            'row' => $row,
             'breadcrumbs' => [
                 [
                     'name' => __('Flight'),
-                    'url'  => route('flight.admin.index')
+                    'url' => route('flight.admin.index')
                 ],
                 [
                     'name' => __('Attributes'),
-                    'url'  => route('flight.admin.attribute.index')
+                    'url' => route('flight.admin.attribute.index')
                 ],
                 [
-                    'name'  => __('Attribute: :name', ['name' => $row->name]),
+                    'name' => __('Attribute: :name', ['name' => $row->name]),
                     'class' => 'active'
                 ],
             ]
@@ -116,7 +116,7 @@ class AttributeController extends AdminController
             foreach ($ids as $id) {
                 $query = $this->attributesClass::where("id", $id);
                 $query->first();
-                if(!empty($query)){
+                if (!empty($query)) {
                     $query->delete();
                 }
             }
@@ -133,25 +133,25 @@ class AttributeController extends AdminController
         }
         $listTerms = $this->termsClass::where("attr_id", $attr_id);
         if (!empty($search = $request->query('s'))) {
-            $listTerms->where('name', 'LIKE', '%' . $search . '%');
+            $listTerms->where('name', 'LIKE', '%'.$search.'%');
         }
         $listTerms->orderBy('created_at', 'desc');
         $data = [
-            'rows'        => $listTerms->paginate(20),
-            'attr'        => $row,
-            "row"         => new $this->termsClass(),
-            'translation'    => new TermsTranslation(),
+            'rows' => $listTerms->paginate(20),
+            'attr' => $row,
+            "row" => new $this->termsClass(),
+            'translation' => new TermsTranslation(),
             'breadcrumbs' => [
                 [
                     'name' => __('Flight'),
-                    'url'  => route('flight.admin.index')
+                    'url' => route('flight.admin.index')
                 ],
                 [
                     'name' => __('Attributes'),
-                    'url'  => route('flight.admin.attribute.index')
+                    'url' => route('flight.admin.attribute.index')
                 ],
                 [
-                    'name'  => __('Attribute: :name', ['name' => $row->name]),
+                    'name' => __('Attribute: :name', ['name' => $row->name]),
                     'class' => 'active'
                 ],
             ]
@@ -166,27 +166,27 @@ class AttributeController extends AdminController
         if (empty($row)) {
             return redirect()->back()->with('error', __('Term not found'));
         }
-        $translation = $row->translate($request->query('lang',get_main_lang()));
+        $translation = $row->translate($request->query('lang', get_main_lang()));
         $attr = $this->attributesClass::find($row->attr_id);
         $data = [
-            'row'         => $row,
-            'translation'    => $translation,
-            'enable_multi_lang'=>true,
+            'row' => $row,
+            'translation' => $translation,
+            'enable_multi_lang' => true,
             'breadcrumbs' => [
                 [
                     'name' => __('Flight'),
-                    'url'  => route('flight.admin.index')
+                    'url' => route('flight.admin.index')
                 ],
                 [
                     'name' => __('Attributes'),
-                    'url'  => route('flight.admin.attribute.index')
+                    'url' => route('flight.admin.attribute.index')
                 ],
                 [
                     'name' => $attr->name,
-                    'url'  => route('flight.admin.attribute.term.index',['id'=>$row->attr_id])
+                    'url' => route('flight.admin.attribute.term.index', ['id' => $row->attr_id])
                 ],
                 [
-                    'name'  => __('Term: :name', ['name' => $row->name]),
+                    'name' => __('Term: :name', ['name' => $row->name]),
                     'class' => 'active'
                 ],
             ]
@@ -233,7 +233,7 @@ class AttributeController extends AdminController
             foreach ($ids as $id) {
                 $query = $this->termsClass::where("id", $id);
                 $query->first();
-                if(!empty($query)){
+                if (!empty($query)) {
                     $query->delete();
                 }
             }
@@ -246,28 +246,27 @@ class AttributeController extends AdminController
         $pre_selected = $request->query('pre_selected');
         $selected = $request->query('selected');
 
-        if($pre_selected && $selected){
-            if(is_array($selected))
-            {
+        if ($pre_selected && $selected) {
+            if (is_array($selected)) {
                 $query = $this->termsClass::getForSelect2Query('flight');
-                $items = $query->whereIn('bravo_terms.id',$selected)->take(50)->get();
+                $items = $query->whereIn('bravo_terms.id', $selected)->take(50)->get();
                 return response()->json([
-                    'items'=>$items
+                    'items' => $items
                 ]);
             }
 
-            if(empty($item)){
+            if (empty($item)) {
                 return response()->json([
-                    'text'=>''
+                    'text' => ''
                 ]);
-            }else{
+            } else {
                 return response()->json([
-                    'text'=>$item->name
+                    'text' => $item->name
                 ]);
             }
         }
         $q = $request->query('q');
-        $query = $this->termsClass::getForSelect2Query('flight',$q);
+        $query = $this->termsClass::getForSelect2Query('flight', $q);
         $res = $query->orderBy('bravo_terms.id', 'desc')->limit(20)->get();
         return response()->json([
             'results' => $res

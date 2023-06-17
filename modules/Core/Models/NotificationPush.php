@@ -5,13 +5,14 @@
  * Date: 8/9/2019
  * Time: 11:56 PM
  */
+
 namespace Modules\Core\Models;
 
 use App\BaseModel;
 
 class NotificationPush extends BaseModel
 {
-    protected $table  = 'notifications';
+    protected $table = 'notifications';
 
     protected $fillable = [
         'type',

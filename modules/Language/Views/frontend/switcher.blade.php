@@ -1,5 +1,5 @@
 @php
-    $languages = \Modules\Language\Models\Language::getActive();
+    use Modules\Language\Models\Language;$languages = Language::getActive();
     $locale = session('website_locale',app()->getLocale());
 @endphp
 {{--Multi Language--}}

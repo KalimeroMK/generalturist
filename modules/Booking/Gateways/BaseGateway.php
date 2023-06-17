@@ -1,19 +1,24 @@
 <?php
+
 namespace Modules\Booking\Gateways;
 
 use Illuminate\Http\Request;
+use Modules\Booking\Models\Bookable;
+use Modules\Booking\Models\Booking;
 use Modules\Booking\Models\Payment;
+use Modules\Language\Models\Language;
 
 abstract class BaseGateway
 {
-    protected $id;
-    public    $name;
+    public $name;
     public $is_offline = false;
+    protected $id;
 
     public function __construct($id = false)
     {
-        if ($id)
+        if ($id) {
             $this->id = $id;
+        }
     }
 
     public function isAvailable()
@@ -21,117 +26,105 @@ abstract class BaseGateway
         return $this->getOption('enable');
     }
 
+    public function getOption($key, $default = '')
+    {
+        return setting_item('g_'.$this->id.'_'.$key, $default);
+    }
+
     public function getHtml()
     {
-
     }
 
     /**
-     * @param Request $request
-     * @param \Modules\Booking\Models\Booking $booking
-     * @param \Modules\Booking\Models\Bookable $service
+     * @param  Request  $request
+     * @param  Booking  $booking
+     * @param  Bookable  $service
      */
     public function process(Request $request, $booking, $service)
     {
-
     }
 
-    public function processNormal($payment){
-
+    public function processNormal($payment)
+    {
     }
 
     public function cancelPayment(Request $request)
     {
-
     }
 
     public function confirmPayment(Request $request)
     {
-
     }
+
     public function callbackPayment(Request $request)
     {
-
     }
 
+    public function getOptionsConfigsFormatted()
+    {
+        $languages = Language::getActive();
+        $options = $this->getOptionsConfigs();
+        if (!empty($options)) {
+            foreach ($options as &$option) {
+                $option['value'] = $this->getOption($option['id'], $option['std'] ?? '');
+                if (!empty($option['multi_lang']) && !empty($languages) && setting_item('site_enable_multi_lang') && setting_item('site_locale')) {
+                    foreach ($languages as $language) {
+                        if (setting_item('site_locale') == $language->locale) {
+                            continue;
+                        }
+                        $option["value_".$language->locale] = $this->getOption($option['id']."_".$language->locale, '');
+                    }
+                }
+                $option['id'] = 'g_'.$this->id.'_'.$option['id'];
+            }
+        }
+        return $options;
+    }
 
     public function getOptionsConfigs()
     {
         return [];
     }
 
-    public function getOptionsConfigsFormatted()
-    {
-        $languages = \Modules\Language\Models\Language::getActive();
-        $options = $this->getOptionsConfigs();
-        if (!empty($options)) {
-            foreach ($options as &$option) {
-                $option['value'] = $this->getOption($option['id'], $option['std'] ?? '');
-                if( !empty($option['multi_lang']) && !empty($languages) && setting_item('site_enable_multi_lang') && setting_item('site_locale')){
-                    foreach($languages as $language){
-                        if( setting_item('site_locale') == $language->locale) continue;
-                        $option["value_".$language->locale] = $this->getOption($option['id']."_".$language->locale, '');
-                    }
-                }
-                $option['id'] = 'g_' . $this->id . '_' . $option['id'];
-            }
-        }
-        return $options;
-    }
-
-    public function getOption($key, $default = '')
-    {
-        return setting_item('g_' . $this->id . '_' . $key, $default);
-    }
-
     public function getDisplayName()
     {
         $locale = app()->getLocale();
-        if(!empty($locale)){
+        if (!empty($locale)) {
             $title = $this->getOption("name_".$locale);
         }
-        if(empty($title)){
-            $title = $this->getOption("name" , $this->name);
+        if (empty($title)) {
+            $title = $this->getOption("name", $this->name);
         }
         return $title;
     }
 
-    public function getDisplayHtml()
-    {
-        $locale = app()->getLocale();
-        if(!empty($locale)){
-            $html = $this->getOption("html_".$locale);
-        }
-        if(empty($html)){
-            $html = $this->getOption("html");
-        }
-        return $html;
-    }
-
     public function getReturnUrl($is_normal = false)
     {
-        if($is_normal){
-            return route('gateway.confirm',['gateway'=>$this->id]);
+        if ($is_normal) {
+            return route('gateway.confirm', ['gateway' => $this->id]);
         }
         $is_api = request()->segment(1) == 'api';
-        return url(($is_api ? 'api/' : '').app_get_locale(false,false,"/").config('booking.booking_route_prefix') . '/confirm/' . $this->id);
+        return url(($is_api ? 'api/' : '').app_get_locale(false, false,
+                "/").config('booking.booking_route_prefix').'/confirm/'.$this->id);
     }
 
-    public function getWebhookUrl($is_normal=false){
-        if($is_normal){
-            return route('gateway.webhook',['gateway'=>$this->id,'is_normal'=>$is_normal]);
-        }else{
-            return route('gateway.webhook',['gateway'=>$this->id]);
+    public function getWebhookUrl($is_normal = false)
+    {
+        if ($is_normal) {
+            return route('gateway.webhook', ['gateway' => $this->id, 'is_normal' => $is_normal]);
+        } else {
+            return route('gateway.webhook', ['gateway' => $this->id]);
         }
     }
 
     public function getCancelUrl($is_normal = false)
     {
-        if($is_normal){
-            return route('gateway.cancel',['gateway'=>$this->id]);
+        if ($is_normal) {
+            return route('gateway.cancel', ['gateway' => $this->id]);
         }
         $is_api = request()->segment(1) == 'api';
-        return url(($is_api ? 'api/' : '').app_get_locale(false,false,"/").config('booking.booking_route_prefix') . '/cancel/' . $this->id);
+        return url(($is_api ? 'api/' : '').app_get_locale(false, false,
+                "/").config('booking.booking_route_prefix').'/cancel/'.$this->id);
     }
 
     public function getDisplayLogo()
@@ -140,22 +133,37 @@ abstract class BaseGateway
         return get_file_url($logo_id);
     }
 
-    public function getForm(){
-
-    }
-    public function getApiOptions(){
-
+    public function getForm()
+    {
     }
 
-    public function getApiDisplayHtml(){
+    public function getApiOptions()
+    {
+    }
+
+    public function getApiDisplayHtml()
+    {
         return $this->getDisplayHtml();
     }
 
-    public function confirmNormalPayment(){
-
+    public function getDisplayHtml()
+    {
+        $locale = app()->getLocale();
+        if (!empty($locale)) {
+            $html = $this->getOption("html_".$locale);
+        }
+        if (empty($html)) {
+            $html = $this->getOption("html");
+        }
+        return $html;
     }
-    public function callbackNormalPayment(){
 
+    public function confirmNormalPayment()
+    {
+    }
+
+    public function callbackNormalPayment()
+    {
     }
 
     public function cancelNormalPayment()
@@ -167,8 +175,8 @@ abstract class BaseGateway
         $c = $request->query('pid');
         $payment = Payment::where('code', $c)->first();
         if ($payment) {
-            if($payment->status == 'cancel'){
-                return [false,__("Your payment has been canceled")];
+            if ($payment->status == 'cancel') {
+                return [false, __("Your payment has been canceled")];
             }
             return $payment->markAsCancel();
         }
@@ -176,11 +184,13 @@ abstract class BaseGateway
         return [false];
     }
 
-    public function getValidationRules(){
+    public function getValidationRules()
+    {
         return [];
     }
 
-    public function getValidationMessages(){
+    public function getValidationMessages()
+    {
         return [];
     }
 }

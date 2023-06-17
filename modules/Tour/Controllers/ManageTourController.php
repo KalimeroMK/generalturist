@@ -1,21 +1,22 @@
 <?php
+
 namespace Modules\Tour\Controllers;
 
-use App\Notifications\AdminChannelServices;
-use Modules\Booking\Events\BookingUpdatedEvent;
-use Modules\Core\Events\CreatedServicesEvent;
-use Modules\FrontendController;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\Booking\Events\BookingUpdatedEvent;
+use Modules\Booking\Models\Booking;
+use Modules\Core\Events\CreatedServicesEvent;
+use Modules\Core\Models\Attributes;
+use Modules\FrontendController;
+use Modules\Location\Models\Location;
 use Modules\Location\Models\LocationCategory;
 use Modules\Tour\Hook;
 use Modules\Tour\Models\Tour;
 use Modules\Tour\Models\TourCategory;
-use Modules\Tour\Models\TourTranslation;
-use Modules\Location\Models\Location;
-use Modules\Core\Models\Attributes;
 use Modules\Tour\Models\TourTerm;
-use Modules\Booking\Models\Booking;
+use Modules\Tour\Models\TourTranslation;
 
 class ManageTourController extends FrontendController
 {
@@ -58,18 +59,18 @@ class ManageTourController extends FrontendController
         $user_id = Auth::id();
         $list_tour = $this->tourClass::where("author_id", $user_id)->orderBy('id', 'desc');
         $data = [
-            'rows'        => $list_tour->paginate(5),
+            'rows' => $list_tour->paginate(5),
             'breadcrumbs' => [
                 [
                     'name' => __('Manage Tours'),
-                    'url'  => route('tour.vendor.index'),
+                    'url' => route('tour.vendor.index'),
                 ],
                 [
-                    'name'  => __('All'),
+                    'name' => __('All'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'  => __("Manage Tours"),
+            'page_title' => __("Manage Tours"),
         ];
         return view('Tour::frontend.manageTour.index', $data);
     }
@@ -80,19 +81,19 @@ class ManageTourController extends FrontendController
         $user_id = Auth::id();
         $list_tour = $this->tourClass::onlyTrashed()->where("author_id", $user_id)->orderBy('id', 'desc');
         $data = [
-            'rows'        => $list_tour->paginate(5),
-            'recovery'           => 1,
+            'rows' => $list_tour->paginate(5),
+            'recovery' => 1,
             'breadcrumbs' => [
                 [
                     'name' => __('Manage Tours'),
-                    'url'  => route('tour.vendor.index'),
+                    'url' => route('tour.vendor.index'),
                 ],
                 [
-                    'name'  => __('Recovery'),
+                    'name' => __('Recovery'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'  => __("Recovery Tours"),
+            'page_title' => __("Recovery Tours"),
         ];
         return view('Tour::frontend.manageTour.index', $data);
     }
@@ -102,7 +103,7 @@ class ManageTourController extends FrontendController
         $this->checkPermission('tour_delete');
         $user_id = Auth::id();
         $query = $this->tourClass::onlyTrashed()->where("author_id", $user_id)->where("id", $id)->first();
-        if(!empty($query)){
+        if (!empty($query)) {
             $query->restore();
         }
         return redirect(route('tour.vendor.recovery'))->with('success', __('Restore tour success!'));
@@ -113,24 +114,24 @@ class ManageTourController extends FrontendController
         $this->checkPermission('tour_create');
         $row = new $this->tourClass();
         $data = [
-            'row'           => $row,
-            'translation'   => new $this->tourTranslationClass(),
+            'row' => $row,
+            'translation' => new $this->tourTranslationClass(),
             'tour_category' => $this->tourCategoryClass::get()->toTree(),
             'tour_location' => $this->locationClass::where("status", "publish")->get()->toTree(),
-            'attributes'    => $this->attributesClass::where('service', 'tour')->get(),
-            'location_category'=>$this->locationCategoryClass::where("status", "publish")->get(),
+            'attributes' => $this->attributesClass::where('service', 'tour')->get(),
+            'location_category' => $this->locationCategoryClass::where("status", "publish")->get(),
 
-            'breadcrumbs'   => [
+            'breadcrumbs' => [
                 [
                     'name' => __('Manage Tours'),
-                    'url'  => route('tour.vendor.index'),
+                    'url' => route('tour.vendor.index'),
                 ],
                 [
-                    'name'  => __('Create'),
+                    'name' => __('Create'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'    => __("Create Tours"),
+            'page_title' => __("Create Tours"),
         ];
         return view('Tour::frontend.manageTour.detail', $data);
     }
@@ -146,24 +147,24 @@ class ManageTourController extends FrontendController
         }
         $translation = $row->translate($request->query('lang'));
         $data = [
-            'translation'    => $translation,
-            'row'            => $row,
-            'tour_category'  => $this->tourCategoryClass::where("status", "publish")->get()->toTree(),
-            'tour_location'  => $this->locationClass::where("status", "publish")->get()->toTree(),
-            'location_category'=>$this->locationCategoryClass::where("status", "publish")->get(),
-            'attributes'     => $this->attributesClass::where('service', 'tour')->get(),
+            'translation' => $translation,
+            'row' => $row,
+            'tour_category' => $this->tourCategoryClass::where("status", "publish")->get()->toTree(),
+            'tour_location' => $this->locationClass::where("status", "publish")->get()->toTree(),
+            'location_category' => $this->locationCategoryClass::where("status", "publish")->get(),
+            'attributes' => $this->attributesClass::where('service', 'tour')->get(),
             "selected_terms" => $row->tour_term->pluck('term_id'),
-            'breadcrumbs'    => [
+            'breadcrumbs' => [
                 [
                     'name' => __('Manage Tours'),
-                    'url'  => route('tour.vendor.index'),
+                    'url' => route('tour.vendor.index'),
                 ],
                 [
-                    'name'  => __('Edit'),
+                    'name' => __('Edit'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'     => __("Edit Tours"),
+            'page_title' => __("Edit Tours"),
         ];
         return view('Tour::frontend.manageTour.detail', $data);
     }
@@ -223,7 +224,7 @@ class ManageTourController extends FrontendController
 
         ], $request->input());
 
-        if(!auth()->user()->checkUserPlan() and $row->status == "publish") {
+        if (!auth()->user()->checkUserPlan() and $row->status == "publish") {
             return redirect(route('user.plan'));
         }
         $row->ical_import_url = $request->ical_import_url;
@@ -233,7 +234,7 @@ class ManageTourController extends FrontendController
                 $this->saveTerms($row, $request);
                 $row->saveMeta($request);
             }
-            do_action(Hook::AFTER_SAVING,$row,$request);
+            do_action(Hook::AFTER_SAVING, $row, $request);
             if ($id > 0) {
                 return back()->with('success', __('Tour updated'));
             } else {
@@ -263,12 +264,12 @@ class ManageTourController extends FrontendController
     {
         $this->checkPermission('tour_delete');
         $user_id = Auth::id();
-        if(\request()->query('permanently_delete')){
+        if (\request()->query('permanently_delete')) {
             $query = $this->tourClass::where("author_id", $user_id)->where("id", $id)->withTrashed()->first();
             if (!empty($query)) {
                 $query->forceDelete();
             }
-        }else {
+        } else {
             $query = $this->tourClass::where("author_id", $user_id)->where("id", $id)->first();
             if (!empty($query)) {
                 $query->delete();
@@ -298,7 +299,7 @@ class ManageTourController extends FrontendController
                 break;
             case "make-publish":
                 $query->status = "publish";
-                if(!auth()->user()->checkUserPlan() ) {
+                if (!auth()->user()->checkUserPlan()) {
                     return redirect(route('user.plan'));
                 }
                 break;
@@ -318,7 +319,9 @@ class ManageTourController extends FrontendController
                 $item->status = $status;
                 $item->save();
 
-                if($status == Booking::CANCELLED) $item->tryRefundToWallet();
+                if ($status == Booking::CANCELLED) {
+                    $item->tryRefundToWallet();
+                }
 
                 event(new BookingUpdatedEvent($item));
                 return redirect()->back()->with('success', __('Update success'));
@@ -336,7 +339,7 @@ class ManageTourController extends FrontendController
         $row = $row->find($id);
         if (empty($row)) {
             return redirect(route('tour.vendor.index'))->with('warning', __('Tour not found!'));
-        };
+        }
         try {
             $clone = $row->replicate();
             $clone->status = 'draft';
@@ -365,7 +368,7 @@ class ManageTourController extends FrontendController
                 }
             }
             return redirect()->back()->with('success', __('Tour clone was successful'));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $clone->delete();
             return redirect()->back()->with('warning', __($exception->getMessage()));
         }

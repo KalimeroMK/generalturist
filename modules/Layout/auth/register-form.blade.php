@@ -3,14 +3,16 @@
     <div class="row">
         <div class="col-lg-6 col-md-12">
             <div class="form-group">
-                <input type="text" class="form-control" name="first_name" autocomplete="off" placeholder="{{__("First Name")}}">
+                <input type="text" class="form-control" name="first_name" autocomplete="off"
+                       placeholder="{{__("First Name")}}">
                 <i class="input-icon field-icon icofont-waiter-alt"></i>
                 <span class="invalid-feedback error error-first_name"></span>
             </div>
         </div>
         <div class="col-lg-6 col-md-12">
             <div class="form-group">
-                <input type="text" class="form-control" name="last_name" autocomplete="off" placeholder="{{__("Last Name")}}">
+                <input type="text" class="form-control" name="last_name" autocomplete="off"
+                       placeholder="{{__("Last Name")}}">
                 <i class="input-icon field-icon icofont-waiter-alt"></i>
                 <span class="invalid-feedback error error-last_name"></span>
             </div>
@@ -85,7 +87,7 @@
         </div>
     @endif
     <div class="c-grey f14 text-center">
-       {{__(" Already have an account?")}}
+        {{__(" Already have an account?")}}
         <a href="#" data-target="#login" data-toggle="modal">{{__("Log In")}}</a>
     </div>
 </form>

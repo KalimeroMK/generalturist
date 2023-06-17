@@ -5,6 +5,7 @@
  * Date: 7/16/2019
  * Time: 2:05 PM
  */
+
 namespace Modules\Page\Models;
 
 use App\BaseModel;

@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Core\Events;
 
 
@@ -7,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 class CreateReviewEvent
 {
     use SerializesModels;
+
     public $services;
     public $review;
 

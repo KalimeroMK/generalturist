@@ -22,12 +22,16 @@
                             <option value="draft">{{__(" Move to Draft ")}}</option>
                             <option value="delete">{{__(" Delete ")}}</option>
                         </select>
-                        <button data-confirm="{{__("Do you want to delete?")}}" class="btn-info btn btn-icon dungdt-apply-form-btn" type="button">{{__('Apply')}}</button>
+                        <button data-confirm="{{__("Do you want to delete?")}}"
+                                class="btn-info btn btn-icon dungdt-apply-form-btn"
+                                type="button">{{__('Apply')}}</button>
                     </form>
                 @endif
             </div>
             <div class="col-left">
-                <form method="get" action="{{route('news.admin.index')}} " class="filter-form filter-form-right d-flex justify-content-end flex-column flex-sm-row" role="search">
+                <form method="get" action="{{route('news.admin.index')}} "
+                      class="filter-form filter-form-right d-flex justify-content-end flex-column flex-sm-row"
+                      role="search">
                     <input type="text" name="s" value="{{ Request()->s }}" placeholder="{{__('Search by name')}}"
                            class="form-control">
                     <select name="cate_id" class="form-control">
@@ -53,50 +57,55 @@
                     <div class="panel-body">
                         <form action="" class="bravo-form-item">
                             <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th width="60px"><input type="checkbox" class="check-all"></th>
-                                    <th class="title"> {{ __('Name')}}</th>
-                                    <th width="200px"> {{ __('Category')}}</th>
-                                    <th width="130px"> {{ __('Author')}}</th>
-                                    <th width="100px"> {{ __('Date')}}</th>
-                                    <th width="100px">{{  __('Status')}}</th>
-                                    <th width="100px"></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @if($rows->total() > 0)
-                                    @foreach($rows as $row)
-                                        <tr>
-                                            <td>
-                                                <input type="checkbox" class="check-item" name="ids[]" value="{{$row->id}}">
-                                            </td>
-                                            <td class="title">
-                                                <a href="{{$row->getEditUrl()}}">{{$row->title}}</a>
-                                            </td>
-                                            <td>{{$row->category->name ?? '' }}</td>
-                                            <td>
-                                                @if(!empty($row->author))
-                                                    {{$row->author->getDisplayName()}}
-                                                @else
-                                                    {{__("[Author Deleted]")}}
-                                                @endif
-                                            </td>
-                                            <td> {{ display_date($row->updated_at)}}</td>
-                                            <td><span class="badge badge-{{ $row->status }}">{{ $row->status }}</span></td>
-                                            <td>
-                                                <a href="{{route('news.admin.edit',['id'=>$row->id])}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> {{__('Edit')}}</a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @else
+                                <table class="table table-hover">
+                                    <thead>
                                     <tr>
-                                        <td colspan="6">{{__("No data")}}</td>
+                                        <th width="60px"><input type="checkbox" class="check-all"></th>
+                                        <th class="title"> {{ __('Name')}}</th>
+                                        <th width="200px"> {{ __('Category')}}</th>
+                                        <th width="130px"> {{ __('Author')}}</th>
+                                        <th width="100px"> {{ __('Date')}}</th>
+                                        <th width="100px">{{  __('Status')}}</th>
+                                        <th width="100px"></th>
                                     </tr>
-                                @endif
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                    @if($rows->total() > 0)
+                                        @foreach($rows as $row)
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="check-item" name="ids[]"
+                                                           value="{{$row->id}}">
+                                                </td>
+                                                <td class="title">
+                                                    <a href="{{$row->getEditUrl()}}">{{$row->title}}</a>
+                                                </td>
+                                                <td>{{$row->category->name ?? '' }}</td>
+                                                <td>
+                                                    @if(!empty($row->author))
+                                                        {{$row->author->getDisplayName()}}
+                                                    @else
+                                                        {{__("[Author Deleted]")}}
+                                                    @endif
+                                                </td>
+                                                <td> {{ display_date($row->updated_at)}}</td>
+                                                <td>
+                                                    <span class="badge badge-{{ $row->status }}">{{ $row->status }}</span>
+                                                </td>
+                                                <td>
+                                                    <a href="{{route('news.admin.edit',['id'=>$row->id])}}"
+                                                       class="btn btn-primary btn-sm"><i
+                                                                class="fa fa-edit"></i> {{__('Edit')}}</a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="6">{{__("No data")}}</td>
+                                        </tr>
+                                    @endif
+                                    </tbody>
+                                </table>
                             </div>
                         </form>
                         {{$rows->appends(request()->query())->links()}}

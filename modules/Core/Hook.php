@@ -1,5 +1,7 @@
 <?php
+
 namespace Modules\Core;
+
 class Hook
 {
     const CORE_SETTING_CONFIG = 'core_setting_config';

@@ -1,0 +1,50 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: .docker
+      dockerfile: Dockerfile
+    container_name: app_booking
+    ports:
+      - "9001:9000"
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+      - ./.docker/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - ./.docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./.docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+    networks:
+      - ortometals
+  db:
+    image: mariadb:latest
+    container_name: mysql_booking
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: homestead
+      MYSQL_USER: homestead
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    ports:
+      - "3314:3306"
+    volumes:
+      - ./.docker/dbdata:/var/lib/mysql
+      - ./.docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - ortometals
+  nginx:
+    image: nginx:latest
+    container_name: nginx_booking
+    restart: unless-stopped
+    ports:
+      - "94:80"
+    volumes:
+      - ./:/var/www
+      - ./.docker/nginx:/etc/nginx/conf.d
+    networks:
+      - ortometals
+networks:
+  ortometals:
+    driver: bridge

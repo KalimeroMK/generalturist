@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <form action="{{route('user.admin.wallet.store',['id'=>$row->id])}}" method="post" >
+    <form action="{{route('user.admin.wallet.store',['id'=>$row->id])}}" method="post">
         @csrf
         <div class="container">
             <div class="row">
@@ -19,11 +19,13 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>{{__("Balance")}}</label>
-                                        <input type="number" readonly value="{{$row->balance}}" step="0.1" class="form-control">
+                                        <input type="number" readonly value="{{$row->balance}}" step="0.1"
+                                               class="form-control">
                                     </div>
                                     <div class="form-group">
                                         <label>{{__("Credit Amount")}}</label>
-                                        <input type="number" name="credit_amount" value="0" step="0.1" class="form-control">
+                                        <input type="number" name="credit_amount" value="0" step="0.1"
+                                               class="form-control">
                                     </div>
                                 </div>
                             </div>

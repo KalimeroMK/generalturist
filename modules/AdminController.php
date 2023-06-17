@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules;
 
 use App\Http\Controllers\Controller;

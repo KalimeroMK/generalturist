@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Dashboard\Admin;
 
 use Illuminate\Http\Request;
@@ -11,8 +12,8 @@ class DashboardController extends AdminController
     {
         $f = strtotime('monday this week');
         $data = [
-            'recent_bookings'    => Booking::getRecentBookings(),
-            'top_cards'          => Booking::getTopCardsReport(),
+            'recent_bookings' => Booking::getRecentBookings(),
+            'top_cards' => Booking::getTopCardsReport(),
             'earning_chart_data' => Booking::getDashboardChartData($f, time())
         ];
         return view('Dashboard::index', $data);

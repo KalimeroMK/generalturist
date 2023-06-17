@@ -7,6 +7,7 @@ use Illuminate\Queue\SerializesModels;
 class CreatePlanRequest
 {
     use SerializesModels;
+
     public $user;
     public $payment;
 

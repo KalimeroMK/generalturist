@@ -47,12 +47,12 @@ return [
             'table' => 'cache',
             'connection' => null,
             'lock_connection' => null,
-
         ],
 
         'file' => [
             'driver' => 'file',
             'path' => storage_path('framework/cache/data'),
+            'lock_path' => storage_path('framework/cache/data'),
         ],
 
         'memcached' => [

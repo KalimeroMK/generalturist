@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Flight\Models;
 
 use App\BaseModel;

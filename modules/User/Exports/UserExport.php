@@ -1,11 +1,12 @@
 <?php
+
 namespace Modules\User\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use App\User;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
 class UserExport implements FromCollection, WithHeadings, WithMapping
 {
@@ -32,18 +33,18 @@ class UserExport implements FromCollection, WithHeadings, WithMapping
     public function map($user): array
     {
         return [
-            ltrim($user->business_name,"=-"),
-            ltrim($user->first_name,"=-"),
-            ltrim($user->last_name,"=-"),
-            ltrim($user->email,"=-"),
-            ltrim($user->phone,"=-"),
-            ltrim($user->address,"=-"),
-            ltrim($user->address2,"=-"),
-            ltrim($user->city,"=-"),
-            ltrim($user->state,"=-"),
-            ltrim($user->country,"=-"),
-            ltrim($user->zip_code,"=-"),
-            ltrim($user->status,"=-"),
+            ltrim($user->business_name, "=-"),
+            ltrim($user->first_name, "=-"),
+            ltrim($user->last_name, "=-"),
+            ltrim($user->email, "=-"),
+            ltrim($user->phone, "=-"),
+            ltrim($user->address, "=-"),
+            ltrim($user->address2, "=-"),
+            ltrim($user->city, "=-"),
+            ltrim($user->state, "=-"),
+            ltrim($user->country, "=-"),
+            ltrim($user->zip_code, "=-"),
+            ltrim($user->status, "=-"),
             //ltrim($user->role_name,"=-"),
         ];
     }

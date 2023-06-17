@@ -1,5 +1,5 @@
 <?php
 
-use \Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Route;
 
-Route::get('/','DashboardController@index')->name('admin.index');
+Route::get('/', 'DashboardController@index')->name('admin.index');

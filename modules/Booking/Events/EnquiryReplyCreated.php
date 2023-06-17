@@ -17,7 +17,6 @@ class EnquiryReplyCreated
 
     public function __construct(EnquiryReply $reply, Enquiry $enquiry)
     {
-
         $this->_enquiry = $enquiry;
         $this->_reply = $reply;
     }

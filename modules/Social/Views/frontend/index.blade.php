@@ -1,5 +1,6 @@
 @extends('layouts.app',['container_class'=>'container-fluid','header_right_menu'=>true,'header_social'=>1])@push('css')
-    <link href="{{ asset('dist/frontend/module/social/css/social.css?_ver='.config('app.asset_version')) }}" rel="stylesheet">
+    <link href="{{ asset('dist/frontend/module/social/css/social.css?_ver='.config('app.asset_version')) }}"
+          rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset("libs/ion_rangeslider/css/ion.rangeSlider.min.css") }}"/>
     <style type="text/css">
         .bravo_topbar, .bravo_footer {

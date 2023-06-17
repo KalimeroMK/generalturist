@@ -1,5 +1,6 @@
 <?php
-namespace  Modules\User;
+
+namespace Modules\User;
 
 use Modules\Core\Abstracts\BaseSettingsClass;
 
@@ -9,11 +10,11 @@ class SettingClass extends BaseSettingsClass
     {
         return [
             [
-                'id'   => 'user',
+                'id' => 'user',
                 'title' => __("User Settings"),
-                'position'=>50,
-                'view'=>"User::admin.settings.user",
-                "keys"=>[
+                'position' => 50,
+                'view' => "User::admin.settings.user",
+                "keys" => [
                     'user_enable_login_recaptcha',
                     'user_enable_register_recaptcha',
                     'enable_mail_user_registered',
@@ -43,16 +44,16 @@ class SettingClass extends BaseSettingsClass
                     'user_role'
 
                 ],
-                'html_keys'=>[
+                'html_keys' => [
 
                 ]
             ],
             [
-                'id'   => 'user_plans',
+                'id' => 'user_plans',
                 'title' => __("User Plans Settings"),
-                'position'=>51,
-                'view'=>"User::admin.settings.plan",
-                "keys"=>[
+                'position' => 51,
+                'view' => "User::admin.settings.plan",
+                "keys" => [
                     'user_plans_enable',
 
                     'user_plans_page_title',
@@ -76,7 +77,7 @@ class SettingClass extends BaseSettingsClass
                     'plan_update_payment_user_subject',
                     'plan_update_payment_user_content',
                 ],
-                'html_keys'=>[
+                'html_keys' => [
 
                 ]
             ]

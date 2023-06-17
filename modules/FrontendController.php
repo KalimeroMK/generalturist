@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules;
 
 use App\Http\Controllers\Controller;
@@ -8,7 +9,6 @@ class FrontendController extends Controller
 {
     public function __construct()
     {
-
     }
 
     public function checkPermission($permission = false)
@@ -22,7 +22,9 @@ class FrontendController extends Controller
 
     public function hasPermission($permission)
     {
-        if(!Auth::check()) return false;
+        if (!Auth::check()) {
+            return false;
+        }
         return Auth::user()->hasPermission($permission);
     }
 }

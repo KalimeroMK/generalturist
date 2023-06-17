@@ -1,6 +1,6 @@
 <?php
 
-namespace  Modules\Dashboard;
+namespace Modules\Dashboard;
 
 use Modules\Core\Abstracts\BaseSettingsClass;
 

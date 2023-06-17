@@ -1,20 +1,21 @@
 <?php
+
 namespace Modules\News\Models;
 
 use App\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Modules\Core\Models\SEO;
 
 class Tag extends BaseModel
 {
     use SoftDeletes;
+
     protected $table = 'core_tags';
-    protected $fillable      = [
+    protected $fillable = [
         'name',
         'content',
         'slug'
     ];
-    protected $slugField     = 'slug';
+    protected $slugField = 'slug';
     protected $slugFromField = 'name';
     protected $seo_type = 'news_tags';
 
@@ -27,7 +28,7 @@ class Tag extends BaseModel
     {
         $query = static::select('id', 'name');
         if ($q) {
-            $query->where('name', 'like', "%" . $q . "%");
+            $query->where('name', 'like', "%".$q."%");
         }
         $a = $query->limit(10)->get();
         return $a;
@@ -54,6 +55,6 @@ class Tag extends BaseModel
 
     public function getDetailUrl($locale = false)
     {
-        return route('news.tag.index',['slug'=>$this->slug]);
+        return route('news.tag.index', ['slug' => $this->slug]);
     }
 }

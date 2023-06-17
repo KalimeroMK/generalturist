@@ -2,25 +2,26 @@
 
 namespace Modules\User\Controllers;
 
+use App\Models\ChMessage as Message;
 use App\User;
 use Chatify\Facades\ChatifyMessenger as Chatify;
-use App\Models\ChMessage as Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 use Illuminate\Support\Facades\Response;
-use Modules\FrontendController;
 
 class MessagesController extends \Chatify\Http\Controllers\MessagesController
 {
 
     public function iframe($id = null)
     {
-        if(!setting_item('inbox_enable')) abort(404);
+        if (!setting_item('inbox_enable')) {
+            abort(404);
+        }
 
-        $routeName= FacadesRequest::route()->getName();
-        $type = in_array($routeName, ['user','group'])
+        $routeName = FacadesRequest::route()->getName();
+        $type = in_array($routeName, ['user', 'group'])
             ? $routeName
             : 'user';
 
@@ -35,14 +36,14 @@ class MessagesController extends \Chatify\Http\Controllers\MessagesController
     /**
      * Search in messenger
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return void
      */
     public function search(Request $request)
     {
         $getRecords = null;
         $input = trim(filter_var($request['input'], FILTER_SANITIZE_STRING));
-        $records = \App\Models\User::where('id','!=',Auth::user()->id)
+        $records = \App\Models\User::where('id', '!=', Auth::user()->id)
             ->where('name', 'LIKE', "%{$input}%")
             ->orWhere('first_name', 'LIKE', "%{$input}%")
             ->orWhere('email', 'LIKE', "%{$input}%")
@@ -54,7 +55,7 @@ class MessagesController extends \Chatify\Http\Controllers\MessagesController
                 'user' => $record,
             ])->render();
         }
-        if($records->total() < 1){
+        if ($records->total() < 1) {
             $getRecords = '<p class="message-hint center-el"><span>Nothing to show.</span></p>';
         }
         // send the response
@@ -68,7 +69,7 @@ class MessagesController extends \Chatify\Http\Controllers\MessagesController
     /**
      * Get contacts list
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return JSON response
      */
     public function getContacts(Request $request)
@@ -77,7 +78,7 @@ class MessagesController extends \Chatify\Http\Controllers\MessagesController
         $tmpUser = $user_id ? User::find($user_id) : false;
 
         // get all users that received/sent message from/to [Auth user]
-        $users = Message::join('users',  function ($join) {
+        $users = Message::join('users', function ($join) {
             $join->on('ch_messages.from_id', '=', 'users.id')
                 ->orOn('ch_messages.to_id', '=', 'users.id');
         })
@@ -85,8 +86,8 @@ class MessagesController extends \Chatify\Http\Controllers\MessagesController
                 $q->where('ch_messages.from_id', Auth::user()->id)
                     ->orWhere('ch_messages.to_id', Auth::user()->id);
             })
-            ->where('users.id','!=',Auth::user()->id)
-            ->select('users.*',DB::raw('MAX(ch_messages.created_at) max_created_at'))
+            ->where('users.id', '!=', Auth::user()->id)
+            ->select('users.*', DB::raw('MAX(ch_messages.created_at) max_created_at'))
             ->orderBy('max_created_at', 'desc')
             ->groupBy('users.id')
             ->paginate($request->per_page ?? $this->perPage);
@@ -99,11 +100,11 @@ class MessagesController extends \Chatify\Http\Controllers\MessagesController
                 // Get user data
                 $contacts .= Chatify::getContactItem($user);
             }
-        }else{
+        } else {
             $contacts = '<p class="message-hint center-el"><span>Your contact list is empty</span></p>';
         }
 
-        if($tmpUser and ($usersList or !in_array($user_id,$users->pluck('id')->all()))){
+        if ($tmpUser and ($usersList or !in_array($user_id, $users->pluck('id')->all()))) {
             $contacts = Chatify::getContactItem($tmpUser);
         }
 
@@ -117,7 +118,7 @@ class MessagesController extends \Chatify\Http\Controllers\MessagesController
     /**
      * Fetch data by id for (user/group)
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return collection
      */
     public function idFetchData(Request $request)
@@ -128,7 +129,7 @@ class MessagesController extends \Chatify\Http\Controllers\MessagesController
         // User data
         if ($request['type'] == 'user') {
             $fetch = \App\Models\User::where('id', $request['id'])->first();
-            if($fetch){
+            if ($fetch) {
                 $userAvatar = $fetch->avatar_url;
             }
         }

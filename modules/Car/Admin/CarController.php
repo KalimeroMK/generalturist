@@ -5,6 +5,7 @@
  * Date: 7/30/2019
  * Time: 1:56 PM
  */
+
 namespace Modules\Car\Admin;
 
 use Illuminate\Http\Request;
@@ -27,8 +28,13 @@ class CarController extends AdminController
     protected $attributes;
     protected $location;
 
-    public function __construct(Car $car,CarTranslation $car_translation,CarTerm $car_term, Attributes $attributes, Location $location)
-    {
+    public function __construct(
+        Car $car,
+        CarTranslation $car_translation,
+        CarTerm $car_term,
+        Attributes $attributes,
+        Location $location
+    ) {
         $this->setActiveMenu(route('car.admin.index'));
         $this->car = $car;
         $this->car_translation = $car_translation;
@@ -51,7 +57,7 @@ class CarController extends AdminController
         $query = $this->car::query();
         $query->orderBy('id', 'desc');
         if (!empty($s = $request->input('s'))) {
-            $query->where('title', 'LIKE', '%' . $s . '%');
+            $query->where('title', 'LIKE', '%'.$s.'%');
             $query->orderBy('title', 'asc');
         }
         if (!empty($is_featured = $request->input('is_featured'))) {
@@ -68,19 +74,19 @@ class CarController extends AdminController
             $query->where('author_id', Auth::id());
         }
         $data = [
-            'rows'              => $query->with(['author'])->paginate(20),
+            'rows' => $query->with(['author'])->paginate(20),
             'car_manage_others' => $this->hasPermission('car_manage_others'),
-            'breadcrumbs'       => [
+            'breadcrumbs' => [
                 [
                     'name' => __('Cars'),
-                    'url'  => route('car.admin.index')
+                    'url' => route('car.admin.index')
                 ],
                 [
-                    'name'  => __('All'),
+                    'name' => __('All'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'        => __("Car Management")
+            'page_title' => __("Car Management")
         ];
         return view('Car::admin.index', $data);
     }
@@ -91,7 +97,7 @@ class CarController extends AdminController
         $query = $this->car::onlyTrashed();
         $query->orderBy('id', 'desc');
         if (!empty($s = $request->input('s'))) {
-            $query->where('title', 'LIKE', '%' . $s . '%');
+            $query->where('title', 'LIKE', '%'.$s.'%');
             $query->orderBy('title', 'asc');
         }
         if ($this->hasPermission('car_manage_others')) {
@@ -102,20 +108,20 @@ class CarController extends AdminController
             $query->where('author_id', Auth::id());
         }
         $data = [
-            'rows'              => $query->with(['author'])->paginate(20),
+            'rows' => $query->with(['author'])->paginate(20),
             'car_manage_others' => $this->hasPermission('car_manage_others'),
-            'recovery'          => 1,
-            'breadcrumbs'       => [
+            'recovery' => 1,
+            'breadcrumbs' => [
                 [
                     'name' => __('Cars'),
-                    'url'  => route('car.admin.index')
+                    'url' => route('car.admin.index')
                 ],
                 [
-                    'name'  => __('Recovery'),
+                    'name' => __('Recovery'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'        => __("Recovery Car Management")
+            'page_title' => __("Recovery Car Management")
         ];
         return view('Car::admin.index', $data);
     }
@@ -128,21 +134,21 @@ class CarController extends AdminController
             'status' => 'publish'
         ]);
         $data = [
-            'row'          => $row,
-            'attributes'   => $this->attributes::where('service', 'car')->get(),
+            'row' => $row,
+            'attributes' => $this->attributes::where('service', 'car')->get(),
             'car_location' => $this->location::where('status', 'publish')->get()->toTree(),
-            'translation'  => new $this->car_translation(),
-            'breadcrumbs'  => [
+            'translation' => new $this->car_translation(),
+            'breadcrumbs' => [
                 [
                     'name' => __('Cars'),
-                    'url'  => route('car.admin.index')
+                    'url' => route('car.admin.index')
                 ],
                 [
-                    'name'  => __('Add Car'),
+                    'name' => __('Add Car'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'   => __("Add new Car")
+            'page_title' => __("Add new Car")
         ];
         return view('Car::admin.detail', $data);
     }
@@ -154,37 +160,36 @@ class CarController extends AdminController
         if (empty($row)) {
             return redirect(route('car.admin.index'));
         }
-        $translation = $row->translate($request->query('lang',get_main_lang()));
+        $translation = $row->translate($request->query('lang', get_main_lang()));
         if (!$this->hasPermission('car_manage_others')) {
             if ($row->author_id != Auth::id()) {
                 return redirect(route('car.admin.index'));
             }
         }
         $data = [
-            'row'               => $row,
-            'translation'       => $translation,
-            "selected_terms"    => $row->terms->pluck('term_id'),
-            'attributes'        => $this->attributes::where('service', 'car')->get(),
-            'car_location'      => $this->location::where('status', 'publish')->get()->toTree(),
+            'row' => $row,
+            'translation' => $translation,
+            "selected_terms" => $row->terms->pluck('term_id'),
+            'attributes' => $this->attributes::where('service', 'car')->get(),
+            'car_location' => $this->location::where('status', 'publish')->get()->toTree(),
             'enable_multi_lang' => true,
-            'breadcrumbs'       => [
+            'breadcrumbs' => [
                 [
                     'name' => __('Cars'),
-                    'url'  => route('car.admin.index')
+                    'url' => route('car.admin.index')
                 ],
                 [
-                    'name'  => __('Edit Car'),
+                    'name' => __('Edit Car'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'        => __("Edit: :name", ['name' => $row->title])
+            'page_title' => __("Edit: :name", ['name' => $row->title])
         ];
         return view('Car::admin.detail', $data);
     }
 
     public function store(Request $request, $id)
     {
-
         if ($id > 0) {
             $this->checkPermission('car_update');
             $row = $this->car::find($id);
@@ -244,7 +249,7 @@ class CarController extends AdminController
             if (!$request->input('lang') or is_default_lang($request->input('lang'))) {
                 $this->saveTerms($row, $request);
             }
-            do_action(Hook::AFTER_SAVING,$row,$request);
+            do_action(Hook::AFTER_SAVING, $row, $request);
             if ($id > 0) {
                 event(new UpdatedServiceEvent($row));
                 return back()->with('success', __('Car updated'));
@@ -264,7 +269,7 @@ class CarController extends AdminController
             $term_ids = $request->input('terms');
             foreach ($term_ids as $term_id) {
                 $this->car_term::firstOrCreate([
-                    'term_id'   => $term_id,
+                    'term_id' => $term_id,
                     'target_id' => $row->id
                 ]);
             }
@@ -274,7 +279,6 @@ class CarController extends AdminController
 
     public function bulkEdit(Request $request)
     {
-
         $ids = $request->input('ids');
         $action = $request->input('action');
         if (empty($ids) or !is_array($ids)) {
@@ -379,7 +383,7 @@ class CarController extends AdminController
         $q = $request->query('q');
         $query = $this->car::select('id', 'title as text')->where("status", "publish");
         if ($q) {
-            $query->where('title', 'like', '%' . $q . '%');
+            $query->where('title', 'like', '%'.$q.'%');
         }
         $res = $query->orderBy('id', 'desc')->limit(20)->get();
         return $this->sendSuccess([

@@ -3,9 +3,7 @@
 namespace Modules\Flight\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Modules\Flight\Models\Flight;
 use Modules\Flight\Models\FlightSeat;
-use Modules\Flight\Models\SeatType;
 
 class FlightSeatFactory extends Factory
 {
@@ -22,17 +20,18 @@ class FlightSeatFactory extends Factory
      * @return array
      */
     private $seatType = 0;
+
     public function definition()
     {
-        $persons=['adult','child'];
+        $persons = ['adult', 'child'];
         return [
-            'seat_type'=>"",
-            'flight_id'=>"",
-            'price'=>$this->faker->numberBetween(10,99),
-            'max_passengers'=>$this->faker->numberBetween(1,20),
-            'person'=>$this->faker->randomElement($persons),
-            'baggage_check_in'=>$this->faker->numberBetween(10,15),
-            'baggage_cabin'=>$this->faker->numberBetween(3,7),
+            'seat_type' => "",
+            'flight_id' => "",
+            'price' => $this->faker->numberBetween(10, 99),
+            'max_passengers' => $this->faker->numberBetween(1, 20),
+            'person' => $this->faker->randomElement($persons),
+            'baggage_check_in' => $this->faker->numberBetween(10, 15),
+            'baggage_cabin' => $this->faker->numberBetween(3, 7),
         ];
     }
 }

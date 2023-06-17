@@ -1,7 +1,10 @@
 <?php
-if(is_default_lang()){
+
+use Modules\Media\Helpers\FileHelper;
+
+if (is_default_lang()) {
     $meta_seo = $row->getSeoMeta();
-}else{
+} else {
     $meta_seo = $translation->getSeoMeta(request()->query('lang'));
 }
 
@@ -17,8 +20,10 @@ $seo_share = $meta_seo['seo_share'] ?? false;
                         {{__("Allow search engines to show this service in search results?")}}
                     </label>
                     <select name="seo_index" class="form-control">
-                        <option value="1" @if(isset($meta_seo['seo_index']) and $meta_seo['seo_index'] == 1) selected @endif>{{__("Yes")}}</option>
-                        <option value="0" @if(isset($meta_seo['seo_index']) and $meta_seo['seo_index'] == 0) selected @endif>{{__("No")}}</option>
+                        <option value="1"
+                                @if(isset($meta_seo['seo_index']) and $meta_seo['seo_index'] == 1) selected @endif>{{__("Yes")}}</option>
+                        <option value="0"
+                                @if(isset($meta_seo['seo_index']) and $meta_seo['seo_index'] == 0) selected @endif>{{__("No")}}</option>
                     </select>
                 </div>
             </div>
@@ -36,50 +41,59 @@ $seo_share = $meta_seo['seo_share'] ?? false;
         </ul>
         <div class="tab-content" data-condition="seo_index:is(1)">
             <div class="tab-pane active" id="seo_1">
-                <div class="form-group" >
+                <div class="form-group">
                     <label class="control-label">{{__("Seo Title")}}</label>
-                    <input type="text" name="seo_title" class="form-control" placeholder="{{ $row->title ?? $row->name ?? __("Leave blank to use service title")}}" value="{{ $meta_seo['seo_title'] ?? ""}}">
+                    <input type="text" name="seo_title" class="form-control"
+                           placeholder="{{ $row->title ?? $row->name ?? __("Leave blank to use service title")}}"
+                           value="{{ $meta_seo['seo_title'] ?? ""}}">
                 </div>
                 <div class="form-group">
                     <label class="control-label">{{__("Seo Description")}}</label>
-                    <textarea name="seo_desc" rows="3" class="form-control" placeholder="{{$row->short_desc ?? __("Enter description...")}}">{{$meta_seo['seo_desc'] ?? ""}}</textarea>
+                    <textarea name="seo_desc" rows="3" class="form-control"
+                              placeholder="{{$row->short_desc ?? __("Enter description...")}}">{{$meta_seo['seo_desc'] ?? ""}}</textarea>
                 </div>
                 @if(is_default_lang())
                     <div class="form-group form-group-image">
                         <label class="control-label">{{__("Featured Image")}}</label>
-                        {!! \Modules\Media\Helpers\FileHelper::fieldUpload('seo_image', $meta_seo['seo_image'] ?? "" ) !!}
+                        {!! FileHelper::fieldUpload('seo_image', $meta_seo['seo_image'] ?? "" ) !!}
                     </div>
                 @endif
             </div>
             <div class="tab-pane" id="seo_2">
                 <div class="form-group">
                     <label class="control-label">{{__("Facebook Title")}}</label>
-                    <input type="text" name="seo_share[facebook][title]" class="form-control" placeholder="{{ $row->title ?? $row->name ?? __("Enter title...")}}" value="{{$seo_share['facebook']['title'] ?? "" }}">
+                    <input type="text" name="seo_share[facebook][title]" class="form-control"
+                           placeholder="{{ $row->title ?? $row->name ?? __("Enter title...")}}"
+                           value="{{$seo_share['facebook']['title'] ?? "" }}">
                 </div>
                 <div class="form-group">
                     <label class="control-label">{{__("Facebook Description")}}</label>
-                    <textarea name="seo_share[facebook][desc]" rows="3" class="form-control" placeholder="{{$row->short_desc ?? __("Enter description...")}}">{{$seo_share['facebook']['desc'] ?? "" }}</textarea>
+                    <textarea name="seo_share[facebook][desc]" rows="3" class="form-control"
+                              placeholder="{{$row->short_desc ?? __("Enter description...")}}">{{$seo_share['facebook']['desc'] ?? "" }}</textarea>
                 </div>
                 @if(is_default_lang())
                     <div class="form-group form-group-image">
                         <label class="control-label">{{__("Facebook Image")}}</label>
-                        {!! \Modules\Media\Helpers\FileHelper::fieldUpload('seo_share[facebook][image]',$seo_share['facebook']['image'] ?? "" ) !!}
+                        {!! FileHelper::fieldUpload('seo_share[facebook][image]',$seo_share['facebook']['image'] ?? "" ) !!}
                     </div>
                 @endif
             </div>
             <div class="tab-pane" id="seo_3">
                 <div class="form-group">
                     <label class="control-label">{{__("Twitter Title")}}</label>
-                    <input type="text" name="seo_share[twitter][title]" class="form-control" placeholder="{{ $row->title ?? $row->name ?? __("Enter title...")}}" value="{{$seo_share['twitter']['title'] ?? "" }}">
+                    <input type="text" name="seo_share[twitter][title]" class="form-control"
+                           placeholder="{{ $row->title ?? $row->name ?? __("Enter title...")}}"
+                           value="{{$seo_share['twitter']['title'] ?? "" }}">
                 </div>
                 <div class="form-group">
                     <label class="control-label">{{__("Twitter Description")}}</label>
-                    <textarea name="seo_share[twitter][desc]" rows="3" class="form-control" placeholder="{{$row->short_desc ?? __("Enter description...")}}">{{$seo_share['twitter']['desc'] ?? "" }}</textarea>
+                    <textarea name="seo_share[twitter][desc]" rows="3" class="form-control"
+                              placeholder="{{$row->short_desc ?? __("Enter description...")}}">{{$seo_share['twitter']['desc'] ?? "" }}</textarea>
                 </div>
                 @if(is_default_lang())
                     <div class="form-group form-group-image">
                         <label class="control-label">{{__("Twitter Image")}}</label>
-                        {!! \Modules\Media\Helpers\FileHelper::fieldUpload('seo_share[twitter][image]', $seo_share['twitter']['image'] ?? "" ) !!}
+                        {!! FileHelper::fieldUpload('seo_share[twitter][image]', $seo_share['twitter']['image'] ?? "" ) !!}
                     </div>
                 @endif
             </div>

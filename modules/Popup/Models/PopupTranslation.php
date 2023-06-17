@@ -15,5 +15,4 @@ class PopupTranslation extends BaseModel
     ];
 
 
-
 }

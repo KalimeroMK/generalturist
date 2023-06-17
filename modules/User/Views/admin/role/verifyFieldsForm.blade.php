@@ -1,16 +1,18 @@
+@php use Modules\Language\Models\Language; @endphp
 @if(empty($row['id']))
-<div class="form-group">
-    <label>{{__("Field ID")}} <span class="text-danger">*</span></label>
-    <input type="text" value="{{$row['id'] ?? ''}}" placeholder="{{__("Field ID ")}}" name="id" class="form-control" required>
-    <i>{{__('Must be unique. Only accept letter and number, dash, underscore, without space')}}</i>
-    <div class="invalid-feedback">
-        {{__('Please enter field id and make sure it unique')}}
+    <div class="form-group">
+        <label>{{__("Field ID")}} <span class="text-danger">*</span></label>
+        <input type="text" value="{{$row['id'] ?? ''}}" placeholder="{{__("Field ID ")}}" name="id" class="form-control"
+               required>
+        <i>{{__('Must be unique. Only accept letter and number, dash, underscore, without space')}}</i>
+        <div class="invalid-feedback">
+            {{__('Please enter field id and make sure it unique')}}
+        </div>
     </div>
-</div>
 @else
     <input type="hidden" name="id" value="{{$row['id']}}">
 @endif
-@php  $languages = \Modules\Language\Models\Language::getActive(); @endphp
+@php  $languages = Language::getActive(); @endphp
 <div class="form-group form-group-item">
     <label>{{__("Field Name")}} <span class="text-danger">*</span></label>
     <div class="border p-2 rounded">
@@ -19,7 +21,8 @@
                 @php $key_lang = setting_item('site_locale') != $language->locale ? "_".$language->locale : ""  @endphp
                 <div class="g-lang">
                     <div class="title-lang">{{$language->name}}</div>
-                    <input type="text" value="{{$row['name'.$key_lang] ?? ''}}" placeholder="" name="name{{$key_lang}}" class="form-control" required>
+                    <input type="text" value="{{$row['name'.$key_lang] ?? ''}}" placeholder="" name="name{{$key_lang}}"
+                           class="form-control" required>
                 </div>
             @endforeach
         @else
@@ -48,8 +51,9 @@
     <div class=" terms-scrollable">
         @foreach($roles as $role)
             <div>
-                <label >
-                     <input type="checkbox" name="roles[]" value="{{$role->id}}" @if(!empty($row['roles'] ?? []) and in_array($role->id,$row['roles'] ?? [])) checked @endif />{{ucfirst($role->name)}}
+                <label>
+                    <input type="checkbox" name="roles[]" value="{{$role->id}}"
+                           @if(!empty($row['roles'] ?? []) and in_array($role->id,$row['roles'] ?? [])) checked @endif />{{ucfirst($role->name)}}
                 </label>
             </div>
         @endforeach
@@ -71,5 +75,6 @@
 </div>
 <div class="form-group">
     <label>{{__("Icon code")}}</label>
-    <input type="text" value="{{$row['icon'] ?? ''}}" placeholder="{{__("Eg: fa fa-phone")}}" name="icon" class="form-control">
+    <input type="text" value="{{$row['icon'] ?? ''}}" placeholder="{{__("Eg: fa fa-phone")}}" name="icon"
+           class="form-control">
 </div>

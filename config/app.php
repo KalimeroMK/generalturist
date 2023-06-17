@@ -228,9 +228,4 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
-    'version'=>"3.2.1",
-    'asset_version'=>env('APP_ASSET_VERSION','3.2.1'),
-
-    'updater_url'=>"http://check.bookingcore.org/updater.php"
-
 ];

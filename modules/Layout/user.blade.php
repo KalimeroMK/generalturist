@@ -6,7 +6,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @php($favicon = setting_item('site_favicon'))
-    <link rel="icon" type="image/png" href="{{!empty($favicon)?get_file_url($favicon,'full'):url('images/favicon.png')}}" />
+    <link rel="icon" type="image/png"
+          href="{{!empty($favicon)?get_file_url($favicon,'full'):url('images/favicon.png')}}"/>
     @include('Layout::parts.seo-meta')
     <link href="{{ asset('libs/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ asset('libs/font-awesome/css/font-awesome.css') }}" rel="stylesheet">
@@ -14,18 +15,19 @@
     <link href="{{ asset('libs/icofont/icofont.min.css') }}" rel="stylesheet">
     <link href="{{ asset('dist/frontend/css/notification.css') }}" rel="newest stylesheet">
     <link href="{{ asset('dist/frontend/css/app.css?_ver='.config('app.asset_version')) }}" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{ asset("libs/daterange/daterangepicker.css") }}" >
-    <link rel="stylesheet" type="text/css" href="{{ asset("libs/select2/css/select2.min.css") }}" >
+    <link rel="stylesheet" type="text/css" href="{{ asset("libs/daterange/daterangepicker.css") }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset("libs/select2/css/select2.min.css") }}">
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link rel='stylesheet' id='google-font-css-css'  href='https://fonts.googleapis.com/css?family=Poppins%3A400%2C500%2C600' type='text/css' media='all' />
+    <link rel='stylesheet' id='google-font-css-css'
+          href='https://fonts.googleapis.com/css?family=Poppins%3A400%2C500%2C600' type='text/css' media='all'/>
     @include('Layout::parts.global-script')
     <script>
         var image_editer = {
             language: '{{ app()->getLocale() }}',
             translations: {
                 {{ app()->getLocale() }}: {
-                'header.image_editor_title': '{{ __('Image Editor') }}',
+                    'header.image_editor_title': '{{ __('Image Editor') }}',
                     'header.toggle_fullscreen': '{{ __('Toggle fullscreen') }}',
                     'header.close': '{{ __('Close') }}',
                     'header.close_modal': '{{ __('Close window') }}',
@@ -75,17 +77,19 @@
                     'common.upload': '{{ __('Upload') }}',
                     'common.gallery': '{{ __('Gallery') }}',
                     'common.text': '{{ __('Text') }}',
-            }
+                }
             }
         };
     </script>
-    <link href="{{ asset('dist/frontend/module/user/css/user.css?_ver='.config('app.asset_version')) }}" rel="stylesheet">
+    <link href="{{ asset('dist/frontend/module/user/css/user.css?_ver='.config('app.asset_version')) }}"
+          rel="stylesheet">
     <!-- Styles -->
     @stack('css')
     <style type="text/css">
         .bravo_topbar, .bravo_header, .bravo_footer {
             display: none;
         }
+
         html, body, .bravo_wrap, .bravo_user_profile,
         .bravo_user_profile > .container-fluid > .row-eq-height > .col-md-3 {
             min-height: 100vh !important;
@@ -99,33 +103,33 @@
     @endif
 </head>
 <body class="user-page {{$body_class ?? ''}} @if(setting_item_with_lang('enable_rtl')) is-rtl @endif">
-    @if(!is_demo_mode())
-        {!! setting_item('body_scripts') !!}
-    @endif
-    <div class="bravo_wrap">
-        @include('Layout::parts.topbar')
-        @include('Layout::parts.header')
+@if(!is_demo_mode())
+    {!! setting_item('body_scripts') !!}
+@endif
+<div class="bravo_wrap">
+    @include('Layout::parts.topbar')
+    @include('Layout::parts.header')
 
-        <div class="bravo_user_profile">
-            <div class="container-fluid">
-                <div class="row row-eq-height">
-                    <div class="col-md-3">
-                        @include('User::frontend.layouts.sidebar')
-                    </div>
-                    <div class="col-md-9">
-                        <div class="user-form-settings">
-                            @include('Layout::parts.user-bc')
-                            @yield('content')
-                        </div>
+    <div class="bravo_user_profile">
+        <div class="container-fluid">
+            <div class="row row-eq-height">
+                <div class="col-md-3">
+                    @include('User::frontend.layouts.sidebar')
+                </div>
+                <div class="col-md-9">
+                    <div class="user-form-settings">
+                        @include('Layout::parts.user-bc')
+                        @yield('content')
                     </div>
                 </div>
             </div>
         </div>
-        @include('Layout::parts.footer',['is_user_page'=>1])
     </div>
-    <script src="{{ asset('libs/filerobot-image-editor/filerobot-image-editor.min.js?_ver='.config('app.asset_version')) }}"></script>
-    @if(!is_demo_mode())
+    @include('Layout::parts.footer',['is_user_page'=>1])
+</div>
+<script src="{{ asset('libs/filerobot-image-editor/filerobot-image-editor.min.js?_ver='.config('app.asset_version')) }}"></script>
+@if(!is_demo_mode())
     {!! setting_item('footer_scripts') !!}
-    @endif
+@endif
 </body>
 </html>

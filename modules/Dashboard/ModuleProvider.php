@@ -1,11 +1,21 @@
 <?php
+
 namespace Modules\Dashboard;
+
 use Modules\ModuleServiceProvider;
 
 class ModuleProvider extends ModuleServiceProvider
 {
-    public function boot(){
+    public static function getAdminMenu()
+    {
+        return [
+        ];
     }
+
+    public function boot()
+    {
+    }
+
     /**
      * Register bindings in the container.
      *
@@ -17,12 +27,6 @@ class ModuleProvider extends ModuleServiceProvider
             __DIR__.'/Config/config.php', 'admin'
         );
         $this->app->register(RouterServiceProvider::class);
-    }
-
-    public static function getAdminMenu()
-    {
-        return [
-        ];
     }
 
 }
